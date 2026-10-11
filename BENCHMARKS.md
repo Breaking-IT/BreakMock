@@ -16,6 +16,18 @@ Go: `go version go1.27.1 darwin/arm64`. Java details and reference JAR hash are 
 Medians of three rounds; zero request errors in every round. RSS column is the
 median of each round’s sampled peak. Raw results: [benchmark.json](testdata/reports/benchmark.json).
 
+## Journal capped at 1,000 entries on both servers
+
+| Workload | Java RPS | BreakMock RPS | Throughput ratio | Java peak RSS MiB | BreakMock peak RSS MiB |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| static | 59,045 | 79,365 | 1.34× | 790.4 | 48.9 |
+| template | 55,646 | 77,097 | 1.39× | 849.9 | 49.2 |
+
+Same three-round method; zero request errors. Raw results:
+[benchmark-journal.json](testdata/reports/benchmark-journal.json). The CLI’s
+inbound header-order capture is enabled in this configuration. Both journals are
+explicitly capped; unbounded retention is not represented by these RSS values.
+
 ## Method and limitations
 
 - The same Go HTTP client uses 32 persistent connections for both servers.
