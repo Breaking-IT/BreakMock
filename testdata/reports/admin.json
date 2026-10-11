@@ -1,0 +1,269 @@
+{
+  "reference": {
+    "version": "3.13.2"
+  },
+  "candidate": {
+    "version": "BreakMock 0.1.0"
+  },
+  "comparison": "strict response-body bytes after value-only nondeterminism substitutions",
+  "passed": 51,
+  "semantic_passed": 51,
+  "total": 51,
+  "results": [
+    {
+      "name": "reset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "empty mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "settings initialize",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "settings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "settings update",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "settings read updated",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "ordered user maps create",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "ordered user maps get",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "ordered user maps update",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "ordered user maps delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "create mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "get mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "list mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "metadata find",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unmatched mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "serve matched",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal count",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal find",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal list",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "no unmatched mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "recording start",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "recording active status",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "recording empty stop",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "recording stopped status",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "recording double stop",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "snapshot local stub",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "remove requests by metadata",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "clear journal",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "file put",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "file get",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "file list",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "file delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "delete mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "clear mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "import",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "save",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "delete saved mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "reset persisted",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "get persisted",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "metadata remove",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario create",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario list",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario state",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario reset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record proxy start",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record proxy serve first",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record proxy serve repeated",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record proxy stop",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record replay first",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "record replay second",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "final reset",
+      "pass": true,
+      "semantic_pass": true
+    }
+  ]
+}

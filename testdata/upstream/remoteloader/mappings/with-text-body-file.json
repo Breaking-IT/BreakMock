@@ -1,0 +1,8 @@
+{
+  "request": {"url": "/text-file"},
+  "response": {
+    "bodyFileName": "body.txt",
+    "status": 200
+  },
+  "id": "e7af68ed-ed7c-4f9f-9d34-344c88cca8b7"
+}

@@ -1,0 +1,2379 @@
+{
+  "reference": "WireMock 3.13.2",
+  "passed": 138,
+  "total": 138,
+  "results": [
+    {
+      "name": "equalTo0",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalTo": "abc"
+          }
+        ]
+      },
+      "body": "abc",
+      "path": "/test"
+    },
+    {
+      "name": "equalTo1",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalTo": "abc"
+          }
+        ]
+      },
+      "body": "abcd",
+      "path": "/test"
+    },
+    {
+      "name": "contains2",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "contains": "bc"
+          }
+        ]
+      },
+      "body": "abc",
+      "path": "/test"
+    },
+    {
+      "name": "doesNotContain3",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "doesNotContain": "bc"
+          }
+        ]
+      },
+      "body": "abc",
+      "path": "/test"
+    },
+    {
+      "name": "matches4",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matches": "a(?=b)b"
+          }
+        ]
+      },
+      "body": "ab",
+      "path": "/test"
+    },
+    {
+      "name": "matches5",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matches": "(a)\\1"
+          }
+        ]
+      },
+      "body": "aa",
+      "path": "/test"
+    },
+    {
+      "name": "matches6",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matches": "a"
+          }
+        ]
+      },
+      "body": "ba",
+      "path": "/test"
+    },
+    {
+      "name": "doesNotMatch7",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "doesNotMatch": "a"
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "before8",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01"
+          }
+        ]
+      },
+      "body": "2025-01-01",
+      "path": "/test"
+    },
+    {
+      "name": "after9",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01"
+          }
+        ]
+      },
+      "body": "2027-01-01",
+      "path": "/test"
+    },
+    {
+      "name": "includes/test?q=1&q=2",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "includes": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=1&q=2"
+    },
+    {
+      "name": "hasExactly/test?q=1&q=2",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "hasExactly": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=1&q=2"
+    },
+    {
+      "name": "includes/test?q=1",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "includes": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=1"
+    },
+    {
+      "name": "hasExactly/test?q=1",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "hasExactly": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=1"
+    },
+    {
+      "name": "includes/test?q=2&q=1&q=3",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "includes": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=2&q=1&q=3"
+    },
+    {
+      "name": "hasExactly/test?q=2&q=1&q=3",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "queryParameters": {
+          "q": {
+            "hasExactly": [
+              {
+                "equalTo": "1"
+              },
+              {
+                "equalTo": "2"
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test?q=2&q=1&q=3"
+    },
+    {
+      "name": "body 16",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToJson": "{\"a\":\"${json-unit.any-number}\"}"
+          }
+        ]
+      },
+      "body": "{\"a\":2}",
+      "path": "/test"
+    },
+    {
+      "name": "body 17",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToJson": "{\"a\":\"${json-unit.any-number}\"}"
+          }
+        ]
+      },
+      "body": "{\"a\":\"2\"}",
+      "path": "/test"
+    },
+    {
+      "name": "body 18",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToJson": "{\"a\":\"${json-unit.ignore-element}\"}"
+          }
+        ]
+      },
+      "body": "{}",
+      "path": "/test"
+    },
+    {
+      "name": "body 19",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToJson": "[1,2]",
+            "ignoreExtraElements": true
+          }
+        ]
+      },
+      "body": "[0,1,2]",
+      "path": "/test"
+    },
+    {
+      "name": "body 20",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToJson": "[1,2]",
+            "ignoreExtraElements": true
+          }
+        ]
+      },
+      "body": "[1,0,2]",
+      "path": "/test"
+    },
+    {
+      "name": "body 21",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$.a"
+          }
+        ]
+      },
+      "body": "{\"a\":[]}",
+      "path": "/test"
+    },
+    {
+      "name": "body 22",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.a",
+              "equalTo": "true"
+            }
+          }
+        ]
+      },
+      "body": "{\"a\":true}",
+      "path": "/test"
+    },
+    {
+      "name": "body 23",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$.things[?(@.id == 2)]"
+          }
+        ]
+      },
+      "body": "{\"things\":[{\"id\":2}]}",
+      "path": "/test"
+    },
+    {
+      "name": "body 24",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": "{\"type\":\"object\",\"required\":[\"a\"]}"
+          }
+        ]
+      },
+      "body": "{\"a\":2}",
+      "path": "/test"
+    },
+    {
+      "name": "body 25",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": "{\"type\":\"object\",\"required\":[\"a\"]}"
+          }
+        ]
+      },
+      "body": "{}",
+      "path": "/test"
+    },
+    {
+      "name": "body 26",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "/a/b/text()",
+              "equalTo": "yes"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "body 27",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "/a/b",
+              "equalToXml": "<b>yes</b>"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "body 28",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": "/x:a/x:b",
+            "xPathNamespaces": {
+              "x": "urn:foo"
+            }
+          }
+        ]
+      },
+      "body": "<a xmlns=\"urn:foo\"><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "body 29",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b> yes </b></a>"
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "missing doesNotMatch",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "headers": {
+          "X-Missing": {
+            "doesNotMatch": "abc"
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "missing doesNotContain",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "headers": {
+          "X-Missing": {
+            "doesNotContain": "abc"
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "template",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "urlPathTemplate": "/users/{id}",
+        "pathParameters": {
+          "id": {
+            "matches": "[0-9]+"
+          }
+        }
+      },
+      "body": null,
+      "path": "/users/12"
+    },
+    {
+      "name": "encoded path",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "urlPath": "/a%20b"
+      },
+      "body": null,
+      "path": "/a%20b"
+    },
+    {
+      "name": "XML order 34",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><c>2</c></a>"
+          }
+        ]
+      },
+      "body": "<a><b>1</b><c>2</c></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML order 35",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><c>2</c></a>"
+          }
+        ]
+      },
+      "body": "<a><c>2</c><b>1</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML order 36",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><c>2</c></a>"
+          }
+        ]
+      },
+      "body": "<a><b>2</b><c>1</c></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML same-name order 37",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><b>2</b></a>",
+            "ignoreOrderOfSameNode": true
+          }
+        ]
+      },
+      "body": "<a><b>1</b><b>2</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML same-name order 38",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><b>2</b></a>",
+            "ignoreOrderOfSameNode": true
+          }
+        ]
+      },
+      "body": "<a><b>2</b><b>1</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML same-name order 39",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><b>2</b></a>",
+            "ignoreOrderOfSameNode": false
+          }
+        ]
+      },
+      "body": "<a><b>1</b><b>2</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML same-name order 40",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><b>1</b><b>2</b></a>",
+            "ignoreOrderOfSameNode": false
+          }
+        ]
+      },
+      "body": "<a><b>2</b><b>1</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 41",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a>${xmlunit.ignore}</a>",
+            "enablePlaceholders": true
+          }
+        ]
+      },
+      "body": "<a>123</a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 42",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a>${xmlunit.ignore}</a>",
+            "enablePlaceholders": false
+          }
+        ]
+      },
+      "body": "<a>123</a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 43",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a>#{xmlunit.ignore}</a>",
+            "enablePlaceholders": true,
+            "placeholderOpeningDelimiterRegex": "#\\{",
+            "placeholderClosingDelimiterRegex": "}"
+          }
+        ]
+      },
+      "body": "<a>123</a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 44",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a x=\"1\"/>",
+            "exemptedComparisons": [
+              "ATTR_VALUE"
+            ]
+          }
+        ]
+      },
+      "body": "<a x=\"2\"/>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 45",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a xmlns=\"urn:x\"/>"
+          }
+        ]
+      },
+      "body": "<b:a xmlns:b=\"urn:x\"/>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 46",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a xmlns=\"urn:x\"/>"
+          }
+        ]
+      },
+      "body": "<a xmlns=\"urn:y\"/>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 47",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a xmlns=\"urn:x\"/>",
+            "exemptedComparisons": [
+              "NAMESPACE_URI"
+            ]
+          }
+        ]
+      },
+      "body": "<a xmlns=\"urn:y\"/>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 48",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><!--hi--><b>hello</b></a>"
+          }
+        ]
+      },
+      "body": "<a><b>hello</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XML feature 49",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToXml": "<a><![CDATA[hello]]></a>"
+          }
+        ]
+      },
+      "body": "<a>hello</a>",
+      "path": "/test"
+    },
+    {
+      "name": "date 50",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "body": "2025-12-31T19:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 51",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01T00:00:00"
+          }
+        ]
+      },
+      "body": "2026-01-01T00:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 52",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01T00:00:00Z",
+            "actualFormat": "unix"
+          }
+        ]
+      },
+      "body": "1767225600",
+      "path": "/test"
+    },
+    {
+      "name": "date 53",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01T00:00:00Z",
+            "actualFormat": "epoch"
+          }
+        ]
+      },
+      "body": "1767225600000",
+      "path": "/test"
+    },
+    {
+      "name": "date 54",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01T00:00:00Z",
+            "truncateActual": "first hour of day"
+          }
+        ]
+      },
+      "body": "2026-01-01T19:23:45Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 55",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "2026-01-01",
+            "actualFormat": "dd/MM/yyyy"
+          }
+        ]
+      },
+      "body": "01/01/2026",
+      "path": "/test"
+    },
+    {
+      "name": "date 56",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "now +2 days"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 57",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "now -2 days"
+          }
+        ]
+      },
+      "body": "2100-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 58",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalToDateTime": "now",
+            "expectedOffset": 1,
+            "expectedOffsetUnit": "MONTHS"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 59",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "body": "2025-12-31T19:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 60",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01T00:00:00"
+          }
+        ]
+      },
+      "body": "2026-01-01T00:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 61",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01T00:00:00Z",
+            "actualFormat": "unix"
+          }
+        ]
+      },
+      "body": "1767225600",
+      "path": "/test"
+    },
+    {
+      "name": "date 62",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01T00:00:00Z",
+            "actualFormat": "epoch"
+          }
+        ]
+      },
+      "body": "1767225600000",
+      "path": "/test"
+    },
+    {
+      "name": "date 63",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01T00:00:00Z",
+            "truncateActual": "first hour of day"
+          }
+        ]
+      },
+      "body": "2026-01-01T19:23:45Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 64",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "2026-01-01",
+            "actualFormat": "dd/MM/yyyy"
+          }
+        ]
+      },
+      "body": "01/01/2026",
+      "path": "/test"
+    },
+    {
+      "name": "date 65",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "now +2 days"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 66",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "now -2 days"
+          }
+        ]
+      },
+      "body": "2100-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 67",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "before": "now",
+            "expectedOffset": 1,
+            "expectedOffsetUnit": "MONTHS"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 68",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "body": "2025-12-31T19:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 69",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01T00:00:00"
+          }
+        ]
+      },
+      "body": "2026-01-01T00:00:00-05:00",
+      "path": "/test"
+    },
+    {
+      "name": "date 70",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01T00:00:00Z",
+            "actualFormat": "unix"
+          }
+        ]
+      },
+      "body": "1767225600",
+      "path": "/test"
+    },
+    {
+      "name": "date 71",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01T00:00:00Z",
+            "actualFormat": "epoch"
+          }
+        ]
+      },
+      "body": "1767225600000",
+      "path": "/test"
+    },
+    {
+      "name": "date 72",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01T00:00:00Z",
+            "truncateActual": "first hour of day"
+          }
+        ]
+      },
+      "body": "2026-01-01T19:23:45Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 73",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "2026-01-01",
+            "actualFormat": "dd/MM/yyyy"
+          }
+        ]
+      },
+      "body": "01/01/2026",
+      "path": "/test"
+    },
+    {
+      "name": "date 74",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "now +2 days"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 75",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "now -2 days"
+          }
+        ]
+      },
+      "body": "2100-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "date 76",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "after": "now",
+            "expectedOffset": 1,
+            "expectedOffsetUnit": "MONTHS"
+          }
+        ]
+      },
+      "body": "2000-01-01T00:00:00Z",
+      "path": "/test"
+    },
+    {
+      "name": "root JSONPath 77",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.suite == 'a')]"
+          }
+        ]
+      },
+      "body": "{\"suite\":\"a\"}",
+      "path": "/test"
+    },
+    {
+      "name": "root JSONPath 78",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$[?(@.suite == 'a')]"
+          }
+        ]
+      },
+      "body": "{\"suite\":\"b\"}",
+      "path": "/test"
+    },
+    {
+      "name": "edge 79",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "clientIp": {
+          "equalTo": "127.0.0.1"
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "edge 80",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "clientIp": {
+          "equalTo": "192.0.2.1"
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "edge 81",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "headers": {
+          "X-Missing": {
+            "absent": false
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "schema 82",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "body": "123",
+      "path": "/test"
+    },
+    {
+      "name": "schema 83",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "body": "\"hi\"",
+      "path": "/test"
+    },
+    {
+      "name": "schema 84",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 85",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":\"1\"}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 86",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "number"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1,\"x\":2}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 87",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "body": "123",
+      "path": "/test"
+    },
+    {
+      "name": "schema 88",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "body": "\"hi\"",
+      "path": "/test"
+    },
+    {
+      "name": "schema 89",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 90",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":\"1\"}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 91",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1,\"x\":2}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 92",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ]
+      },
+      "body": "123",
+      "path": "/test"
+    },
+    {
+      "name": "schema 93",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ]
+      },
+      "body": "\"hi\"",
+      "path": "/test"
+    },
+    {
+      "name": "schema 94",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 95",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":\"1\"}",
+      "path": "/test"
+    },
+    {
+      "name": "schema 96",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonSchema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ]
+      },
+      "body": "{\"id\":1,\"x\":2}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 97",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.missing",
+              "absent": true
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 98",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.empty",
+              "absent": true
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 99",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.values",
+              "equalTo": "b"
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 100",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.values",
+              "equalToJson": "[\"a\",\"b\"]"
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 101",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.values[*]",
+              "equalToJson": "[\"a\",\"b\"]"
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 102",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.values[*]",
+              "equalTo": "b"
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "JSONPath array 103",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": {
+              "expression": "$.nothing",
+              "absent": true
+            }
+          }
+        ]
+      },
+      "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 104",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "bodyPatterns": [
+              {
+                "equalTo": "one"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 105",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "bodyPatterns": [
+              {
+                "contains": "o"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 106",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "bodyPatterns": [
+              {
+                "equalTo": "missing"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 107",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ALL",
+            "bodyPatterns": [
+              {
+                "equalTo": "one"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 108",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ALL",
+            "bodyPatterns": [
+              {
+                "contains": "o"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart 109",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ALL",
+            "bodyPatterns": [
+              {
+                "equalTo": "missing"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart file 110",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "fileName": "one.txt",
+            "bodyPatterns": [
+              {
+                "contains": "o"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart file 111",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "fileName": "two.txt",
+            "bodyPatterns": [
+              {
+                "contains": "o"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart file 112",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "fileName": "missing.txt",
+            "bodyPatterns": [
+              {
+                "contains": "o"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart binary 113",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "bodyPatterns": [
+              {
+                "binaryEqualTo": "b25l"
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart binary 114",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "bodyPatterns": [
+              {
+                "and": [
+                  {
+                    "contains": "o"
+                  },
+                  {
+                    "doesNotContain": "x"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart headers 115",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "headers": {
+              "content-type": {
+                "contains": "text/"
+              }
+            }
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart headers 116",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "headers": {
+              "Content-Disposition": {
+                "contains": "name=\"first\""
+              }
+            }
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "multipart headers 117",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "multipartPatterns": [
+          {
+            "matchingType": "ANY",
+            "headers": {
+              "missing": {
+                "absent": true
+              }
+            }
+          }
+        ]
+      },
+      "body": "--test-boundary\r\nContent-Disposition: form-data; name=\"first\"; filename=\"one.txt\"\r\nContent-Type: text/plain\r\n\r\none\r\n--test-boundary\r\nContent-Disposition: form-data; name=\"second\"; filename=\"two.txt\"\r\nContent-Type: text/plain\r\n\r\ntwo\r\n--test-boundary--\r\n",
+      "path": "/test"
+    },
+    {
+      "name": "XPath serialization 118",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "/a/b",
+              "equalTo": "<b>yes</b>\n"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XPath serialization 119",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "/a",
+              "equalTo": "<a>\n  <b>yes</b>\n</a>\n"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XPath serialization 120",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "count(/a/b)",
+              "equalTo": "1.0"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XPath serialization 121",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "boolean(/a/b)",
+              "equalTo": "true"
+            }
+          }
+        ]
+      },
+      "body": "<a><b>yes</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 122",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "equalTo": ""
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 123",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "binaryEqualTo": ""
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 124",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "contains": ""
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 125",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matches": ".*"
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 126",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "absent": true
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "empty body 127",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "not": {
+              "contains": "x"
+            }
+          }
+        ]
+      },
+      "body": "",
+      "path": "/test"
+    },
+    {
+      "name": "form 128",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "formParameters": {
+          "x": {
+            "equalTo": "hello world"
+          }
+        }
+      },
+      "body": "x=hello+world",
+      "path": "/test"
+    },
+    {
+      "name": "form 129",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "formParameters": {
+          "x": {
+            "equalTo": "hello world"
+          }
+        }
+      },
+      "body": "x=hello%20world",
+      "path": "/test"
+    },
+    {
+      "name": "form 130",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "formParameters": {
+          "x": {
+            "equalTo": "hello world"
+          }
+        }
+      },
+      "body": "x=no",
+      "path": "/test"
+    },
+    {
+      "name": "form 131",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "formParameters": {
+          "x": {
+            "equalTo": "hello world"
+          }
+        }
+      },
+      "body": "x=hello+world&x=extra",
+      "path": "/test"
+    },
+    {
+      "name": "header logical 132",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "headers": {
+          "X-Test": {
+            "or": [
+              {
+                "equalTo": "yes"
+              },
+              {
+                "absent": true
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "header logical 133",
+      "passed": true,
+      "reference": "(200, b'unmatched')",
+      "candidate": "(200, b'unmatched')",
+      "request": {
+        "headers": {
+          "X-Test": {
+            "or": [
+              {
+                "equalTo": "yes"
+              },
+              {
+                "absent": true
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "header logical 134",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "headers": {
+          "X-Test": {
+            "or": [
+              {
+                "equalTo": "yes"
+              },
+              {
+                "absent": true
+              }
+            ]
+          }
+        }
+      },
+      "body": null,
+      "path": "/test"
+    },
+    {
+      "name": "XPath primitive 135",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "/a/@id",
+              "equalTo": "1"
+            }
+          }
+        ]
+      },
+      "body": "<a id=\"1\"><b>1</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XPath primitive 136",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "string(/a/b)",
+              "equalTo": "1"
+            }
+          }
+        ]
+      },
+      "body": "<a id=\"1\"><b>1</b></a>",
+      "path": "/test"
+    },
+    {
+      "name": "XPath primitive 137",
+      "passed": true,
+      "reference": "(200, b'matched')",
+      "candidate": "(200, b'matched')",
+      "request": {
+        "bodyPatterns": [
+          {
+            "matchesXPath": {
+              "expression": "count(/a/b)",
+              "equalTo": "1"
+            }
+          }
+        ]
+      },
+      "body": "<a id=\"1\"><b>1</b></a>",
+      "path": "/test"
+    }
+  ]
+}

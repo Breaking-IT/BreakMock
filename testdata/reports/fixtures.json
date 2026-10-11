@@ -1,0 +1,107 @@
+{
+  "reference": "WireMock 3.13.2",
+  "source": "src/test/resources/remoteloader (unmodified)",
+  "passed": 9,
+  "total": 9,
+  "results": [
+    {
+      "name": "GET /remote-load/1",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 13,
+      "candidate_body_length": 13,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    },
+    {
+      "name": "GET /remote-load/2",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 13,
+      "candidate_body_length": 13,
+      "reference_content_type": "text/plain",
+      "candidate_content_type": "text/plain"
+    },
+    {
+      "name": "GET /image-file",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 3849,
+      "candidate_body_length": 3849,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    },
+    {
+      "name": "GET /binary-file-from-header",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 2,
+      "candidate_body_length": 2,
+      "reference_content_type": "image/jpg",
+      "candidate_content_type": "image/jpg"
+    },
+    {
+      "name": "GET /text-file",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 9,
+      "candidate_body_length": 9,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    },
+    {
+      "name": "GET /text-file-from-header",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 2,
+      "candidate_body_length": 2,
+      "reference_content_type": "application/json",
+      "candidate_content_type": "application/json"
+    },
+    {
+      "name": "GET /todo/items",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 36,
+      "candidate_body_length": 36,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    },
+    {
+      "name": "POST /todo/items",
+      "passed": true,
+      "reference_status": 201,
+      "candidate_status": 201,
+      "body_bytes_equal": true,
+      "reference_body_length": 0,
+      "candidate_body_length": 0,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    },
+    {
+      "name": "GET /todo/items",
+      "passed": true,
+      "reference_status": 200,
+      "candidate_status": 200,
+      "body_bytes_equal": true,
+      "reference_body_length": 78,
+      "candidate_body_length": 78,
+      "reference_content_type": null,
+      "candidate_content_type": null
+    }
+  ]
+}

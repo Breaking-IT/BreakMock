@@ -1,0 +1,283 @@
+{
+  "reference": "WireMock 3.13.2",
+  "passed": 30,
+  "total": 30,
+  "results": [
+    {
+      "name": "exact URL",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "URL path ignores query",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "URL regular expression",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "path regular expression",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "query matching",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "header case insensitive names",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "case insensitive values",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "cookie matching",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "basic authentication",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "JSON equality",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "JSON extra elements",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "JSON unordered arrays",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "JSONPath",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "XML equality",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "XPath",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "binary response",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "JSON response serialization",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template request",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template escaping",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template JSONPath",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template math",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template each",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "template response header",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "absent header",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "negative contains",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "logical OR",
+      "passed": true,
+      "checks": {
+        "status": true,
+        "body_bytes": true,
+        "Content-Type": true,
+        "X-Test": true
+      }
+    },
+    {
+      "name": "mapping list",
+      "passed": true
+    },
+    {
+      "name": "mapping get",
+      "passed": true
+    },
+    {
+      "name": "request count",
+      "passed": true
+    },
+    {
+      "name": "scenario list",
+      "passed": true
+    }
+  ]
+}

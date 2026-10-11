@@ -1,0 +1,34 @@
+name: Compatibility and race tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: sudo apt-get update && sudo apt-get install -y zlib1g-dev
+      - run: go test -race ./...
+      - run: go vet ./...
+      - name: Build container
+        run: docker build -t breakmock:ci .
+      - name: Download pinned Java reference
+        run: |
+          curl --fail --location --silent --show-error https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/3.13.2/wiremock-standalone-3.13.2.jar -o /tmp/wiremock.jar
+          echo 'd097b19bd483c5038479b13a5c71e9faf8f2f5106584f0c120a7770ab0bdb367  /tmp/wiremock.jar' | sha256sum --check
+      - name: Compare against Java WireMock
+        run: python3 scripts/verify.py --jar /tmp/wiremock.jar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compatibility-reports
+          path: testdata/reports/

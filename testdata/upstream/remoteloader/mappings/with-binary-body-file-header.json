@@ -1,0 +1,9 @@
+{
+  "request": {"url": "/binary-file-from-header"},
+  "response": {
+    "headers": {"content-type": "image/jpg"},
+    "bodyFileName": "body.unknown",
+    "status": 200
+  },
+  "id": "59179b2b-ce01-49cf-8381-280dcd559484"
+}

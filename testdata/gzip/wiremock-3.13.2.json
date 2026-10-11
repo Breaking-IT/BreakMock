@@ -1,0 +1,170 @@
+{
+  "reference": "WireMock 3.13.2, OpenJDK system zlib 1.2.12",
+  "fixtures": [
+    {
+      "kind": "repeat",
+      "size": 32,
+      "sha256": "f81430e415e6fa6c95946f517ee43fe1f6f3d807ee695176614fcdf540ade836"
+    },
+    {
+      "kind": "repeat",
+      "size": 64,
+      "sha256": "2ae0924f43a1bce4aa8581f73fceecbe8a2aa44c2fca7b6d65d7964cea7d8f71"
+    },
+    {
+      "kind": "repeat",
+      "size": 511,
+      "sha256": "9d528e3900d0cb838d32564000bd8ed93b7fc974edc58739a6239f7beead24e4"
+    },
+    {
+      "kind": "repeat",
+      "size": 8191,
+      "sha256": "bb31945476c8e945350c664d16e192183cf1941a21de1e55dc5012655caa8996"
+    },
+    {
+      "kind": "repeat",
+      "size": 8192,
+      "sha256": "dcee3212e6acf0f0c866f14d94ea35d13891e1b77f2fab3cdb7407359c6a9683"
+    },
+    {
+      "kind": "repeat",
+      "size": 8193,
+      "sha256": "0b37d3334a3a4900572adcba5adbc74d2b5f237617e8ca5fc0dc7223c9a9a09b"
+    },
+    {
+      "kind": "repeat",
+      "size": 65535,
+      "sha256": "df92d90763c72745c23c51bbfa2f8aefc6d6422983d854ba3331a8f74e6b6fd8"
+    },
+    {
+      "kind": "repeat",
+      "size": 65536,
+      "sha256": "4ff2b5e6bc8032ed450402f49a015b0d63823bfb4c067a027b91ad5f33ad6c82"
+    },
+    {
+      "kind": "repeat",
+      "size": 65537,
+      "sha256": "383432dd1fb474c3eb41c8fa8d2953a36d0d753bc12994361e35100eab7f49fa"
+    },
+    {
+      "kind": "repeat",
+      "size": 262144,
+      "sha256": "8a943cde1e0dcbd18d4dafd4d941d729df1a4bccbc4afee4cbafafbdde3cf78e"
+    },
+    {
+      "kind": "repeat",
+      "size": 1048576,
+      "sha256": "8732ba5eaa5d7397aae0b197563eafc25f7e16a33e69128a1d08019842cd5212"
+    },
+    {
+      "kind": "counter",
+      "size": 32,
+      "sha256": "d361948e90f887d036634feb2db37bb872c70e9f81ecc8d6984cb7d3f9383d8c"
+    },
+    {
+      "kind": "counter",
+      "size": 64,
+      "sha256": "2be85404ca442d613e15469e15eb50daa6f46e0335083675d9436cb0396ae9f9"
+    },
+    {
+      "kind": "counter",
+      "size": 511,
+      "sha256": "fe6f2f6ca86c135b974beaca4af9cfd76fa987ebb098347bea889c2b0914a778"
+    },
+    {
+      "kind": "counter",
+      "size": 8191,
+      "sha256": "09ecaf989a8442fd15eeac798b3ada48b7d9d4590dc0cad7a029bea60ba095b4"
+    },
+    {
+      "kind": "counter",
+      "size": 8192,
+      "sha256": "7580ff21724ee2167030b9471b99b3fb0efefccd6c42d7b509ed69a4b30712c6"
+    },
+    {
+      "kind": "counter",
+      "size": 8193,
+      "sha256": "9f28ad4ccb6d35181f5034d90fb55a46f54b7524e7f38dfc7cd4f9394a46573e"
+    },
+    {
+      "kind": "counter",
+      "size": 65535,
+      "sha256": "780feb6350ab4d2ed6fee30d8d9b2b77494ad95a55c1552aeece270cc34e2b2f"
+    },
+    {
+      "kind": "counter",
+      "size": 65536,
+      "sha256": "934aa58587b65e5e5689b296d04235b746641dce56ae56163d23619b16d6d0a7"
+    },
+    {
+      "kind": "counter",
+      "size": 65537,
+      "sha256": "11af3776127d9dc77695bcb16960663db0d0cd2ae9135cbc5557e89f4a0e2861"
+    },
+    {
+      "kind": "counter",
+      "size": 262144,
+      "sha256": "a17796a4e155a4ba4caeeba937e3263fb7e49d1a4b673afb2dbebd00803ec7d6"
+    },
+    {
+      "kind": "counter",
+      "size": 1048576,
+      "sha256": "eed35e110122d2b162d92d5e483849f1f53321c5d03d5861197b8fca822cef83"
+    },
+    {
+      "kind": "random",
+      "size": 32,
+      "sha256": "5e1b731fbc2dea44c7a345325044635d022a27fa75ed97ec0077ebd75023308a"
+    },
+    {
+      "kind": "random",
+      "size": 64,
+      "sha256": "d988a75ea03cbb3c18d80c1fab77c168e969d34a8543bdaddde4e51d379c35e3"
+    },
+    {
+      "kind": "random",
+      "size": 511,
+      "sha256": "16ac366bafe313cba090c60e207a23ac422bfa25b9ce60575f2322183631bf81"
+    },
+    {
+      "kind": "random",
+      "size": 8191,
+      "sha256": "76a681c33c2905ea0122be7c73e0e8b0ecd1845015db8620fc35221f478a4572"
+    },
+    {
+      "kind": "random",
+      "size": 8192,
+      "sha256": "fe1cda1e548f92b47ed13706488b896d49ce4e526e024b20ffd78fcbcb57b3b0"
+    },
+    {
+      "kind": "random",
+      "size": 8193,
+      "sha256": "f7956069a83c7c2e1d1e11166deb7dc9010471d9a51a40afe65be013647f9deb"
+    },
+    {
+      "kind": "random",
+      "size": 65535,
+      "sha256": "8f0f4dcaa96983d66c9eb95db6ad730944e669dfbfb1105c0447cb024ee0709a"
+    },
+    {
+      "kind": "random",
+      "size": 65536,
+      "sha256": "cb3900122a468c660d20c72e5ace57094d9f965631c0fca5298e0bc89ccc01a4"
+    },
+    {
+      "kind": "random",
+      "size": 65537,
+      "sha256": "40ad6b4e00b95a5ece0ec6fe9b1f6af681aac27adb26ace45438ab52f80be000"
+    },
+    {
+      "kind": "random",
+      "size": 262144,
+      "sha256": "f320266617e0972af68ba5b9b5246bea5f22af384073e3a691b8f9021257c4b2"
+    },
+    {
+      "kind": "random",
+      "size": 1048576,
+      "sha256": "db23ff929d42ecaf5f80c4c3703429ae48ea69a3cf502918b505483b939b572d"
+    }
+  ]
+}
