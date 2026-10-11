@@ -8,6 +8,10 @@ import (
 )
 
 func TestJavaMatcherFixtures(t *testing.T) {
+	// These captured oracle fixtures used Java's en-NL default locale.
+	previousLocale := templateDefaultLocale()
+	templateLocale = "en_NL"
+	t.Cleanup(func() { templateLocale = previousLocale })
 	raw, err := os.ReadFile("testdata/matcher_cases.json")
 	if err != nil {
 		t.Fatal(err)

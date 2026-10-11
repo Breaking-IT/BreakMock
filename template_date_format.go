@@ -90,7 +90,11 @@ func templateDateLayout(format string) string {
 		case "EEE", "EE", "E":
 			return "Mon"
 		case "a":
-			return "pm"
+			period := templateDatePeriod(time.Date(2000, 1, 1, 13, 0, 0, 0, time.UTC))
+			if period == "pm" {
+				return "pm"
+			}
+			return "PM"
 		case "Z", "ZZ":
 			return "-0700"
 		case "X":
@@ -149,10 +153,7 @@ func templateFormatDate(date time.Time, format string) string {
 			}
 			return date.Format("Mon")
 		case 'a':
-			if date.Hour() < 12 {
-				return "am"
-			}
-			return "pm"
+			return templateDatePeriod(date)
 		case 'Z':
 			return date.Format("-0700")
 		case 'X':
@@ -173,4 +174,12 @@ func templateFormatDate(date time.Time, format string) string {
 		}
 		return fmt.Sprintf("%0*d", len(token), n)
 	})
+}
+
+func templateDatePeriod(date time.Time) string {
+	locale := loadTemplateDateLocale(templateDefaultLocale())
+	if periods := locale.Symbols["a"]; len(periods) > date.Hour()*2 {
+		return periods[date.Hour()*2]
+	}
+	return date.Format("PM")
 }
