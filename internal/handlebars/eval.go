@@ -19,6 +19,15 @@ var (
 	zero reflect.Value
 )
 
+// MissingHelperError distinguishes helper invocations from absent model fields.
+type MissingHelperError struct {
+	Name     string
+	Position int
+	Block    bool
+}
+
+func (e *MissingHelperError) Error() string { return "could not find helper: '" + e.Name + "'" }
+
 // evalVisitor evaluates a handlebars template with context
 type evalVisitor struct {
 	tpl *Template
@@ -36,7 +45,8 @@ type evalVisitor struct {
 	blocks []*ast.BlockStatement
 
 	// expressions stack
-	exprs []*ast.Expression
+	exprs          []*ast.Expression
+	errorPositions []int
 
 	// memoize expressions that were function calls
 	exprFunc map[*ast.Expression]bool
@@ -808,6 +818,8 @@ func (v *evalVisitor) VisitProgram(node *ast.Program) interface{} {
 
 // VisitMustache implements corresponding Visitor interface method
 func (v *evalVisitor) VisitMustache(node *ast.MustacheStatement) interface{} {
+	v.errorPositions = append(v.errorPositions, node.Expression.Path.Location().Pos)
+	defer func() { v.errorPositions = v.errorPositions[:len(v.errorPositions)-1] }()
 	v.at(node)
 
 	// evaluate expression
@@ -821,6 +833,8 @@ func (v *evalVisitor) VisitMustache(node *ast.MustacheStatement) interface{} {
 
 // VisitBlock implements corresponding Visitor interface method
 func (v *evalVisitor) VisitBlock(node *ast.BlockStatement) interface{} {
+	v.errorPositions = append(v.errorPositions, node.Expression.Path.Location().Pos)
+	defer func() { v.errorPositions = v.errorPositions[:len(v.errorPositions)-1] }()
 	v.at(node)
 
 	v.pushBlock(node)
@@ -924,6 +938,9 @@ func (v *evalVisitor) VisitExpression(node *ast.Expression) interface{} {
 		if helper := v.findHelper(helperName); helper != zero {
 			result = v.callHelper(helperName, helper, node)
 			done = true
+		} else if len(node.Params) > 0 || (node.Hash != nil && len(node.Hash.Pairs) > 0) {
+			block := v.curBlock()
+			panic(&MissingHelperError{Name: helperName, Position: node.Path.Location().Pos, Block: block != nil && block.Expression == node})
 		}
 	}
 

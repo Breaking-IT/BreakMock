@@ -1,0 +1,716 @@
+[ {
+  "name" : "0",
+  "pattern" : { },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "1",
+  "pattern" : { },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "2",
+  "pattern" : { },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "3",
+  "pattern" : { },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "4",
+  "pattern" : { },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "5",
+  "pattern" : {
+    "body" : {
+      "equalTo" : ""
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "6",
+  "pattern" : {
+    "body" : {
+      "equalTo" : ""
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "7",
+  "pattern" : {
+    "body" : {
+      "equalTo" : ""
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "8",
+  "pattern" : {
+    "body" : {
+      "equalTo" : ""
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "9",
+  "pattern" : {
+    "body" : {
+      "equalTo" : ""
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "10",
+  "pattern" : {
+    "body" : {
+      "equalTo" : "hello"
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "11",
+  "pattern" : {
+    "body" : {
+      "equalTo" : "hello"
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "12",
+  "pattern" : {
+    "body" : {
+      "equalTo" : "hello"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "13",
+  "pattern" : {
+    "body" : {
+      "equalTo" : "hello"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "14",
+  "pattern" : {
+    "body" : {
+      "equalTo" : "hello"
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "15",
+  "pattern" : {
+    "body" : {
+      "contains" : "ell"
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "16",
+  "pattern" : {
+    "body" : {
+      "contains" : "ell"
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "17",
+  "pattern" : {
+    "body" : {
+      "contains" : "ell"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "18",
+  "pattern" : {
+    "body" : {
+      "contains" : "ell"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "19",
+  "pattern" : {
+    "body" : {
+      "contains" : "ell"
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "20",
+  "pattern" : {
+    "body" : {
+      "absent" : true
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "21",
+  "pattern" : {
+    "body" : {
+      "absent" : true
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "22",
+  "pattern" : {
+    "body" : {
+      "absent" : true
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "23",
+  "pattern" : {
+    "body" : {
+      "absent" : true
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "24",
+  "pattern" : {
+    "body" : {
+      "absent" : true
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "25",
+  "pattern" : {
+    "body" : {
+      "doesNotMatch" : "x"
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "26",
+  "pattern" : {
+    "body" : {
+      "doesNotMatch" : "x"
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "27",
+  "pattern" : {
+    "body" : {
+      "doesNotMatch" : "x"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "28",
+  "pattern" : {
+    "body" : {
+      "doesNotMatch" : "x"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "29",
+  "pattern" : {
+    "body" : {
+      "doesNotMatch" : "x"
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "30",
+  "pattern" : {
+    "body" : {
+      "binaryEqualTo" : "aGVsbG8="
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "31",
+  "pattern" : {
+    "body" : {
+      "binaryEqualTo" : "aGVsbG8="
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "32",
+  "pattern" : {
+    "body" : {
+      "binaryEqualTo" : "aGVsbG8="
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "33",
+  "pattern" : {
+    "body" : {
+      "binaryEqualTo" : "aGVsbG8="
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "34",
+  "pattern" : {
+    "body" : {
+      "binaryEqualTo" : "aGVsbG8="
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "35",
+  "pattern" : {
+    "body" : {
+      "matchesJsonPath" : "$.x"
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "36",
+  "pattern" : {
+    "body" : {
+      "matchesJsonPath" : "$.x"
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "37",
+  "pattern" : {
+    "body" : {
+      "matchesJsonPath" : "$.x"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "38",
+  "pattern" : {
+    "body" : {
+      "matchesJsonPath" : "$.x"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "39",
+  "pattern" : {
+    "body" : {
+      "matchesJsonPath" : "$.x"
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "40",
+  "pattern" : {
+    "channel" : {
+      "url" : "/chat"
+    },
+    "body" : {
+      "contains" : "h"
+    }
+  },
+  "body" : "",
+  "present" : false,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "41",
+  "pattern" : {
+    "channel" : {
+      "url" : "/chat"
+    },
+    "body" : {
+      "contains" : "h"
+    }
+  },
+  "body" : "",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "42",
+  "pattern" : {
+    "channel" : {
+      "url" : "/chat"
+    },
+    "body" : {
+      "contains" : "h"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : true
+}, {
+  "name" : "43",
+  "pattern" : {
+    "channel" : {
+      "url" : "/chat"
+    },
+    "body" : {
+      "contains" : "h"
+    }
+  },
+  "body" : "hello",
+  "present" : true,
+  "binary" : true,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+}, {
+  "name" : "44",
+  "pattern" : {
+    "channel" : {
+      "url" : "/chat"
+    },
+    "body" : {
+      "contains" : "h"
+    }
+  },
+  "body" : "{\"x\":1}",
+  "present" : true,
+  "binary" : false,
+  "channel" : {
+    "url" : "/chat",
+    "method" : "GET",
+    "headers" : { }
+  },
+  "matches" : false
+} ]

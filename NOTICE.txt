@@ -3,9 +3,13 @@ The Apache Software Foundation (http://www.apache.org/).
 BreakMock
 Copyright 2026 Breaking-IT
 
-This project implements portions of the WireMock 3.13.2 protocol in Go,
+This project implements portions of the WireMock 4.0.0-beta.40 protocol in Go,
 with reference to the Apache-2.0-licensed WireMock project:
 https://github.com/wiremock/wiremock
-Reference commit: 88587aa13b4899da080538e1b21bec0da105491e
+Reference commit: 0f5b90519fecfcc66accc5d6ddc884484fa1a1e1
 WireMock's applicable source notices are retained in source-derived files.
 BreakMock is an independent project and is not endorsed by WireMock.
+
+Historical fixtures retain their original version-specific provenance.
+Bundled admin assets retain upstream and third-party license files.
+The adapted WebSocket runtime retains the Gorilla WebSocket BSD license.

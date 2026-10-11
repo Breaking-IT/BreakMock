@@ -1,15 +1,70 @@
 {
   "reference": {
-    "version": "3.13.2"
+    "version": "4.0.0-beta.40"
   },
   "candidate": {
-    "version": "BreakMock 0.1.0"
+    "version": "4.0.0-beta.40"
   },
   "comparison": "strict response-body bytes after value-only nondeterminism substitutions",
-  "passed": 51,
-  "semantic_passed": 51,
-  "total": 51,
+  "passed": 130,
+  "semantic_passed": 130,
+  "total": 130,
   "results": [
+    {
+      "name": "version JSON",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "version text",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "health",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default missing certificate",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset docs",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset docs/swagger",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset recorder",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset recorder/",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset swagger-ui/",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset swagger-ui/swagger-ui-dist/swagger-ui.css",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "asset recorder/lib/jquery-4.0.0.min.js",
+      "pass": true,
+      "semantic_pass": true
+    },
     {
       "name": "reset",
       "pass": true,
@@ -17,6 +72,26 @@
     },
     {
       "name": "empty mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "empty unmatched response",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "empty unmatched journal",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "empty unmatched list",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "empty unmatched clear",
       "pass": true,
       "semantic_pass": true
     },
@@ -37,6 +112,226 @@
     },
     {
       "name": "settings read updated",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping omitted objects",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping get",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping duplicate error",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping legacy edit",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping legacy get",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "default mapping delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "invalid UUID error",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unknown mapping property error",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "legacy missing mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "response string status",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "response string status get",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "response string status delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "response body precedence",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "response body precedence delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unknown request property",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unknown response property",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity typedtext",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete typedtext",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity typedjson",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete typedjson",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity typedbinary",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete typedbinary",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity base64",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete base64",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity file",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete file",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity charset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete charset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity compression",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "HTTP entity delete compression",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "v4 ignored schema and uuid",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "v4 ignored schema cleanup",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "persistent create",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "persistent reset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "persistent survives reset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "persistent delete",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "extended settings initialize",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "extended settings initial read",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "extended settings patch",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "extended settings patched read",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "settings restore",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unknown scenario error",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "admin root mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unknown admin path",
       "pass": true,
       "semantic_pass": true
     },
@@ -106,6 +401,41 @@
       "semantic_pass": true
     },
     {
+      "name": "near misses request pattern",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "unmatched near misses empty",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal unmatched filter",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal future filter",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal past filter",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal invalid date",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "journal invalid stub UUID",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
       "name": "no unmatched mappings",
       "pass": true,
       "semantic_pass": true
@@ -137,6 +467,16 @@
     },
     {
       "name": "snapshot local stub",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "snapshot extract text body",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "snapshot extracted file bytes",
       "pass": true,
       "semantic_pass": true
     },
@@ -226,6 +566,21 @@
       "semantic_pass": true
     },
     {
+      "name": "scenario invalid state",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario null state",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "scenario empty body reset",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
       "name": "scenario reset",
       "pass": true,
       "semantic_pass": true
@@ -257,6 +612,46 @@
     },
     {
       "name": "record replay second",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "webhook clear mappings",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "webhook clear journal",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "webhook mapping",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "webhook trigger",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "webhook journal",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "closest unmatched response",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "closest unmatched journal",
+      "pass": true,
+      "semantic_pass": true
+    },
+    {
+      "name": "closest unmatched near misses",
       "pass": true,
       "semantic_pass": true
     },

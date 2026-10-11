@@ -1,0 +1,5 @@
+WireMock administrative documentation and recorder assets copied byte-for-byte from WireMock 4.0.0-beta.40.
+Copyright 2011-2026 Thomas Akehurst and WireMock contributors. Licensed under Apache-2.0.
+Swagger UI third-party licenses and notices are retained alongside its assets.
+jQuery 4.0.0 is Copyright OpenJS Foundation and other contributors, licensed under MIT; see jquery-LICENSE.txt.
+These compatibility assets preserve upstream branding and do not imply affiliation.

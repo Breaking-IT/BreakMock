@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Same-host comparison; reports RSS and throughput, not a universal performance claim."""
+from oracle import identify
 import argparse,json,subprocess,time,urllib.request,pathlib,platform,hashlib,threading
 p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--output',default='testdata/reports/benchmark.json');p.add_argument('--duration',default='5s');p.add_argument('--rounds',type=int,default=3);p.add_argument('--journal-limit',type=int,default=0,help='0 disables journal; positive sets same bounded journal on both');a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parent.parent
@@ -23,11 +24,10 @@ for round in range(a.rounds):
    for _ in range(100):
     if proc.poll() is not None:raise RuntimeError(f'{kind} exited')
     try:
-     version=json.loads(req(port,'/__admin/version'))['version'];break
+     identity=identify(f'http://127.0.0.1:{port}',kind);version=identity['implementation_version'] or identity['version'];break
     except:time.sleep(.1)
    else:raise RuntimeError('startup timeout')
-   if kind=='java' and version!='3.13.2':raise RuntimeError('incorrect reference '+version)
-   if kind=='go' and not version.startswith('BreakMock'):raise RuntimeError('incorrect candidate '+version)
+   if kind=='java' and version!='4.0.0-beta.40':raise RuntimeError('incorrect reference '+version)
    startup=time.monotonic()-t;idle=rss(proc.pid)
    for workload,response in [('static',{'status':200,'body':'Hello, benchmark!','headers':{'Content-Type':'text/plain'}}),('template',{'status':200,'body':"Hello {{request.query.name}}: {{math 2 '+' 3}}",'transformers':['response-template'],'headers':{'Content-Type':'text/plain'}})]:
     req(port,'/__admin/reset',{});req(port,'/__admin/mappings',{'request':{'method':'GET','urlPath':'/bench'},'response':response})

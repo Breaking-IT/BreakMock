@@ -5,16 +5,17 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/dlclark/regexp2"
 	"math"
 	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"reflect"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf16"
 
 	raymond "github.com/Breaking-IT/BreakMock/internal/handlebars"
 	"github.com/ohler55/ojg/jp"
@@ -70,44 +71,60 @@ func RenderTemplate(source string, request Request, parameters map[string]any) (
 	return renderTemplateFull(source, request, parameters)
 }
 
-func renderTemplateFull(source string, request Request, parameters map[string]any) (result string, err error) {
+func renderTemplateFull(source string, request Request, parameters map[string]any) (string, error) {
+	return renderTemplateModel(source, request, parameters, "request")
+}
+
+// RenderWebhookTemplate exposes the original request under WireMock's webhook model name.
+func RenderWebhookTemplate(source string, request Request, parameters map[string]any, rootDir string) (string, error) {
+	return renderTemplateModel(source, request, parameters, "originalRequest")
+}
+func renderTemplateModel(source string, request Request, parameters map[string]any, requestName string) (string, error) {
+	return renderTemplateContext(source, request, parameters, requestName, nil)
+}
+
+// RenderMessageTemplate renders the WireMock message/action context with the shared helper library.
+func RenderMessageTemplate(source string, model map[string]any) (string, error) {
+	result, err := renderTemplateContext(source, Request{URL: "/"}, nil, "request", model)
+	if failure, ok := err.(*TemplateExecutionError); ok && failure.InlineMessage != "" {
+		return "", fmt.Errorf("%s", failure.InlineMessage)
+	}
+	return result, err
+}
+func renderTemplateContext(source string, request Request, parameters map[string]any, requestName string, model map[string]any) (result string, err error) {
 	defer func() {
 		if v := recover(); v != nil {
 			result = ""
-			err = fmt.Errorf("response template: %v", v)
+			if failure, ok := v.(templateJavaFailure); ok {
+				position := failure.position
+				if position > len(source) {
+					position = len(source)
+				}
+				prefix := source[:position]
+				line := strings.Count(prefix, "\n") + 1
+				column := position - strings.LastIndex(prefix, "\n") - 1
+				err = &TemplateExecutionError{Message: fmt.Sprintf("%d:%d: %s", line, column, failure.message)}
+			} else if failure, ok := v.(*TemplateExecutionError); ok {
+				err = failure
+			} else {
+				err = fmt.Errorf("response template: %v", v)
+			}
 		}
 	}()
-	u, err := url.Parse(request.AbsoluteURL)
-	if err != nil || u == nil || u.Host == "" {
-		u, err = url.Parse(request.URL)
-	}
+	ctx, err := buildTemplateRequestContext(request, parameters)
 	if err != nil {
 		return "", err
 	}
-	query := map[string]any{}
-	for k, v := range u.Query() {
-		query[k] = templateValues(v)
+	if requestName != "request" {
+		ctx[requestName] = ctx["request"]
+		delete(ctx, "request")
 	}
-	headers := templateHeaders{}
-	for k, v := range request.Headers {
-		headers[k] = templateValues(v)
-		headers[strings.ToLower(k)] = templateValues(v)
-		headers[http.CanonicalHeaderKey(k)] = templateValues(v)
-	}
-	cookies := map[string]any{}
-	hr := http.Request{Header: request.Headers}
-	for _, c := range hr.Cookies() {
-		cookies[c.Name] = c.Value
-	}
-	port := u.Port()
-	if port == "" {
-		port = "80"
-		if u.Scheme == "https" {
-			port = "443"
+	if model != nil {
+		ctx = make(map[string]any, len(model))
+		for k, v := range model {
+			ctx[k] = v
 		}
 	}
-	pn, _ := strconv.Atoi(port)
-	ctx := map[string]any{"parameters": parameters, "request": map[string]any{"method": request.Method, "url": request.URL, "absoluteUrl": request.AbsoluteURL, "path": newTemplatePath(u.Path), "pathSegments": strings.Split(strings.Trim(u.Path, "/"), "/"), "query": query, "headers": headers, "cookies": cookies, "body": string(request.Body), "host": u.Hostname(), "port": pn, "scheme": u.Scheme, "baseUrl": u.Scheme + "://" + u.Host}}
 	t, err := cachedTemplate(source)
 	if err != nil {
 		return "", err
@@ -119,6 +136,22 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 			t.RegisterHelper(name, f)
 		}
 	}
+	for _, name := range []string{"eq", "neq", "gt", "gte", "lt", "lte", "and", "or", "not"} {
+		n := name
+		add(n, func(o *raymond.Options) any { return templateConditional(n, o) })
+	}
+	for _, name := range []string{"center", "ljust", "rjust", "slugify", "stringFormat", "stripTags", "abbreviate", "wordWrap", "yesno", "numberFormat", "dateFormat", "isEven", "isOdd", "stripes", "hostname", "systemValue"} {
+		n := name
+		add(n, func(o *raymond.Options) any { return templateExtraString(n, o) })
+	}
+	add("lookup", func(o *raymond.Options) any {
+		value := o.Eval(o.Param(0), o.ParamStr(1))
+		if list, ok := value.([]any); ok {
+			return templateList(list)
+		}
+		return value
+	})
+
 	add("assign", func(o *raymond.Options) any { ctx[o.ParamStr(0)] = o.Fn(); return "" })
 	add("val", func(o *raymond.Options) any {
 		v := o.Param(0)
@@ -143,20 +176,30 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 			var e error
 			data, e = parseTemplateJSON(input)
 			if e != nil {
-				return ""
+				return "[ERROR: " + input + " is not valid JSON]"
 			}
 		} else {
 			data = o.Param(0)
 		}
-		p, e := jp.ParseString(o.ParamStr(1))
+		if o.Param(1) == nil {
+			return "[ERROR: The JSONPath cannot be empty]"
+		}
+		expression := o.ParamStr(1)
+		if v, ok := templateJSONPathFunction(data, expression); ok {
+			return v
+		}
+		p, e := jp.ParseString(templateNormalizeJSONPath(expression))
 		if e != nil {
-			panic(e)
+			return "[ERROR: " + expression + " is not a valid JSONPath expression]"
 		}
 		v := p.Get(data)
 		if len(v) == 0 {
 			return o.HashProp("default")
 		}
 		if len(v) == 1 && p.Normal() {
+			if v[0] == nil {
+				return o.HashProp("default")
+			}
 			return templateJSONValue(v[0])
 		}
 		return templateJSONArray(v)
@@ -179,13 +222,25 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 		if e != nil {
 			return ""
 		}
+		if v != nil {
+			switch v.(type) {
+			case *templateObject, []any:
+			default:
+				panic(&TemplateExecutionError{Message: templateJSONMapError(v)})
+			}
+		}
 		if name != "" {
 			ctx[name] = v
 			return ""
 		}
 		return v
 	})
-	add("toJson", func(o *raymond.Options) any { return templatePrettyJSON(o.Param(0), 0) })
+	add("toJson", func(o *raymond.Options) any {
+		if o.Param(0) == nil {
+			return ""
+		}
+		return templatePrettyJSON(templateOmitNulls(o.Param(0)), 0)
+	})
 	add("jsonMerge", templateJSONMerge)
 	add("jsonRemove", templateJSONRemove)
 	add("jsonArrayAdd", templateJSONArrayAdd)
@@ -215,7 +270,7 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 	})
 	add("randomDecimal", func(o *raymond.Options) any {
 		lo, hi := templateNumber(o.HashProp("lower"), 0), templateNumber(o.HashProp("upper"), 1)
-		return lo + rand.Float64()*(hi-lo)
+		return templateFloat(lo + rand.Float64()*(hi-lo))
 	})
 	add("randomValue", templateRandom)
 	add("pickRandom", func(o *raymond.Options) any {
@@ -243,31 +298,44 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 		return v[rand.IntN(len(v))]
 	})
 	add("math", func(o *raymond.Options) any {
-		a, b := templateNumber(o.Param(0), 0), templateNumber(o.Param(2), 0)
+		if len(o.Params()) != 3 {
+			return "[ERROR: All maths functions require two operands and an operator as parameters e.g. 3 '+' 2]"
+		}
+		a, _ := strconv.ParseFloat(o.ParamStr(0), 64)
+		b, _ := strconv.ParseFloat(o.ParamStr(2), 64)
 		switch o.ParamStr(1) {
 		case "+":
-			return a + b
+			return templateMathResult(a+b, o.Param(0), o.Param(2))
 		case "-":
-			return a - b
+			return templateMathResult(a-b, o.Param(0), o.Param(2))
 		case "*", "x":
-			return a * b
+			return templateMathResult(a*b, o.Param(0), o.Param(2))
 		case "/":
+			if b == 0 {
+				templateJavaPanic(o, "java.lang.ArithmeticException: / by zero")
+			}
 			scale := 0
 			left := o.ParamStr(0)
 			if pos := strings.IndexByte(left, '.'); pos >= 0 {
 				scale = len(left) - pos - 1
 			}
 			factor := math.Pow10(scale)
-			return math.Round(a/b*factor) / factor
+			return templateMathResult(math.Round(a/b*factor)/factor, o.Param(0), o.Param(2))
 		case "%":
-			return math.Mod(a, b)
+			return templateMathResult(math.Mod(a, b), o.Param(0), o.Param(2))
 		}
 		panic("unknown math operator")
 	})
 	add("range", func(o *raymond.Options) any {
+		if len(o.Params()) != 2 {
+			return "[ERROR: The range helper requires both lower and upper bounds as integer parameters]"
+		}
 		a, b := int(templateNumber(o.Param(0), 0)), int(templateNumber(o.Param(1), 0))
 		if b-a > 100000 {
 			panic("range exceeds limit")
+		}
+		if b-a+1 < 0 {
+			templateJavaPanic(o, fmt.Sprintf("java.lang.IllegalArgumentException: %d", b-a+1))
 		}
 		v := templateList{}
 		for i := a; i <= b; i++ {
@@ -277,17 +345,27 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 	})
 	add("array", func(o *raymond.Options) any { return templateList(o.Params()) })
 	add("arrayAdd", func(o *raymond.Options) any {
+		if len(o.Params()) < 2 {
+			return "[ERROR: Missing required parameter: additional value to add to list]"
+		}
 		v := templateSlice(o.Param(0))
+		if o.Param(0) == nil {
+			return templateList{}
+		}
 		position := len(v)
 		if p := o.HashProp("position"); p != nil && raymond.Str(p) != "end" {
 			if raymond.Str(p) == "start" {
 				position = 0
 			} else {
-				position = int(templateNumber(p, 0))
+				n, e := strconv.Atoi(raymond.Str(p))
+				if e != nil {
+					return "[ERROR: position must be 'start', 'end' or an integer]"
+				}
+				position = n
 			}
 		}
 		if position < 0 || position > len(v) {
-			panic("arrayAdd position out of range")
+			return "[ERROR: position must be greater than or equal to 0 and less than or equal to the size of the list]"
 		}
 		v = append(v, nil)
 		copy(v[position+1:], v[position:])
@@ -297,37 +375,56 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 	add("arrayRemove", func(o *raymond.Options) any {
 		v := templateSlice(o.Param(0))
 		position := len(v) - 1
+		if len(v) == 0 {
+			templateJavaPanic(o, "java.lang.IndexOutOfBoundsException: Index -1 out of bounds for length 0")
+		}
 		if p := o.HashProp("position"); p != nil && raymond.Str(p) != "end" {
 			if raymond.Str(p) == "start" {
 				position = 0
 			} else {
-				position = int(templateNumber(p, 0))
+				n, e := strconv.Atoi(raymond.Str(p))
+				if e != nil {
+					return "[ERROR: position must be 'start', 'end' or an integer]"
+				}
+				position = n
 			}
 		}
 		if position < 0 || position >= len(v) {
-			panic("arrayRemove position out of range")
+			return "[ERROR: position must be greater than or equal to 0 and less than or equal to the size of the list]"
 		}
 		return templateList(append(v[:position], v[position+1:]...))
 	})
 
 	add("arrayJoin", func(o *raymond.Options) any {
-		sep := o.ParamStr(0)
-		r := reflect.ValueOf(o.Param(1))
-		out := []string{}
-		if r.IsValid() && (r.Kind() == reflect.Array || r.Kind() == reflect.Slice) {
-			for i := 0; i < r.Len(); i++ {
-				out = append(out, raymond.Str(r.Index(i).Interface()))
+		values := templateSlice(o.Param(1))
+		if values == nil || len(values) == 0 {
+			if r := reflect.ValueOf(o.Param(1)); r.IsValid() && r.Kind() != reflect.Slice && r.Kind() != reflect.Array {
+				values = o.Params()[1:]
 			}
 		}
-		return o.HashStr("prefix") + strings.Join(out, sep) + o.HashStr("suffix")
+		if len(values) == 0 {
+			return ""
+		}
+		parts := []string{}
+		for _, v := range values {
+			if o.IsBlock() {
+				parts = append(parts, o.FnWith(v))
+			} else {
+				parts = append(parts, raymond.Str(v))
+			}
+		}
+		return o.HashStr("prefix") + strings.Join(parts, o.ParamStr(0)) + o.HashStr("suffix")
 	})
+
 	add("size", func(o *raymond.Options) any {
 		v := reflect.ValueOf(o.Param(0))
 		if !v.IsValid() {
 			return 0
 		}
 		switch v.Kind() {
-		case reflect.Map, reflect.Slice, reflect.Array, reflect.String:
+		case reflect.String:
+			return templateUTF16Len(v.String())
+		case reflect.Map, reflect.Slice, reflect.Array:
 			return v.Len()
 		}
 		return 0
@@ -365,18 +462,21 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 			}
 			return v
 		}
-		return url.QueryEscape(s)
+		return strings.ReplaceAll(strings.ReplaceAll(url.QueryEscape(s), "%2A", "*"), "~", "%7E")
 	})
 	add("formData", func(o *raymond.Options) any {
-		data := map[string]any{}
-		for _, part := range strings.Split(o.ParamStr(0), "&") {
-			key, val, _ := strings.Cut(part, "=")
-			if o.HashProp("urlDecode") == true {
-				key, _ = url.QueryUnescape(key)
-				val, _ = url.QueryUnescape(val)
+		data := &templateObject{values: map[string]any{}}
+		for _, field := range strings.Split(o.ParamStr(0), "&") {
+			parts := strings.Split(field, "=")
+			if len(parts) < 2 || parts[1] == "" {
+				continue
 			}
-			vs, _ := data[key].(templateValues)
-			data[key] = append(vs, val)
+			key, value := parts[0], strings.TrimSpace(parts[1])
+			if o.HashProp("urlDecode") == true {
+				value, _ = url.QueryUnescape(value)
+			}
+			old, _ := data.values[key].(templateValues)
+			data.SetValueForKey(key, append(old, value))
 		}
 		if name := o.ParamStr(1); name != "" {
 			ctx[name] = data
@@ -386,11 +486,23 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 	})
 
 	add("regexExtract", func(o *raymond.Options) any {
-		r, e := regexp.Compile(o.ParamStr(1))
+		r, e := regexp2.Compile(o.ParamStr(1), 0)
 		if e != nil {
-			panic(e)
+			return "[ERROR: Invalid regex string " + o.ParamStr(1) + "]"
 		}
-		matches := r.FindAllStringSubmatch(o.ParamStr(0), -1)
+		r.MatchTimeout = 100 * time.Millisecond
+		matches := [][]string{}
+		m, e := r.FindStringMatch(o.ParamStr(0))
+		for m != nil && e == nil {
+			groups := m.Groups()
+			parts := make([]string, len(groups))
+			for i, g := range groups {
+				parts[i] = g.String()
+			}
+			matches = append(matches, parts)
+			m, e = r.FindNextMatch(m)
+		}
+
 		if len(matches) == 0 {
 			if d := o.HashProp("default"); d != nil {
 				return d
@@ -408,27 +520,39 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 		return matches[0][0]
 	})
 	add("contains", func(o *raymond.Options) any {
+		if len(o.Params()) < 2 {
+			return "[ERROR: You must specify the string or array to be matched and the regular expression]"
+		}
 		v := strings.Contains(o.ParamStr(0), o.ParamStr(1))
+		if r := reflect.ValueOf(o.Param(0)); r.IsValid() && (r.Kind() == reflect.Slice || r.Kind() == reflect.Array) {
+			v = false
+			for i := 0; i < r.Len(); i++ {
+				if reflect.DeepEqual(r.Index(i).Interface(), o.Param(1)) {
+					v = true
+					break
+				}
+			}
+		}
 		if o.IsBlock() {
 			b := o.Fn()
 			if v {
 				return raymond.SafeString(b)
 			}
-			return raymond.SafeString(o.Inverse())
+			return ""
 		}
 		return v
 	})
 	add("matches", func(o *raymond.Options) any {
-		v, e := regexp.MatchString("^(?:"+o.ParamStr(1)+")$", o.ParamStr(0))
-		if e != nil {
-			panic(e)
+		if len(o.Params()) < 2 {
+			return "[ERROR: You must specify the string to be matched and the regular expression]"
 		}
+		v := templateMatchesRegex(o.ParamStr(1), o.ParamStr(0))
 		if o.IsBlock() {
 			b := o.Fn()
 			if v {
 				return raymond.SafeString(b)
 			}
-			return raymond.SafeString(o.Inverse())
+			return ""
 		}
 		return v
 	})
@@ -439,7 +563,30 @@ func renderTemplateFull(source string, request Request, parameters map[string]an
 	add("now", templateDate)
 	add("date", templateDate)
 	add("parseDate", templateParseDate)
-	return t.Exec(ctx)
+	err = t.ValidateHelpers()
+	if err == nil {
+		result, err = t.Exec(ctx)
+	}
+	if missing, ok := err.(*raymond.MissingHelperError); ok {
+		if missing.Block {
+			return "", &TemplateExecutionError{Message: "java.lang.IllegalArgumentException: " + missing.Error()}
+		}
+		start, end := strings.Index(source, "{{"), strings.LastIndex(source, "}}")+2
+		compiled := source[start:end]
+		position := missing.Position - start
+		prefix := compiled[:position]
+		line := strings.Count(prefix, "\n") + 1
+		column := position - strings.LastIndex(prefix, "\n") - 1
+		lineText := strings.Split(compiled, "\n")[line-1]
+		message := fmt.Sprintf("%d:%d: %s\n%s\n%s^\n", line, column, missing.Error(), lineText, strings.Repeat(" ", column))
+		spread := javaStringHash(compiled)
+		hash := int32(spread ^ (spread >> 16)) // undo HashMap's spread to obtain String.hashCode
+		if hash < 0 {
+			hash = -hash
+		}
+		return "", &TemplateExecutionError{Message: message, InlineMessage: fmt.Sprintf("inline@%x:%s", uint32(hash), message)}
+	}
+	return result, err
 }
 func templateNumber(v any, d float64) float64 {
 	if v == nil {
@@ -488,12 +635,7 @@ func templateRandom(o *raymond.Options) any {
 	}
 	return s
 }
-func templateDateLayout(s string) string {
-	if s == "" {
-		return "2006-01-02T15:04:05Z0700"
-	}
-	return strings.NewReplacer("yyyy", "2006", "SSS", "000", "XXX", "Z07:00", "ZZ", "-0700", "MM", "01", "dd", "02", "HH", "15", "mm", "04", "ss", "05", "'", "").Replace(s)
-}
+
 func templateDate(o *raymond.Options) any {
 	v := time.Now()
 	if t, ok := o.Param(0).(time.Time); ok {
@@ -512,7 +654,7 @@ func templateDate(o *raymond.Options) any {
 	if offset := o.HashStr("offset"); offset != "" {
 		parts := strings.Fields(offset)
 		if len(parts) != 2 {
-			panic("unsupported date offset")
+			templateJavaPanic(o, "java.lang.IllegalArgumentException: Invalid date offset "+offset)
 		}
 		n, e := strconv.Atoi(parts[0])
 		if e != nil {
@@ -532,7 +674,7 @@ func templateDate(o *raymond.Options) any {
 		case "year":
 			v = v.AddDate(n, 0, 0)
 		default:
-			panic("unsupported date offset")
+			templateJavaPanic(o, "java.lang.IllegalArgumentException: No enum constant com.github.tomakehurst.wiremock.common.DateTimeUnit."+strings.ToUpper(parts[1]))
 		}
 	}
 	f := o.HashStr("format")
@@ -545,7 +687,7 @@ func templateDate(o *raymond.Options) any {
 	if f == "unix" {
 		return v.Unix()
 	}
-	return v.Format(templateDateLayout(f))
+	return templateFormatDate(v, f)
 }
 func templateStringHelper(name string, o *raymond.Options) any {
 	s := o.ParamStr(0)
@@ -566,15 +708,15 @@ func templateStringHelper(name string, o *raymond.Options) any {
 	case "replace":
 		return strings.ReplaceAll(s, o.ParamStr(1), o.ParamStr(2))
 	case "substring":
-		r := []rune(s)
+		r := utf16.Encode([]rune(s))
 		a := int(templateNumber(o.Param(1), 0))
 		b := int(templateNumber(o.Param(2), float64(len(r))))
 		if a < 0 || b < a || b > len(r) {
 			panic("invalid substring range")
 		}
-		return string(r[a:b])
+		return string(utf16.Decode(r[a:b]))
 	case "defaultIfEmpty":
-		if s == "" {
+		if s == "" || o.Param(0) == false || (reflect.ValueOf(o.Param(0)).IsValid() && (reflect.ValueOf(o.Param(0)).Kind() == reflect.Slice || reflect.ValueOf(o.Param(0)).Kind() == reflect.Map) && reflect.ValueOf(o.Param(0)).Len() == 0) {
 			return o.Param(1)
 		}
 	case "join":
@@ -584,8 +726,64 @@ func templateStringHelper(name string, o *raymond.Options) any {
 			for i := 0; i < r.Len(); i++ {
 				v = append(v, raymond.Str(r.Index(i).Interface()))
 			}
-			return strings.Join(v, o.ParamStr(1))
+			return o.HashStr("prefix") + strings.Join(v, o.ParamStr(1)) + o.HashStr("suffix")
 		}
 	}
 	return s
+}
+
+func buildTemplateRequestContext(request Request, parameters map[string]any) (map[string]any, error) {
+	u, err := url.Parse(request.AbsoluteURL)
+	if err != nil || u == nil || u.Host == "" {
+		u, err = url.Parse(request.URL)
+	}
+	if err != nil {
+		return nil, err
+	}
+	query := map[string]any{}
+	for k, v := range u.Query() {
+		query[k] = templateValues(v)
+	}
+	headers := templateHeaders{}
+	for k, v := range request.Headers {
+		headers[k] = templateValues(v)
+		headers[strings.ToLower(k)] = templateValues(v)
+		headers[http.CanonicalHeaderKey(k)] = templateValues(v)
+	}
+	cookies := map[string]any{}
+	hr := http.Request{Header: request.Headers}
+	for _, c := range hr.Cookies() {
+		values, _ := cookies[c.Name].(templateValues)
+		cookies[c.Name] = append(values, c.Value)
+	}
+	port := u.Port()
+	if port == "" {
+		port = "80"
+		if u.Scheme == "https" {
+			port = "443"
+		}
+	}
+	pn, _ := strconv.Atoi(port)
+	ctx := map[string]any{"parameters": parameters, "request": map[string]any{"method": request.Method, "url": request.URL, "path": newTemplatePath(u.Path), "pathSegments": templateSegments(u.Path), "query": query, "headers": headers, "cookies": cookies, "body": string(request.Body), "host": u.Hostname(), "port": pn, "scheme": u.Scheme, "baseUrl": u.Scheme + "://" + u.Host}}
+	templateRequestExtras(ctx["request"].(map[string]any), request)
+	return ctx, nil
+}
+
+// RenderMessageTemplateWithRequest builds the request/message model used by native message actions.
+func RenderMessageTemplateWithRequest(source string, request *Request, incoming map[string]any, parameters map[string]any) (string, error) {
+	model := map[string]any{}
+	if request != nil {
+		var err error
+		model, err = buildTemplateRequestContext(*request, parameters)
+		if err != nil {
+			return "", err
+		}
+	}
+	if incoming != nil {
+		model["message"] = map[string]any{"body": incoming["body"]}
+	}
+	if len(parameters) > 0 {
+		model["parameters"] = parameters
+	}
+	return RenderMessageTemplate(source, model)
 }

@@ -1,94 +1,122 @@
 # Compatibility contract
 
-Target: Java WireMock 3.13.2. This repository does **not** currently claim to accept
-all possible mappings or reproduce all WireMock behavior byte-for-byte.
+Target: **Java WireMock 4.0.0-beta.40**, source commit
+`0f5b90519fecfcc66accc5d6ddc884484fa1a1e1`. The standalone JAR SHA-256 is
+`3a53dec6c814ff73da4abb0bc51624215ea2b913beec8d19aa6d54e4c62161d3`.
+The upstream version is a beta. Implemented BreakMock features, including native
+WebSockets and SSE, are available by default without beta gating.
+
+This repository does **not** claim compatibility with every possible mapping,
+extension or transport configuration. Checked-in differential reports document a
+bounded corpus; a passing fixture is not proof of an entire feature's equivalence.
 
 ## Implemented and exercised
 
-- HTTP mapping loading, priorities, newest-first ties, scenarios, inline/text/file/
-  binary responses, headers, delays, faults, and basic proxying.
-- Matching: URL/path/template, headers/query/forms/cookies, authentication, logical
-  conditions, JSON equality/placeholders/JSONPath/schema, XML/XPath, multipart,
-  common Java regex constructs and date/time conditions.
-- Handlebars request context and common string, number, collection, date, JSON,
-  XML, assignment and random helpers. Templates use WireMock's no-HTML-escaping
-  behavior; JSON data preserves insertion order where tested.
-- Administration: mappings CRUD/import/save/reset, metadata matching, scenarios,
-  files, request journal/find/count/remove, settings, health/version, recording
-  start/stop/status/snapshot and basic proxy record/replay.
+- HTTP mappings, priorities, insertion ordering, scenarios, text/JSON/binary/file
+  responses, v4 entity objects and charsets, templating, delays, faults and proxying.
+- Request matching including v4 `isOneOf`/`isNoneOf` methods and `QUERY`, numeric
+  comparisons, JSONPath/schema/placeholders, XML/XPath, multipart, dates and common
+  Java regex constructs. Near-miss matching distances and diagnostic formatting.
+- Handlebars request/message models and string, number, collection, date, JSON,
+  XML, assignment and random helpers. Upstream-derived fixtures retain provenance.
+- HTTP admin mappings/import/save/reset, scenarios, files, request journals,
+  settings, health/version, docs/recorder assets, recording and webhooks.
+- Native WebSocket text/binary frames, fragmentation, ping/pong, close handling,
+  malformed-frame errors, configurable independent text/binary limits and idle timeouts.
+- Native SSE event framing, comments, IDs, event types, retry fields and multiline data.
+- Message mappings, HTTP-request/HTTP-stub/incoming-message triggers, message
+  templates, priority selection, originating-channel replies, channel selection,
+  broadcasts, admin push, fixed in-memory channels/providers, message journals and
+  verification. Message files load from `message-mappings/`. As in the reference,
+  HTTP `/__admin/reset` does not clear message mappings, and `/mappings/save` saves
+  HTTP mappings only.
 
-Checked-in reports under `testdata/reports/` describe the actual bounded corpus.
+The admin route inventory is in `testdata/admin_endpoint_coverage.json`.
+The test runner rebuilds BreakMock, starts isolated Java/Go servers for each suite,
+checks both version and implementation identity, and returns nonzero on any strict
+failure. `testdata/reports/suites.json` records the consolidated run.
 
-| Suite | Result | Comparison |
+## Byte comparison boundaries
+
+HTTP application bodies and gzip streams are compared as actual bytes, preserving
+JSON order, whitespace, escaping and binary content. Every template case compares
+status and body, including error diagnostics. Separate suites compare full
+WebSocket data/control frames, SSE event bytes, fault socket bytes and HTTP status
+lines. Header defaults are checked where stated by each suite; they are not
+silently included in a broader claim.
+
+Admin and streaming-journal tests preserve exact JSON formatting and property order.
+They substitute only explicitly nondeterministic scalar values: generated IDs,
+timestamps, measured timings and local origins. Fixed IDs and application values
+are preserved. This is formatting equivalence with those substitutions, **not**
+literal equality of every byte from two independent server processes.
+
+A strict diagnostic case remains failing: WireMock prints a JVM byte-array object
+identity (`[B@...`) for a binary matcher mismatch. Identical requests to the same
+Java server produce different identities. The report preserves the failing
+comparison and repeated-Java evidence; it does not normalize this into a pass.
+
+The harness does not claim universal TCP/HTTP header order, chunk boundaries,
+Date values, HTTP/2 frames, scheduling jitter or random-output equivalence.
+WebSocket handshake headers differ in some transport defaults; frame comparisons
+are explicit. Outbound webhook transport headers are reported separately.
+
+Gzip uses native zlib and the v4 Jetty header/trailer layout. CGO and zlib are
+required. DEFLATE bytes can depend on the reference JDK/zlib version. Localized date
+format data is captured from the reference JDK and documented with its generator;
+locale data can change between JDK releases.
+
+## Remaining limits
+
+- Java extensions cannot execute inside Go. Custom transports/channel providers,
+  arbitrary Java transformers/matchers and programmatically populated JVM data
+  stores need native equivalents. File-backed `__files` references are supported.
+- Java regex, Jayway JSONPath, XMLUnit and date/locale dialects have edge cases beyond
+  the corpus. Random values and real-time helpers do not share a Java process's RNG/clock.
+- HTTPS keystores, configured JKS CA export, TLS configuration, HTTP/2 parity and
+  browser proxy mode are not implemented by the current CLI.
+- Multi-channel iteration order depends on generated UUIDs and differs between runtimes.
+- Full proxy/recording behaviors, extension-specific endpoints and all malformed
+  input error responses are not exhaustively covered.
+- SSE peer disconnects follow the reference: a channel may remain until a failed
+  send or explicit admin close. Idle disconnected channels can retain resources.
+- HTTP journal timings measure Go's response path, not Jetty scheduling. Default
+  journals are unbounded; disabling/capping journals affects verification and memory.
+- HTTP/1 header capture and status reason compatibility require the supplied
+  listener wrapper (enabled by the CLI). Embedding without it loses those details.
+- WireMock Cloud proprietary code and extensions such as gRPC/GraphQL are not included.
+  Future test-data and chaos features require independent implementation.
+- Current v4 benchmarks establish lower memory use and faster no-journal throughput
+  for two small workloads. Journaled throughput is near parity, including a slower
+  template result. See `BENCHMARKS.md`; broader workloads remain unmeasured.
+
+## Results
+
+See the individual JSON reports for case-level inputs, failures and comparison
+rules. Suite counts describe test cases, not a percentage of WireMock coverage.
+
+Consolidated local run (2026-10-11):
+
+| Suite | Passing / total | Comparison |
 | --- | ---: | --- |
-| Original upstream fixtures | 9/9 | Response body bytes |
-| Baseline workflows | 30/30 | 26 stub byte checks, 4 semantic admin checks |
-| Request matchers | 138/138 | Status and body bytes, explicit negative fallback |
-| Templates | 93/95 strict | 2 JVM diagnostic bodies remain different |
-| Admin workflows | 51/51 | Formatting/order exact; nondeterministic scalar substitutions |
-| Runtime/proxy | 43/43 | Body bytes and selected headers |
-| Gzip | 99/99 | Encoded bytes and negotiation |
+| Original upstream mappings | 9/9 | HTTP response bytes |
+| Baseline workflows | 30/30 | 26 body checks, 4 semantic admin checks |
+| Request matchers | 434/434 | Status and response bytes |
+| Templates | 429/429 | Status and response bytes, including errors |
+| HTTP admin | 130/130 | JSON bytes with explicit scalar substitutions |
+| Runtime/proxy | 46/46 | Body bytes and selected headers |
+| Gzip | 99/99 | Compressed bytes and negotiation |
+| Diagnostics | 40/41 | Exact bytes; JVM identity case fails |
+| Near-miss distances | 140/140 | Exact admin response bytes |
+| Webhooks | 7/7 | Configured callback content; transport headers separate |
+| Faults | 32/32 | Complete socket bytes and reset behavior |
+| Entity bodies | 34/34 | Status/body bytes, charsets, error HTML |
+| Messaging admin | 79/79 | JSON bytes with explicit scalar substitutions |
+| WebSocket/SSE | 51/51 + 2/2 | Exact frame/event bytes + separate lifecycle checks |
+| Status lines | 17/17 | Status-line and body bytes |
+| Streaming journals | 20/20 | JSON bytes with explicit scalar substitutions |
 
-Some suites overlap. These counts describe test cases, not percentages of the
-WireMock API or upstream test suite covered.
-The fixture suite uses unmodified files from the original WireMock repository.
-
-## What “byte-for-byte” currently means
-
-Stub response bodies are compared without JSON normalization, including JSON key
-order, whitespace, escaping and binary files. Suites also compare HTTP status;
-some check selected headers. Negative matcher cases use an explicit fallback
-stub, rather than pretending WireMock's unmatched diagnostic body is equivalent.
-
-Admin tests preserve Jackson JSON whitespace and property order, including source
-mapping order and captured request/proxy response header order. Only generated IDs,
-timestamps, request origins and measured timings have scalar substitutions in the
-test harness. Application values are not normalized. This is exact formatting with
-specified nondeterministic values substituted, not literal equality of every byte
-from independently running servers.
-
-Gzip uses native zlib with the Java header/trailer format. Compressed bytes are
-compared directly against the reference, including binary data through 1 MiB.
-CGO and zlib are required; a CGO-disabled build reports a compression error instead
-of silently producing a different stream. Different JDK/zlib versions may differ.
-
-Two invalid templated-jsonBody cases check HTTP 500 but still have different JVM
-HTML diagnostic bodies; they are not counted as strict body-byte passes.
-
-The harness does not assert identical TCP framing, header order/capitalization,
-Date headers, HTTP/2 frames, timing jitter or random samples. These are not the
-same as literal network-byte equivalence.
-
-## Known gaps and limits
-
-- Custom Java extensions, transformers, matchers and webhook extensions cannot
-  execute in this Go process. They need native equivalents.
-- The version endpoint identifies BreakMock and deliberately differs from WireMock.
-- Near-miss diagnostics and unmatched-request body formatting, full recording
-  extraction/transformation options, full proxy/recording semantics and all admin
-  endpoints are not complete. Unsupported implemented recording options return
-  explicit errors.
-- Java regex, Jayway JSONPath, XMLUnit and Java date-format dialects have edge
-  cases beyond the tested subset. Equivalent third-party Go libraries alone do
-  not prove compatibility.
-- HTTPS keystores, TLS options, HTTP/2 parity, browser proxy mode and arbitrary
-  status reason phrases are not implemented by the current CLI.
-- Request journal timing values and some low-level transport details are not
-  faithful measurements of Jetty's behavior.
-- Advanced WireMock extensions, gRPC and GraphQL extensions, and WireMock Cloud
-  features are outside the currently verified core.
-- Journal capacity defaults to unbounded, matching WireMock; optional caps and
-  journal disabling affect both memory use and verification/recording features.
-- Exact inbound journal header order requires the provided HTTP/1 listener wrapper
-  (enabled by the CLI). Embedding Server in another HTTP server without the wrapper
-  loses this information. Header capture is bounded and does not cover HTTP/2.
-- Proxy header order capture covers direct HTTP and HTTPS; HTTPS through a CONNECT
-  proxy is not yet covered. Header case/framing on outgoing HTTP remains Go-native.
-
-## Completion criteria
-
-Full compatibility needs a much larger upstream-derived regression corpus,
-explicit versioned mapping/API coverage, resolution of the gaps above and tests
-against real downstream WireMock clients. Performance targets need representative
-mapping counts, body sizes, concurrency levels, journaling and template workloads.
-Passing this repository's current tests is not proof that those criteria are met.
+`go test -race ./...` and `go vet ./...` pass. The strict differential runner
+returns nonzero because the JVM-identity diagnostic remains a failure.
+Outgoing compressed WebSocket frame byte identity is not established; incoming
+compressed-message limits are exercised against Java.

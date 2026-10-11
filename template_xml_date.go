@@ -4,6 +4,9 @@ package breakmock
 import (
 	raymond "github.com/Breaking-IT/BreakMock/internal/handlebars"
 	"github.com/antchfx/xmlquery"
+	"github.com/antchfx/xpath"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -12,6 +15,14 @@ func templateXPath(o *raymond.Options, prefix string) any {
 	doc, e := xmlquery.Parse(strings.NewReader(o.ParamStr(0)))
 	if e != nil {
 		return ""
+	}
+	expression, e := xpath.Compile(prefix + o.ParamStr(1))
+	if e != nil {
+		return ""
+	}
+	value := expression.Evaluate(xmlquery.CreateXPathNavigator(doc))
+	if _, ok := value.(*xpath.NodeIterator); !ok {
+		return value
 	}
 	nodes, e := xmlquery.QueryAll(doc, prefix+o.ParamStr(1))
 	if e != nil {
@@ -38,11 +49,7 @@ func templateFormatXML(o *raymond.Options) any {
 		if child.Type == xmlquery.DeclarationNode || child.Type == xmlquery.TextNode {
 			continue
 		}
-		opts := []xmlquery.OutputOption{xmlquery.WithOutputSelf(), xmlquery.WithEmptyTagSupport()}
-		if o.HashStr("format") != "compact" {
-			opts = append(opts, xmlquery.WithIndentation("  "))
-		}
-		out.WriteString(strings.TrimPrefix(child.OutputXMLWithOptions(opts...), "\n"))
+		out.WriteString(templateXMLSerialize(child, 0, o.HashStr("format") != "compact"))
 		if o.HashStr("format") != "compact" {
 			out.WriteByte('\n')
 		}
@@ -64,9 +71,19 @@ func (v templateDateValue) String() string {
 }
 func templateParseDate(o *raymond.Options) any {
 	format := o.HashStr("format")
+	if format == "epoch" || format == "unix" {
+		n, e := strconv.ParseInt(o.ParamStr(0), 10, 64)
+		if e != nil {
+			return nil
+		}
+		if format == "unix" {
+			n *= 1000
+		}
+		return templateDateValue{Time: time.UnixMilli(n).UTC()}
+	}
 	layouts := []string{templateDateLayout(format)}
 	if format == "" {
-		layouts = []string{time.RFC3339Nano, "2006-01-02T15:04:05Z0700", "2006-01-02", "2006-01-02 15:04:05", time.RFC1123, time.RFC1123Z}
+		layouts = []string{time.RFC3339Nano, time.RFC1123, time.RFC1123Z, time.RFC850, time.ANSIC}
 	}
 	for _, layout := range layouts {
 		t, e := time.Parse(layout, o.ParamStr(0))
@@ -156,3 +173,67 @@ func removeTemplateBlankXML(node *xmlquery.Node) {
 	}
 }
 func isTemplateParsedDate(v any) bool { _, ok := v.(templateDateValue); return ok }
+
+func templateXMLSerialize(node *xmlquery.Node, depth int, pretty bool) string {
+	switch node.Type {
+	case xmlquery.TextNode:
+		return templateXMLEscape(node.Data, false)
+	case xmlquery.CharDataNode:
+		return "<![CDATA[" + node.Data + "]]>"
+	case xmlquery.CommentNode:
+		return "<!--" + node.Data + "-->"
+	}
+	name := node.Data
+	if node.Prefix != "" {
+		name = node.Prefix + ":" + name
+	}
+	var out strings.Builder
+	out.WriteByte('<')
+	out.WriteString(name)
+	attrs := append([]xmlquery.Attr(nil), node.Attr...)
+	sort.SliceStable(attrs, func(i, j int) bool { return templateXMLAttrName(attrs[i]) < templateXMLAttrName(attrs[j]) })
+	for _, attr := range attrs {
+		out.WriteByte(' ')
+		out.WriteString(templateXMLAttrName(attr))
+		out.WriteString(`="`)
+		out.WriteString(templateXMLEscape(attr.Value, true))
+		out.WriteByte('"')
+	}
+	if node.FirstChild == nil {
+		out.WriteString("/>")
+		return out.String()
+	}
+	out.WriteByte('>')
+	block := false
+	for child := node.FirstChild; child != nil; child = child.NextSibling {
+		if child.Type == xmlquery.ElementNode || child.Type == xmlquery.CommentNode {
+			block = true
+		}
+	}
+	for child := node.FirstChild; child != nil; child = child.NextSibling {
+		if block && pretty {
+			out.WriteByte('\n')
+			out.WriteString(strings.Repeat("  ", depth+1))
+		}
+		out.WriteString(templateXMLSerialize(child, depth+1, pretty))
+	}
+	if block && pretty {
+		out.WriteByte('\n')
+		out.WriteString(strings.Repeat("  ", depth))
+	}
+	out.WriteString("</" + name + ">")
+	return out.String()
+}
+func templateXMLAttrName(a xmlquery.Attr) string {
+	if a.Name.Space != "" {
+		return a.Name.Space + ":" + a.Name.Local
+	}
+	return a.Name.Local
+}
+func templateXMLEscape(s string, attribute bool) string {
+	s = strings.NewReplacer("&", "&amp;", "<", "&lt;", ">", "&gt;").Replace(s)
+	if attribute {
+		s = strings.ReplaceAll(s, `"`, "&quot;")
+	}
+	return s
+}

@@ -21,9 +21,44 @@ func matcherDateParse(s, format string) (time.Time, bool, error) {
 		return time.UnixMilli(n).UTC(), true, nil
 	}
 	if format != "" {
-		format = strings.NewReplacer("yyyy", "2006", "MMM", "Jan", "MM", "01", "dd", "02", "HH", "15", "mm", "04", "ss", "05", "SSS", "000", "XXX", "Z07:00", "XX", "Z0700", "X", "Z07", "Z", "-0700", "'T'", "T", "'Z'", "Z").Replace(format)
-		t, e := time.Parse(format, s)
-		return t, strings.ContainsAny(format, "Z7"), e
+		var lastError error
+		for _, variant := range matcherDateFormats(format) {
+			zoned := false
+			layout := templateDateTokens(variant, func(token string, isToken bool) string {
+				if !isToken {
+					return token
+				}
+				if strings.ContainsAny(token, "zZXxVO") {
+					zoned = true
+				}
+				if token[0] == 'S' {
+					return strings.Repeat("0", len(token))
+				}
+				if token[0] == 'u' {
+					if len(token) == 2 {
+						return "06"
+					}
+					return "2006"
+				}
+				if token[0] == 'x' {
+					switch len(token) {
+					case 1:
+						return "-07"
+					case 2:
+						return "-0700"
+					default:
+						return "-07:00"
+					}
+				}
+				return templateDateLayout(token)
+			})
+			parsed, err := time.Parse(layout, s)
+			if err == nil {
+				return parsed, zoned, nil
+			}
+			lastError = err
+		}
+		return time.Time{}, false, lastError
 	}
 	// Java ISO_ZONED_DATE_TIME also permits a bracketed zone ID.
 	if i := strings.LastIndex(s, "["); i >= 0 && strings.HasSuffix(s, "]") {
@@ -146,4 +181,34 @@ func matcherAddMonths(t time.Time, n int) time.Time {
 		d = last
 	}
 	return first.AddDate(0, 0, d-1)
+}
+
+// Expand DateTimeFormatter optional sections. Quotes protect literal brackets.
+func matcherDateFormats(format string) []string {
+	quoted := false
+	start := -1
+	depth := 0
+	for i := 0; i < len(format); i++ {
+		switch format[i] {
+		case '\'':
+			quoted = !quoted
+		case '[':
+			if !quoted {
+				if depth == 0 {
+					start = i
+				}
+				depth++
+			}
+		case ']':
+			if !quoted && depth > 0 {
+				depth--
+				if depth == 0 {
+					with := matcherDateFormats(format[:start] + format[start+1:i] + format[i+1:])
+					without := matcherDateFormats(format[:start] + format[i+1:])
+					return append(with, without...)
+				}
+			}
+		}
+	}
+	return []string{format}
 }

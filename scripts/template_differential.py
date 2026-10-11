@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # Copyright 2026 Breaking-IT. Apache-2.0.
-# Cases adapted from WireMock 3.13.2 response-templating helper tests,
+# Cases adapted from WireMock 3.13.2 and 4.0.0-beta.40 helper tests; run against v4,
 # Copyright 2017-2025 Thomas Akehurst, Apache-2.0 (see upstream LICENSE/NOTICE).
 """Replay identical templates and request bytes against two dedicated servers.
 Compares HTTP status and exact response-body bytes, without JSON normalization.
-Known invalid-JSON diagnostic cases compare status only when the reference emits
-HTTP 500: JVM stacktraces contain process-specific identities. These are counted
-separately, never as exact-byte passes.
 Does not compare Date/Server/transfer framing, random outputs, or entire WireMock suite.
 Both servers' mappings and request journals are reset. Never use production servers.
 """
@@ -18,9 +15,13 @@ def call(base,path,data=None,method=None,headers=None):
  try:r=urllib.request.urlopen(urllib.request.Request(base+path,data=data,method=method,headers=headers or {}),timeout=10)
  except urllib.error.HTTPError as e:r=e
  return r.status,r.read()
-s,b=call(a.reference,'/__admin/version');assert s==200 and json.loads(b).get('version')=='3.13.2',('wrong reference',b)
+from oracle import identify
+identify(a.reference,'java'); identify(a.candidate,'go')
 cases=[]
-def add(name,template,body='',path='/template-test?q=one&q=two',headers=None):cases.append((name,template,body,path,headers or {}))
+parameters_by_name={}
+def add(name,template,body='',path='/template-test?q=one&q=two',headers=None,parameters=None):
+ cases.append((name,template,body,path,headers or {}))
+ if parameters is not None:parameters_by_name[name]=parameters
 for name,t in [
  ('method','{{request.method}}'),('path','{{request.path}}'),('path index','{{request.path.[0]}}'),('pathSegments','{{request.pathSegments.[0]}}'),
  ('query first','{{request.query.q}}'),('query index','{{request.query.q.[1]}}'),('query first last','{{request.query.q.first}}|{{request.query.q.last}}'),('query absent','{{request.query.none}}'),
@@ -37,6 +38,8 @@ for name,t in [
  ('date epoch',"{{date (parseDate '1970-01-01' format='yyyy-MM-dd') format='epoch'}}"),
  ('form data',"{{formData 'a=hello+world&b=2' 'form' urlDecode=true}}{{form.a}}|{{form.b}}"),
  ]:add(name,t)
+for template in ['{{unknown 1}}','prefix {{unknown foo=1}}','{{unknown}}','{{#unknown}}x{{/unknown}}','{{#unknown 1}}x{{/unknown}}','{{val (unknown 1)}}','{{#if false}}{{unknown 1}}{{/if}}','{{#if true}}\n  {{unknown 1}}\n{{/if}}']:
+ add('unknown helper '+repr(template),template)
 add('escaping','{{request.query.q}}|{{{request.query.q}}}',path='/template-test?q=%3Ctag%3E%26%22')
 add('headers','{{request.headers.X-Custom}}',headers={'X-Custom':'hello'})
 add('headers arbitrary case','{{request.headers.x-CuStOm}}',headers={'X-Custom':'hello'})
@@ -75,25 +78,28 @@ for name,t,body in [
 for name,value in [('quotes','%22hello%22'),('html','%3Ctag%3E%26'),('backslash','a%5Cb'),('newline','a%0Ab')]:
  add('jsonBody template '+name,{'value':'{{request.query.q}}'},path='/template-test?q='+value)
 
+for case in json.loads((pathlib.Path(__file__).resolve().parent.parent/'testdata/template_cases.json').read_text()):add(**case)
+for case in json.loads((pathlib.Path(__file__).resolve().parent.parent/'testdata/template_upstream_cases.json').read_text()):add(**case)
+
 failed=[]
 records=[]
 for name,t,body,path,headers in cases:
  results=[]
  for base in (a.reference,a.candidate):
   call(base,'/__admin/reset',method='POST')
-  s,b=call(base,'/__admin/mappings',{'request':{'urlPath':'/template-test'},'response':{'status':200,**({'jsonBody':t} if isinstance(t,dict) else {'body':t}),'transformers':['response-template']}})
+  s,b=call(base,'/__admin/mappings',{'request':{'urlPath':'/template-test'},'response':{'status':200,**({'jsonBody':t} if isinstance(t,dict) else {'body':t}),'transformers':['response-template'],'transformerParameters':parameters_by_name.get(name,{})}})
   results.append(call(base,path,body,headers=headers) if s==201 else ('mapping rejected',s,b))
  diagnostic = name in ('jsonBody template quotes','jsonBody template newline') and results[0][0]==500
- comparison='error_diagnostic_status_only' if diagnostic else 'status_and_exact_body_bytes'
- ok=results[0][0]==results[1][0] if diagnostic else results[0]==results[1]
- print(('PASS ' if ok else 'FAIL ')+name+(' [status only; JVM diagnostic body excluded]' if diagnostic else ''))
+ comparison='status_and_exact_body_bytes'
+ ok=results[0]==results[1]
+ print(('PASS ' if ok else 'FAIL ')+name+(' [JVM diagnostic: strict bytes required]' if diagnostic else ''))
  record={'name':name,'passed':ok,'comparison':comparison,'reference_status':results[0][0],'candidate_status':results[1][0],'reference_body':results[0][-1][:1200].decode(errors='replace'),'candidate_body':results[1][-1][:1200].decode(errors='replace'),'reference_body_bytes':len(results[0][-1]),'candidate_body_bytes':len(results[1][-1])}
  records.append(record)
  if not ok:failed.append(name);print(' reference:',repr(results[0][-1][:300]),'\n candidate:',repr(results[1][-1][:300]))
-summary={'reference_version':'3.13.2','timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'comparison':'Per-case comparison: exact status/body bytes except explicitly labeled JVM diagnostics','cases':len(cases),'passed':len(cases)-len(failed),'exact_body_pass':sum(r['passed'] and r['comparison']=='status_and_exact_body_bytes' for r in records),'diagnostic_status_pass':sum(r['passed'] and r['comparison']=='error_diagnostic_status_only' for r in records),'failed':failed}
+summary={'reference_version':'4.0.0-beta.40','timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'comparison':'Exact status and response body bytes for every case including JVM diagnostics','cases':len(cases),'passed':len(cases)-len(failed),'exact_body_pass':sum(r['passed'] and r['comparison']=='status_and_exact_body_bytes' for r in records),'diagnostic_status_pass':sum(r['passed'] and r['comparison']=='error_diagnostic_status_only' for r in records),'failed':failed}
 summary['strict_passed']=summary['exact_body_pass']
 summary['strict_failed']=len(cases)-summary['strict_passed']
-summary['strict_unsupported']=[r['name'] for r in records if r['comparison']=='error_diagnostic_status_only']
+summary['strict_unsupported']=failed.copy()
 print(json.dumps(summary))
 if a.report:
  pathlib.Path(a.report).parent.mkdir(parents=True,exist_ok=True)

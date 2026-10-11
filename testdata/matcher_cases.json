@@ -1,0 +1,4480 @@
+[
+  {
+    "name": "equalTo0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "abc"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "equalTo1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "abc"
+        }
+      ]
+    },
+    "body": "abcd",
+    "matches": false
+  },
+  {
+    "name": "contains2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "contains": "bc"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "doesNotContain3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "doesNotContain": "bc"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": false
+  },
+  {
+    "name": "matches4",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a(?=b)b"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": true
+  },
+  {
+    "name": "matches5",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(a)\\1"
+        }
+      ]
+    },
+    "body": "aa",
+    "matches": true
+  },
+  {
+    "name": "matches6",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a"
+        }
+      ]
+    },
+    "body": "ba",
+    "matches": false
+  },
+  {
+    "name": "doesNotMatch7",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "doesNotMatch": "a"
+        }
+      ]
+    },
+    "body": "",
+    "matches": true
+  },
+  {
+    "name": "before8",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01"
+        }
+      ]
+    },
+    "body": "2025-01-01",
+    "matches": true
+  },
+  {
+    "name": "after9",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01"
+        }
+      ]
+    },
+    "body": "2027-01-01",
+    "matches": true
+  },
+  {
+    "name": "body 16",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "{\"a\":\"${json-unit.any-number}\"}"
+        }
+      ]
+    },
+    "body": "{\"a\":2}",
+    "matches": true
+  },
+  {
+    "name": "body 17",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "{\"a\":\"${json-unit.any-number}\"}"
+        }
+      ]
+    },
+    "body": "{\"a\":\"2\"}",
+    "matches": false
+  },
+  {
+    "name": "body 18",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "{\"a\":\"${json-unit.ignore-element}\"}"
+        }
+      ]
+    },
+    "body": "{}",
+    "matches": true
+  },
+  {
+    "name": "body 19",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,2]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[0,1,2]",
+    "matches": false
+  },
+  {
+    "name": "body 20",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,2]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[1,0,2]",
+    "matches": false
+  },
+  {
+    "name": "body 21",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.a"
+        }
+      ]
+    },
+    "body": "{\"a\":[]}",
+    "matches": true
+  },
+  {
+    "name": "body 22",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.a",
+            "equalTo": "true"
+          }
+        }
+      ]
+    },
+    "body": "{\"a\":true}",
+    "matches": true
+  },
+  {
+    "name": "body 23",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.things[?(@.id == 2)]"
+        }
+      ]
+    },
+    "body": "{\"things\":[{\"id\":2}]}",
+    "matches": true
+  },
+  {
+    "name": "body 24",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": "{\"type\":\"object\",\"required\":[\"a\"]}"
+        }
+      ]
+    },
+    "body": "{\"a\":2}",
+    "matches": true
+  },
+  {
+    "name": "body 25",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": "{\"type\":\"object\",\"required\":[\"a\"]}"
+        }
+      ]
+    },
+    "body": "{}",
+    "matches": false
+  },
+  {
+    "name": "body 26",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "/a/b/text()",
+            "equalTo": "yes"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "body 27",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "/a/b",
+            "equalToXml": "<b>yes</b>"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "body 28",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": "/x:a/x:b",
+          "xPathNamespaces": {
+            "x": "urn:foo"
+          }
+        }
+      ]
+    },
+    "body": "<a xmlns=\"urn:foo\"><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "body 29",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b> yes </b></a>"
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML order 34",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><c>2</c></a>"
+        }
+      ]
+    },
+    "body": "<a><b>1</b><c>2</c></a>",
+    "matches": true
+  },
+  {
+    "name": "XML order 35",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><c>2</c></a>"
+        }
+      ]
+    },
+    "body": "<a><c>2</c><b>1</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML order 36",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><c>2</c></a>"
+        }
+      ]
+    },
+    "body": "<a><b>2</b><c>1</c></a>",
+    "matches": false
+  },
+  {
+    "name": "XML same-name order 37",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><b>2</b></a>",
+          "ignoreOrderOfSameNode": true
+        }
+      ]
+    },
+    "body": "<a><b>1</b><b>2</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML same-name order 38",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><b>2</b></a>",
+          "ignoreOrderOfSameNode": true
+        }
+      ]
+    },
+    "body": "<a><b>2</b><b>1</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML same-name order 39",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><b>2</b></a>",
+          "ignoreOrderOfSameNode": false
+        }
+      ]
+    },
+    "body": "<a><b>1</b><b>2</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML same-name order 40",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><b>1</b><b>2</b></a>",
+          "ignoreOrderOfSameNode": false
+        }
+      ]
+    },
+    "body": "<a><b>2</b><b>1</b></a>",
+    "matches": false
+  },
+  {
+    "name": "XML feature 41",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a>${xmlunit.ignore}</a>",
+          "enablePlaceholders": true
+        }
+      ]
+    },
+    "body": "<a>123</a>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 42",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a>${xmlunit.ignore}</a>",
+          "enablePlaceholders": false
+        }
+      ]
+    },
+    "body": "<a>123</a>",
+    "matches": false
+  },
+  {
+    "name": "XML feature 43",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a>#{xmlunit.ignore}</a>",
+          "enablePlaceholders": true,
+          "placeholderOpeningDelimiterRegex": "#\\{",
+          "placeholderClosingDelimiterRegex": "}"
+        }
+      ]
+    },
+    "body": "<a>123</a>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 44",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a x=\"1\"/>",
+          "exemptedComparisons": [
+            "ATTR_VALUE"
+          ]
+        }
+      ]
+    },
+    "body": "<a x=\"2\"/>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 45",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns=\"urn:x\"/>"
+        }
+      ]
+    },
+    "body": "<b:a xmlns:b=\"urn:x\"/>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 46",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns=\"urn:x\"/>"
+        }
+      ]
+    },
+    "body": "<a xmlns=\"urn:y\"/>",
+    "matches": false
+  },
+  {
+    "name": "XML feature 47",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns=\"urn:x\"/>",
+          "exemptedComparisons": [
+            "NAMESPACE_URI"
+          ]
+        }
+      ]
+    },
+    "body": "<a xmlns=\"urn:y\"/>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 48",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><!--hi--><b>hello</b></a>"
+        }
+      ]
+    },
+    "body": "<a><b>hello</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XML feature 49",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><![CDATA[hello]]></a>"
+        }
+      ]
+    },
+    "body": "<a>hello</a>",
+    "matches": false
+  },
+  {
+    "name": "date 50",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01T00:00:00Z"
+        }
+      ]
+    },
+    "body": "2025-12-31T19:00:00-05:00",
+    "matches": true
+  },
+  {
+    "name": "date 51",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01T00:00:00"
+        }
+      ]
+    },
+    "body": "2026-01-01T00:00:00-05:00",
+    "matches": true
+  },
+  {
+    "name": "date 52",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01T00:00:00Z",
+          "actualFormat": "unix"
+        }
+      ]
+    },
+    "body": "1767225600",
+    "matches": true
+  },
+  {
+    "name": "date 53",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01T00:00:00Z",
+          "actualFormat": "epoch"
+        }
+      ]
+    },
+    "body": "1767225600000",
+    "matches": true
+  },
+  {
+    "name": "date 54",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01T00:00:00Z",
+          "truncateActual": "first hour of day"
+        }
+      ]
+    },
+    "body": "2026-01-01T19:23:45Z",
+    "matches": true
+  },
+  {
+    "name": "date 55",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "2026-01-01",
+          "actualFormat": "dd/MM/yyyy"
+        }
+      ]
+    },
+    "body": "01/01/2026",
+    "matches": true
+  },
+  {
+    "name": "date 56",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "now +2 days"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "date 57",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "now -2 days"
+        }
+      ]
+    },
+    "body": "2100-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "date 58",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToDateTime": "now",
+          "expectedOffset": 1,
+          "expectedOffsetUnit": "MONTHS"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "date 59",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01T00:00:00Z"
+        }
+      ]
+    },
+    "body": "2025-12-31T19:00:00-05:00",
+    "matches": false
+  },
+  {
+    "name": "date 60",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01T00:00:00"
+        }
+      ]
+    },
+    "body": "2026-01-01T00:00:00-05:00",
+    "matches": false
+  },
+  {
+    "name": "date 61",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01T00:00:00Z",
+          "actualFormat": "unix"
+        }
+      ]
+    },
+    "body": "1767225600",
+    "matches": false
+  },
+  {
+    "name": "date 62",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01T00:00:00Z",
+          "actualFormat": "epoch"
+        }
+      ]
+    },
+    "body": "1767225600000",
+    "matches": false
+  },
+  {
+    "name": "date 63",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01T00:00:00Z",
+          "truncateActual": "first hour of day"
+        }
+      ]
+    },
+    "body": "2026-01-01T19:23:45Z",
+    "matches": false
+  },
+  {
+    "name": "date 64",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2026-01-01",
+          "actualFormat": "dd/MM/yyyy"
+        }
+      ]
+    },
+    "body": "01/01/2026",
+    "matches": false
+  },
+  {
+    "name": "date 65",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "now +2 days"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": true
+  },
+  {
+    "name": "date 66",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "now -2 days"
+        }
+      ]
+    },
+    "body": "2100-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "date 67",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "now",
+          "expectedOffset": 1,
+          "expectedOffsetUnit": "MONTHS"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": true
+  },
+  {
+    "name": "date 68",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01T00:00:00Z"
+        }
+      ]
+    },
+    "body": "2025-12-31T19:00:00-05:00",
+    "matches": false
+  },
+  {
+    "name": "date 69",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01T00:00:00"
+        }
+      ]
+    },
+    "body": "2026-01-01T00:00:00-05:00",
+    "matches": false
+  },
+  {
+    "name": "date 70",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01T00:00:00Z",
+          "actualFormat": "unix"
+        }
+      ]
+    },
+    "body": "1767225600",
+    "matches": false
+  },
+  {
+    "name": "date 71",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01T00:00:00Z",
+          "actualFormat": "epoch"
+        }
+      ]
+    },
+    "body": "1767225600000",
+    "matches": false
+  },
+  {
+    "name": "date 72",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01T00:00:00Z",
+          "truncateActual": "first hour of day"
+        }
+      ]
+    },
+    "body": "2026-01-01T19:23:45Z",
+    "matches": false
+  },
+  {
+    "name": "date 73",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2026-01-01",
+          "actualFormat": "dd/MM/yyyy"
+        }
+      ]
+    },
+    "body": "01/01/2026",
+    "matches": false
+  },
+  {
+    "name": "date 74",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "now +2 days"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "date 75",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "now -2 days"
+        }
+      ]
+    },
+    "body": "2100-01-01T00:00:00Z",
+    "matches": true
+  },
+  {
+    "name": "date 76",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "now",
+          "expectedOffset": 1,
+          "expectedOffsetUnit": "MONTHS"
+        }
+      ]
+    },
+    "body": "2000-01-01T00:00:00Z",
+    "matches": false
+  },
+  {
+    "name": "root JSONPath 77",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$[?(@.suite == 'a')]"
+        }
+      ]
+    },
+    "body": "{\"suite\":\"a\"}",
+    "matches": true
+  },
+  {
+    "name": "root JSONPath 78",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$[?(@.suite == 'a')]"
+        }
+      ]
+    },
+    "body": "{\"suite\":\"b\"}",
+    "matches": false
+  },
+  {
+    "name": "schema 82",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "body": "123",
+    "matches": true
+  },
+  {
+    "name": "schema 83",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "body": "\"hi\"",
+    "matches": false
+  },
+  {
+    "name": "schema 84",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1}",
+    "matches": false
+  },
+  {
+    "name": "schema 85",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":\"1\"}",
+    "matches": false
+  },
+  {
+    "name": "schema 86",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1,\"x\":2}",
+    "matches": false
+  },
+  {
+    "name": "schema 87",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "body": "123",
+    "matches": true
+  },
+  {
+    "name": "schema 88",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "body": "\"hi\"",
+    "matches": true
+  },
+  {
+    "name": "schema 89",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1}",
+    "matches": false
+  },
+  {
+    "name": "schema 90",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":\"1\"}",
+    "matches": false
+  },
+  {
+    "name": "schema 91",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1,\"x\":2}",
+    "matches": false
+  },
+  {
+    "name": "schema 92",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ]
+    },
+    "body": "123",
+    "matches": false
+  },
+  {
+    "name": "schema 93",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ]
+    },
+    "body": "\"hi\"",
+    "matches": false
+  },
+  {
+    "name": "schema 94",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1}",
+    "matches": true
+  },
+  {
+    "name": "schema 95",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":\"1\"}",
+    "matches": false
+  },
+  {
+    "name": "schema 96",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ]
+    },
+    "body": "{\"id\":1,\"x\":2}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath array 97",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.missing",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 98",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.empty",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 99",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values",
+            "equalTo": "b"
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 100",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values",
+            "equalToJson": "[\"a\",\"b\"]"
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 101",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values[*]",
+            "equalToJson": "[\"a\",\"b\"]"
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 102",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values[*]",
+            "equalTo": "b"
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath array 103",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.nothing",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
+    "matches": true
+  },
+  {
+    "name": "XPath serialization 118",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "/a/b",
+            "equalTo": "<b>yes</b>\n"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XPath serialization 119",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "/a",
+            "equalTo": "<a>\n  <b>yes</b>\n</a>\n"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XPath serialization 120",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "count(/a/b)",
+            "equalTo": "1.0"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": false
+  },
+  {
+    "name": "XPath serialization 121",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "boolean(/a/b)",
+            "equalTo": "true"
+          }
+        }
+      ]
+    },
+    "body": "<a><b>yes</b></a>",
+    "matches": true
+  },
+  {
+    "name": "empty body 122",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": ""
+        }
+      ]
+    },
+    "body": "",
+    "matches": false
+  },
+  {
+    "name": "empty body 123",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "binaryEqualTo": ""
+        }
+      ]
+    },
+    "body": "",
+    "matches": true
+  },
+  {
+    "name": "empty body 124",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "contains": ""
+        }
+      ]
+    },
+    "body": "",
+    "matches": false
+  },
+  {
+    "name": "empty body 125",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": ".*"
+        }
+      ]
+    },
+    "body": "",
+    "matches": false
+  },
+  {
+    "name": "empty body 126",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "absent": true
+        }
+      ]
+    },
+    "body": "",
+    "matches": true
+  },
+  {
+    "name": "empty body 127",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "not": {
+            "contains": "x"
+          }
+        }
+      ]
+    },
+    "body": "",
+    "matches": true
+  },
+  {
+    "name": "XPath primitive 135",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "/a/@id",
+            "equalTo": "1"
+          }
+        }
+      ]
+    },
+    "body": "<a id=\"1\"><b>1</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XPath primitive 136",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "string(/a/b)",
+            "equalTo": "1"
+          }
+        }
+      ]
+    },
+    "body": "<a id=\"1\"><b>1</b></a>",
+    "matches": true
+  },
+  {
+    "name": "XPath primitive 137",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesXPath": {
+            "expression": "count(/a/b)",
+            "equalTo": "1"
+          }
+        }
+      ]
+    },
+    "body": "<a id=\"1\"><b>1</b></a>",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath decimal 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.numbers[?(@.decimal == '2.3000')]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[{\"decimal\":2.3}]}",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath decimal 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.numbers[?(@.decimal == '2.3000')]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[{\"decimal\":2.3000}]}",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath decimal 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.numbers[?(@.decimal == '2.3000')]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[{\"decimal\":3.2}]}",
+    "matches": false
+  },
+  {
+    "name": "upstream JSONPath numeric regex 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.numbers[?(@.number =~ /2/i)]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[{\"number\":2}]}",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath numeric regex 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.numbers[?(@.number =~ /2/i)]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[{\"number\":7}]}",
+    "matches": false
+  },
+  {
+    "name": "upstream JSONPath size 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$[?(@.numbers.size() == 2)]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2]}",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath size 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$[?(@.numbers.size() == 2)]"
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1]}",
+    "matches": false
+  },
+  {
+    "name": "upstream JSONPath nested object 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$..thingOne[?(@.innerOne == 11)]"
+        }
+      ]
+    },
+    "body": "{\"things\":{\"thingOne\":{\"innerOne\":11}}}",
+    "matches": true
+  },
+  {
+    "name": "upstream JSONPath nested object 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$..thingOne[?(@.innerOne == 11)]"
+        }
+      ]
+    },
+    "body": "{\"things\":{\"thingOne\":{\"innerOne\":12}}}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath function $.numbers.length() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.numbers.length()",
+            "equalTo": "2"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath function $.numbers.min() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.numbers.min()",
+            "equalTo": "1.0"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath function $.numbers.max() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.numbers.max()",
+            "equalTo": "2.0"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath function $.numbers.sum() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.numbers.sum()",
+            "equalTo": "3.0"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath function $.numbers.avg() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.numbers.avg()",
+            "equalTo": "1.5"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath function $.object.keys() 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.object.keys()",
+            "contains": "a"
+          }
+        }
+      ]
+    },
+    "body": "{\"numbers\":[1,2],\"object\":{\"a\":1,\"b\":2}}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n in [1,2])] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n in [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":2,\"s\":\"HELLO\"}]}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n in [1,2])] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n in [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":5,\"s\":\"world\"}]}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n nin [1,2])] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n nin [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":2,\"s\":\"HELLO\"}]}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n nin [1,2])] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n nin [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":5,\"s\":\"world\"}]}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n >= 2 && @.n < 4)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n >= 2 && @.n < 4)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":2,\"s\":\"HELLO\"}]}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.n >= 2 && @.n < 4)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.n >= 2 && @.n < 4)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":5,\"s\":\"world\"}]}",
+    "matches": false
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.s =~ /hello/i)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.s =~ /hello/i)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":2,\"s\":\"HELLO\"}]}",
+    "matches": true
+  },
+  {
+    "name": "JSONPath operator $.items[?(@.s =~ /hello/i)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.s =~ /hello/i)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"n\":5,\"s\":\"world\"}]}",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 9007199254740993 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "9007199254740993"
+        }
+      ]
+    },
+    "body": "9007199254740993",
+    "matches": true
+  },
+  {
+    "name": "JSON numeric precision 9007199254740993 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "9007199254740993"
+        }
+      ]
+    },
+    "body": "9007199254740992",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 9007199254740993 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "9007199254740993"
+        }
+      ]
+    },
+    "body": "1",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 1.00 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1.00"
+        }
+      ]
+    },
+    "body": "1.00",
+    "matches": true
+  },
+  {
+    "name": "JSON numeric precision 1.00 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1.00"
+        }
+      ]
+    },
+    "body": "9007199254740992",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 1.00 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1.00"
+        }
+      ]
+    },
+    "body": "1",
+    "matches": true
+  },
+  {
+    "name": "JSON numeric precision 0.000000000000000001 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "0.000000000000000001"
+        }
+      ]
+    },
+    "body": "0.000000000000000001",
+    "matches": true
+  },
+  {
+    "name": "JSON numeric precision 0.000000000000000001 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "0.000000000000000001"
+        }
+      ]
+    },
+    "body": "9007199254740992",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 0.000000000000000001 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "0.000000000000000001"
+        }
+      ]
+    },
+    "body": "1",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 1e100 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1e100"
+        }
+      ]
+    },
+    "body": "1e100",
+    "matches": true
+  },
+  {
+    "name": "JSON numeric precision 1e100 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1e100"
+        }
+      ]
+    },
+    "body": "9007199254740992",
+    "matches": false
+  },
+  {
+    "name": "JSON numeric precision 1e100 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "1e100"
+        }
+      ]
+    },
+    "body": "1",
+    "matches": false
+  },
+  {
+    "name": "JSON extras [1,0,2] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,2]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[1,0,2]",
+    "matches": false
+  },
+  {
+    "name": "JSON extras [0,1,2] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,2]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[0,1,2]",
+    "matches": false
+  },
+  {
+    "name": "JSON extras [1,2,0] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,2]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[1,2,0]",
+    "matches": true
+  },
+  {
+    "name": "JSON extras [1,2] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToJson": "[1,1]",
+          "ignoreExtraElements": true
+        }
+      ]
+    },
+    "body": "[1,2]",
+    "matches": false
+  },
+  {
+    "name": "Java regex possessive 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a++"
+        }
+      ]
+    },
+    "body": "aa",
+    "matches": true
+  },
+  {
+    "name": "Java regex possessive 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a++"
+        }
+      ]
+    },
+    "body": "a+",
+    "matches": false
+  },
+  {
+    "name": "Java regex possessive no backtrack 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a++a"
+        }
+      ]
+    },
+    "body": "aa",
+    "matches": false
+  },
+  {
+    "name": "Java regex possessive no backtrack 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a++a"
+        }
+      ]
+    },
+    "body": "aaa",
+    "matches": false
+  },
+  {
+    "name": "Java regex intersection 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[^aeiou]]+"
+        }
+      ]
+    },
+    "body": "bcdf",
+    "matches": true
+  },
+  {
+    "name": "Java regex intersection 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[^aeiou]]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": false
+  },
+  {
+    "name": "Java regex linebreak 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a\\Rb"
+        }
+      ]
+    },
+    "body": "a\nb",
+    "matches": true
+  },
+  {
+    "name": "Java regex linebreak 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a\\Rb"
+        }
+      ]
+    },
+    "body": "a\r\nb",
+    "matches": true
+  },
+  {
+    "name": "Java regex unicode case 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)k"
+        }
+      ]
+    },
+    "body": "K",
+    "matches": true
+  },
+  {
+    "name": "Java regex unicode case 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)k"
+        }
+      ]
+    },
+    "body": "\u212a",
+    "matches": false
+  },
+  {
+    "name": "Java regex unicode flags 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)k"
+        }
+      ]
+    },
+    "body": "K",
+    "matches": true
+  },
+  {
+    "name": "Java regex unicode flags 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)k"
+        }
+      ]
+    },
+    "body": "\u212a",
+    "matches": true
+  },
+  {
+    "name": "Java regex ASCII digits 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?=\\d)\\d+"
+        }
+      ]
+    },
+    "body": "12",
+    "matches": true
+  },
+  {
+    "name": "Java regex ASCII digits 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?=\\d)\\d+"
+        }
+      ]
+    },
+    "body": "\u0661\u0662",
+    "matches": false
+  },
+  {
+    "name": "matchesPathTemplate body 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesPathTemplate": "/one/{id}/two"
+        }
+      ]
+    },
+    "body": "/one/3/two",
+    "matches": true
+  },
+  {
+    "name": "matchesPathTemplate body 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesPathTemplate": "/one/{id}/two"
+        }
+      ]
+    },
+    "body": "/one/3/other",
+    "matches": false
+  },
+  {
+    "name": "Java equalTo ignoreCase i",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "i",
+          "caseInsensitive": true
+        }
+      ]
+    },
+    "body": "i",
+    "matches": true
+  },
+  {
+    "name": "Java equalTo ignoreCase I",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "i",
+          "caseInsensitive": true
+        }
+      ]
+    },
+    "body": "I",
+    "matches": true
+  },
+  {
+    "name": "Java equalTo ignoreCase \u0131",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "i",
+          "caseInsensitive": true
+        }
+      ]
+    },
+    "body": "\u0131",
+    "matches": true
+  },
+  {
+    "name": "Java equalTo ignoreCase \u0130",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalTo": "i",
+          "caseInsensitive": true
+        }
+      ]
+    },
+    "body": "\u0130",
+    "matches": true
+  },
+  {
+    "name": "XML attribute placeholders 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a x=\"${xmlunit.ignore}\" y=\"2\"/>",
+          "enablePlaceholders": true
+        }
+      ]
+    },
+    "body": "<a x=\"1\" y=\"2\"/>",
+    "matches": true
+  },
+  {
+    "name": "XML attribute placeholders 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a x=\"${xmlunit.ignore}\" y=\"2\"/>",
+          "enablePlaceholders": true
+        }
+      ]
+    },
+    "body": "<a x=\"1\" y=\"3\"/>",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x == null)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x == null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x == null)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x == null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x == null)] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x == null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x == null)] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x == null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x != null)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x != null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x != null)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x != null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x != null)] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x != null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x != null)] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x != null)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x)] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x)] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(!@.x)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(!@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(!@.x)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(!@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(!@.x)] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(!@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(!@.x)] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(!@.x)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x subsetof [1,2])] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x subsetof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x subsetof [1,2])] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x subsetof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x subsetof [1,2])] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x subsetof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x subsetof [1,2])] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x subsetof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x anyof [1,2])] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x anyof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x anyof [1,2])] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x anyof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x anyof [1,2])] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x anyof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x anyof [1,2])] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x anyof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x noneof [1,2])] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x noneof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x noneof [1,2])] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x noneof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x noneof [1,2])] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x noneof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x noneof [1,2])] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x noneof [1,2])]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": true
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x empty true)] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x empty true)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":null}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x empty true)] 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x empty true)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x empty true)] 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x empty true)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[1]}]}",
+    "matches": false
+  },
+  {
+    "name": "Jayway edge $.items[?(@.x empty true)] 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.items[?(@.x empty true)]"
+        }
+      ]
+    },
+    "body": "{\"items\":[{\"x\":[]}]}",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)[a-z]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "ABC",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)[a-z]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)[a-z]+ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "\u212a",
+    "matches": false
+  },
+  {
+    "name": "Java regex extra (?i)[^a-z]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[^a-z]+"
+        }
+      ]
+    },
+    "body": "ABC",
+    "matches": false
+  },
+  {
+    "name": "Java regex extra (?i)[^a-z]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[^a-z]+"
+        }
+      ]
+    },
+    "body": "123",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i:a) 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i:a)"
+        }
+      ]
+    },
+    "body": "A",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i:a) 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i:a)"
+        }
+      ]
+    },
+    "body": "a",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)\\w+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)\\w+"
+        }
+      ]
+    },
+    "body": "HELLO",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)\\w+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)\\w+"
+        }
+      ]
+    },
+    "body": "\u212a",
+    "matches": false
+  },
+  {
+    "name": "Java regex extra (?i)hello 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)hello"
+        }
+      ]
+    },
+    "body": "HELLO",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (?i)hello 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)hello"
+        }
+      ]
+    },
+    "body": "hello",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra a{2,3}+a 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a{2,3}+a"
+        }
+      ]
+    },
+    "body": "aaa",
+    "matches": false
+  },
+  {
+    "name": "Java regex extra a{2,3}+a 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "a{2,3}+a"
+        }
+      ]
+    },
+    "body": "aaaa",
+    "matches": true
+  },
+  {
+    "name": "Java regex extra (ab)++ab 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(ab)++ab"
+        }
+      ]
+    },
+    "body": "abab",
+    "matches": false
+  },
+  {
+    "name": "Java regex extra (ab)++ab 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(ab)++ab"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": false
+  },
+  {
+    "name": "Java possessive group (ab)++ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(ab)++"
+        }
+      ]
+    },
+    "body": "abab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (ab)++ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(ab)++"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (ab)++ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(ab)++"
+        }
+      ]
+    },
+    "body": "",
+    "matches": false
+  },
+  {
+    "name": "Java possessive group (?:ab){2,3}+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?:ab){2,3}+"
+        }
+      ]
+    },
+    "body": "abab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (?:ab){2,3}+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?:ab){2,3}+"
+        }
+      ]
+    },
+    "body": "ababab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (?:ab){2,3}+ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?:ab){2,3}+"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": false
+  },
+  {
+    "name": "Java possessive group ((a)b)++ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "((a)b)++"
+        }
+      ]
+    },
+    "body": "abab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group ((a)b)++ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "((a)b)++"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (?i)[a-z]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "ABC",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (?i)[a-z]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "Java possessive group (?i)[a-z]+ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)[a-z]+"
+        }
+      ]
+    },
+    "body": "\u212a",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes (?i:a)k 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i:a)k"
+        }
+      ]
+    },
+    "body": "Ak",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?i:a)k 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i:a)k"
+        }
+      ]
+    },
+    "body": "AK",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes (?i:a)k 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i:a)k"
+        }
+      ]
+    },
+    "body": "ak",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?iu:k)k 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu:k)k"
+        }
+      ]
+    },
+    "body": "\u212ak",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?iu:k)k 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu:k)k"
+        }
+      ]
+    },
+    "body": "\u212aK",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes (?U)\\d+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?U)\\d+"
+        }
+      ]
+    },
+    "body": "\u0661\u0662",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?U)\\d+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?U)\\d+"
+        }
+      ]
+    },
+    "body": "12",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes [a-z&&[def]]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[def]]+"
+        }
+      ]
+    },
+    "body": "def",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes [a-z&&[def]]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[def]]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes [a-z&&[^m-p]]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[^m-p]]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes [a-z&&[^m-p]]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-z&&[^m-p]]+"
+        }
+      ]
+    },
+    "body": "mnop",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes [a-d[m-p]]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-d[m-p]]+"
+        }
+      ]
+    },
+    "body": "amp",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes [a-d[m-p]]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[a-d[m-p]]+"
+        }
+      ]
+    },
+    "body": "xyz",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes [^a-z&&[def]]+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[^a-z&&[def]]+"
+        }
+      ]
+    },
+    "body": "abc",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes [^a-z&&[def]]+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[^a-z&&[def]]+"
+        }
+      ]
+    },
+    "body": "def",
+    "matches": false
+  },
+  {
+    "name": "Java regex scopes [^a-z&&[def]]+ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "[^a-z&&[def]]+"
+        }
+      ]
+    },
+    "body": "123",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?i)\\Qhello.world\\E 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)\\Qhello.world\\E"
+        }
+      ]
+    },
+    "body": "HELLO.WORLD",
+    "matches": true
+  },
+  {
+    "name": "Java regex scopes (?i)\\Qhello.world\\E 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)\\Qhello.world\\E"
+        }
+      ]
+    },
+    "body": "helloxworld",
+    "matches": false
+  },
+  {
+    "name": "XML PI []<?pi one?><a/> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<?pi one?><a/>",
+          "exemptedComparisons": []
+        }
+      ]
+    },
+    "body": "<?pi two?><a/>",
+    "matches": false
+  },
+  {
+    "name": "XML PI ['PROCESSING_INSTRUCTION_DATA']<?pi one?><a/> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<?pi one?><a/>",
+          "exemptedComparisons": [
+            "PROCESSING_INSTRUCTION_DATA"
+          ]
+        }
+      ]
+    },
+    "body": "<?pi two?><a/>",
+    "matches": false
+  },
+  {
+    "name": "XML PI []<?pi one?><a/> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<?pi one?><a/>",
+          "exemptedComparisons": []
+        }
+      ]
+    },
+    "body": "<?pi one?><a/>",
+    "matches": false
+  },
+  {
+    "name": "XML PI ['PROCESSING_INSTRUCTION_DATA']<?pi one?><a/> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<?pi one?><a/>",
+          "exemptedComparisons": [
+            "PROCESSING_INSTRUCTION_DATA"
+          ]
+        }
+      ]
+    },
+    "body": "<?pi one?><a/>",
+    "matches": false
+  },
+  {
+    "name": "XML PI []<a><?pi one?></a> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><?pi one?></a>",
+          "exemptedComparisons": []
+        }
+      ]
+    },
+    "body": "<a><?pi two?></a>",
+    "matches": false
+  },
+  {
+    "name": "XML PI ['PROCESSING_INSTRUCTION_DATA']<a><?pi one?></a> 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a><?pi one?></a>",
+          "exemptedComparisons": [
+            "PROCESSING_INSTRUCTION_DATA"
+          ]
+        }
+      ]
+    },
+    "body": "<a><?pi two?></a>",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern uuuu-MM-ddbefore 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "uuuu-MM-dd"
+        }
+      ]
+    },
+    "body": "2026-01-02",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern uuuu-MM-ddafter 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "uuuu-MM-dd"
+        }
+      ]
+    },
+    "body": "2026-01-02",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-M-dbefore 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "yyyy-M-d"
+        }
+      ]
+    },
+    "body": "2026-1-2",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-M-dafter 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "yyyy-M-d"
+        }
+      ]
+    },
+    "body": "2026-1-2",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern dd MMMM yyyy 'at' hh:mm abefore 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "dd MMMM yyyy 'at' hh:mm a"
+        }
+      ]
+    },
+    "body": "02 January 2026 at 03:04 PM",
+    "matches": false
+  },
+  {
+    "name": "Java date pattern dd MMMM yyyy 'at' hh:mm aafter 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "dd MMMM yyyy 'at' hh:mm a"
+        }
+      ]
+    },
+    "body": "02 January 2026 at 03:04 PM",
+    "matches": false
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]before 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05.123Z",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]after 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05.123Z",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]before 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]after 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXbefore 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05.123456Z",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXafter 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05.123456Z",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ssXXXbefore 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "before": "2027-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ssXXX"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05+02:00",
+    "matches": true
+  },
+  {
+    "name": "Java date pattern yyyy-MM-dd'T'HH:mm:ssXXXafter 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "after": "2025-01-01",
+          "actualFormat": "yyyy-MM-dd'T'HH:mm:ssXXX"
+        }
+      ]
+    },
+    "body": "2026-01-02T15:04:05+02:00",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)i 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)i"
+        }
+      ]
+    },
+    "body": "i",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)i 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)i"
+        }
+      ]
+    },
+    "body": "I",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)i 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)i"
+        }
+      ]
+    },
+    "body": "\u0131",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)i 3",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)i"
+        }
+      ]
+    },
+    "body": "\u0130",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)\u00e9 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)\u00e9"
+        }
+      ]
+    },
+    "body": "\u00e9",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?iu)\u00e9 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?iu)\u00e9"
+        }
+      ]
+    },
+    "body": "\u00c9",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?i-m:a)B 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i-m:a)B"
+        }
+      ]
+    },
+    "body": "aB",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?i-m:a)B 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i-m:a)B"
+        }
+      ]
+    },
+    "body": "AB",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?i-m:a)B 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i-m:a)B"
+        }
+      ]
+    },
+    "body": "Ab",
+    "matches": false
+  },
+  {
+    "name": "Java Unicode flag edge (?i)(?-i:a)B 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)(?-i:a)B"
+        }
+      ]
+    },
+    "body": "aB",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?i)(?-i:a)B 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)(?-i:a)B"
+        }
+      ]
+    },
+    "body": "ab",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?i)(?-i:a)B 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?i)(?-i:a)B"
+        }
+      ]
+    },
+    "body": "AB",
+    "matches": false
+  },
+  {
+    "name": "Java Unicode flag edge (?U)\\p{L}+ 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?U)\\p{L}+"
+        }
+      ]
+    },
+    "body": "hello",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?U)\\p{L}+ 1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?U)\\p{L}+"
+        }
+      ]
+    },
+    "body": "\u039a\u03b1\u03bb\u03b7\u03bc\u03ad\u03c1\u03b1",
+    "matches": true
+  },
+  {
+    "name": "Java Unicode flag edge (?U)\\p{L}+ 2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matches": "(?U)\\p{L}+"
+        }
+      ]
+    },
+    "body": "123",
+    "matches": false
+  },
+  {
+    "name": "XML schema schemaLocation[] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"one.xsd\"/>",
+          "exemptedComparisons": []
+        }
+      ]
+    },
+    "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"two.xsd\"/>",
+    "matches": false
+  },
+  {
+    "name": "XML schema schemaLocation['SCHEMA_LOCATION', 'NO_NAMESPACE_SCHEMA_LOCATION'] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"one.xsd\"/>",
+          "exemptedComparisons": [
+            "SCHEMA_LOCATION",
+            "NO_NAMESPACE_SCHEMA_LOCATION"
+          ]
+        }
+      ]
+    },
+    "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"two.xsd\"/>",
+    "matches": true
+  },
+  {
+    "name": "XML schema noNamespaceSchemaLocation[] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"one.xsd\"/>",
+          "exemptedComparisons": []
+        }
+      ]
+    },
+    "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"two.xsd\"/>",
+    "matches": false
+  },
+  {
+    "name": "XML schema noNamespaceSchemaLocation['SCHEMA_LOCATION', 'NO_NAMESPACE_SCHEMA_LOCATION'] 0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"one.xsd\"/>",
+          "exemptedComparisons": [
+            "SCHEMA_LOCATION",
+            "NO_NAMESPACE_SCHEMA_LOCATION"
+          ]
+        }
+      ]
+    },
+    "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"two.xsd\"/>",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumber1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "1",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumber1.0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "1.0",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumber0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "0",
+    "matches": false
+  },
+  {
+    "name": "v4 number equalToNumber2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "2",
+    "matches": false
+  },
+  {
+    "name": "v4 number equalToNumber-1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "-1",
+    "matches": false
+  },
+  {
+    "name": "v4 number equalToNumber1e0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "1e0",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumber1.0f",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "1.0f",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumber 1 ",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": " 1 ",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumberNaN",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "NaN",
+    "matches": false
+  },
+  {
+    "name": "v4 number equalToNumberInfinity",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "Infinity",
+    "matches": false
+  },
+  {
+    "name": "v4 number equalToNumber0x1.0p0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "0x1.0p0",
+    "matches": true
+  },
+  {
+    "name": "v4 number equalToNumbernonsense",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "equalToNumber": 1
+        }
+      ]
+    },
+    "body": "nonsense",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "1",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber1.0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "1.0",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "0",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "2",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanNumber-1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "-1",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber1e0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "1e0",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber1.0f",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "1.0f",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumber 1 ",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": " 1 ",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumberNaN",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "NaN",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumberInfinity",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "Infinity",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanNumber0x1.0p0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "0x1.0p0",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanNumbernonsense",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanNumber": 1
+        }
+      ]
+    },
+    "body": "nonsense",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber1.0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1.0",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "0",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "2",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber-1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "-1",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber1e0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1e0",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber1.0f",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1.0f",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber 1 ",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": " 1 ",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumberNaN",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "NaN",
+    "matches": false
+  },
+  {
+    "name": "v4 number greaterThanEqualNumberInfinity",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "Infinity",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumber0x1.0p0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "0x1.0p0",
+    "matches": true
+  },
+  {
+    "name": "v4 number greaterThanEqualNumbernonsense",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "greaterThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "nonsense",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "1",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber1.0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "1.0",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "0",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanNumber2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "2",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber-1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "-1",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanNumber1e0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "1e0",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber1.0f",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "1.0f",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber 1 ",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": " 1 ",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumberNaN",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "NaN",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumberInfinity",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "Infinity",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumber0x1.0p0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "0x1.0p0",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanNumbernonsense",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanNumber": 1
+        }
+      ]
+    },
+    "body": "nonsense",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanEqualNumber1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber1.0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1.0",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "0",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber2",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "2",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanEqualNumber-1",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "-1",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber1e0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1e0",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber1.0f",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "1.0f",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumber 1 ",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": " 1 ",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumberNaN",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "NaN",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanEqualNumberInfinity",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "Infinity",
+    "matches": false
+  },
+  {
+    "name": "v4 number lessThanEqualNumber0x1.0p0",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "0x1.0p0",
+    "matches": true
+  },
+  {
+    "name": "v4 number lessThanEqualNumbernonsense",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "lessThanEqualNumber": 1
+        }
+      ]
+    },
+    "body": "nonsense",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.emptyNone",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.empty"
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.empty{'equalTo': 'null'}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.empty",
+            "equalTo": "null"
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.empty{'absent': True}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.empty",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.objNone",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.obj"
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.obj{'equalTo': 'null'}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.obj",
+            "equalTo": "null"
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.obj{'absent': True}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.obj",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.missingNone",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.missing"
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.missing{'equalTo': 'null'}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.missing",
+            "equalTo": "null"
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  },
+  {
+    "name": "v4 JSONPath empty/null $.missing{'absent': True}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.missing",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.values[*]None",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": "$.values[*]"
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.values[*]{'equalTo': 'null'}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values[*]",
+            "equalTo": "null"
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": true
+  },
+  {
+    "name": "v4 JSONPath empty/null $.values[*]{'absent': True}",
+    "pattern": {
+      "bodyPatterns": [
+        {
+          "matchesJsonPath": {
+            "expression": "$.values[*]",
+            "absent": true
+          }
+        }
+      ]
+    },
+    "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
+    "matches": false
+  }
+]

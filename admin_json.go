@@ -6,9 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -31,6 +33,14 @@ func adminJSONValue(b *bytes.Buffer, v any, depth int, context string, order *ad
 		return adminRawJSON(b, raw, depth)
 	}
 	if m, ok := v.(map[string]any); ok {
+		if context == "body" {
+			if normalized, ok := adminMessageEntity(m); ok {
+				m = normalized
+			}
+		}
+		if context == "response" || context == "responseDefinition" {
+			m, order = adminResponseEntity(m, order)
+		}
 		if len(m) == 0 {
 			b.WriteString("{ }")
 			return nil
@@ -40,7 +50,41 @@ func adminJSONValue(b *bytes.Buffer, v any, depth int, context string, order *ad
 				order = store.mappingOrder(id)
 			}
 		}
+		if store != nil {
+			if m["open"] != nil && m["type"] != nil {
+				if ch := store.Messaging().Channel(bmString(m["id"])); ch != nil {
+					order = ch.order
+				}
+			}
+			if m["eventType"] != nil {
+				ms := store.Messaging()
+				ms.mu.RLock()
+				order = ms.eventOrders[bmString(m["id"])]
+				ms.mu.RUnlock()
+			}
+			if m["driverType"] != nil {
+				ms := store.Messaging()
+				ms.mu.RLock()
+				order = ms.providerOrders[bmString(m["name"])]
+				ms.mu.RUnlock()
+			}
+			if m["trigger"] != nil {
+				ms := store.Messaging()
+				ms.mu.RLock()
+				for _, entry := range ms.mappingEntries {
+					if reflect.DeepEqual(entry.value, m) {
+						order = entry.order
+						break
+					}
+				}
+				ms.mu.RUnlock()
+			}
+		}
 		keys := adminKeys(m, context, order)
+		if len(keys) == 0 {
+			b.WriteString("{ }")
+			return nil
+		}
 		b.WriteString("{\n")
 		for i, k := range keys {
 			if i > 0 {
@@ -83,6 +127,31 @@ func adminJSONValue(b *bytes.Buffer, v any, depth int, context string, order *ad
 	switch x := v.(type) {
 	case string:
 		adminJSONString(b, x)
+	case float64:
+		if context == "distance" || strings.HasSuffix(context, "Number") {
+			format := byte('f')
+			if x != 0 && (math.Abs(x) < 0.001 || math.Abs(x) >= 10000000) {
+				format = 'e'
+			}
+			value := strconv.FormatFloat(x, format, -1, 64)
+			mantissa, exponent, scientific := strings.Cut(value, "e")
+			if !strings.Contains(mantissa, ".") {
+				mantissa += ".0"
+			}
+			if scientific {
+				exp, _ := strconv.Atoi(exponent)
+				value = mantissa + "E" + strconv.Itoa(exp)
+			} else {
+				value = mantissa
+			}
+			b.WriteString(value)
+		} else {
+			raw, err := json.Marshal(v)
+			if err != nil {
+				return err
+			}
+			b.Write(raw)
+		}
 	case nil:
 		b.WriteString("null")
 	default:
@@ -97,22 +166,66 @@ func adminJSONValue(b *bytes.Buffer, v any, depth int, context string, order *ad
 func adminKeys(m map[string]any, context string, source *adminOrder) []string {
 	var order []string
 	switch {
+	case m["eventType"] != nil:
+		order = strings.Fields("id eventType channel message stubMapping wasMatched timestamp subEvents")
+	case m["trigger"] != nil:
+		order = strings.Fields("id name priority trigger actions metadata")
+	case m["open"] != nil && m["type"] != nil:
+		order = strings.Fields("type id open initiatingRequest providerName channelName")
+	case m["channelProviders"] != nil:
+		order = strings.Fields("channelProviders meta")
+	case m["messageMappings"] != nil:
+		order = strings.Fields("messageMappings meta")
+	case m["messageServeEvents"] != nil:
+		order = strings.Fields("messageServeEvents messageJournalDisabled")
+	case m["channels"] != nil:
+		order = strings.Fields("channels meta channelsMessaged")
+	case m["driverType"] != nil:
+		order = strings.Fields("name driverType settings")
+	case context == "channel" && m["type"] != nil:
+		order = strings.Fields("type providerName channelName initiatingRequestPattern")
+	case context == "trigger":
+		order = strings.Fields("type channel message requestPattern stubId")
+	case context == "actions":
+		order = strings.Fields("type message channelTarget transformers transformerParameters")
+	case context == "channelTarget":
+		order = strings.Fields("type channelType requestPattern providerName channelName")
+	case context == "body" && (m["data"] != nil || m["base64Data"] != nil || m["filePath"] != nil || m["dataRef"] != nil):
+		if m["format"] == "json" {
+			order = strings.Fields("data format")
+		} else {
+			order = strings.Fields("format compression charset data base64Data filePath dataStore dataRef")
+		}
+	case context == "message":
+		order = strings.Fields("body base64Body headers")
+	case m["report"] != nil && m["contentType"] != nil:
+		order = strings.Fields("status contentType report")
+	case m["type"] != nil && m["data"] != nil && (context == "subEvents" || m["timeOffsetNanos"] != nil):
+		order = strings.Fields("type timeOffsetNanos data")
+	case m["uptimeInSeconds"] != nil:
+		order = strings.Fields("status message version uptimeInSeconds timestamp")
+	case m["nearMisses"] != nil:
+		order = strings.Fields("nearMisses")
+	case m["matchResult"] != nil:
+		order = strings.Fields("request stubMapping requestPattern matchResult")
+	case context == "matchResult":
+		order = strings.Fields("subEvents diffDescriptions distance")
 	case m["wasMatched"] != nil:
 		order = strings.Fields("id request responseDefinition response wasMatched timing subEvents stubMapping")
-	case m["absoluteUrl"] != nil:
+	case m["absoluteUrl"] != nil || m["browserProxyRequest"] != nil:
 		order = strings.Fields("url absoluteUrl method clientIp headers cookies browserProxyRequest loggedDate bodyAsBase64 body protocol scheme host port loggedDateString queryParams formParams")
 	case m["request"] != nil && m["response"] != nil:
 		order = strings.Fields("id name request newRequest response uuid persistent priority scenarioName requiredScenarioState newScenarioState postServeActions serveEventListeners metadata")
 	case m["possibleStates"] != nil:
 		order = strings.Fields("id name state possibleStates mappings")
-	case context == "request":
+	case context == "request" || context == "requestPattern" || context == "initiatingRequestPattern":
 		order = strings.Fields("scheme host port url urlPattern urlPath urlPathPattern urlPathTemplate clientIp method headers pathParameters queryParameters formParameters cookies basicAuthCredentials bodyPatterns multipartPatterns customMatcher")
-	case context == "response" && m["bodyAsBase64"] != nil:
-		order = strings.Fields("status headers bodyAsBase64 body")
+	case m["status"] != nil && m["bodyAsBase64"] != nil:
+		order = strings.Fields("status headers bodyAsBase64 body fromProxy")
 	case context == "response" || context == "responseDefinition":
 		order = strings.Fields("status statusMessage body jsonBody base64Body bodyFileName headers additionalProxyRequestHeaders removeProxyRequestHeaders fixedDelayMilliseconds delayDistribution chunkedDribbleDelay proxyBaseUrl proxyUrlPrefixToRemove fault transformers transformerParameters fromConfiguredStub bodyAsBase64")
-	case context == "settings":
-		order = strings.Fields("fixedDelay delayDistribution proxyPassThrough extended")
+	case context == "settings" && (m["fixedDelay"] != nil || m["delayDistribution"] != nil || m["extended"] != nil || m["proxyPassThrough"] != nil):
+		order = strings.Fields("fixedDelay delayDistribution extended proxyPassThrough")
 	case context == "timing":
 		order = strings.Fields("addedDelay processTime responseSendTime serveTime totalTime")
 	case context == "bodyPatterns":
@@ -134,14 +247,14 @@ func adminKeys(m map[string]any, context string, source *adminOrder) []string {
 	keys := make([]string, 0, len(m))
 	seen := map[string]bool{}
 	for _, k := range order {
-		if _, ok := m[k]; ok && !seen[k] {
+		if value, ok := m[k]; ok && value != nil && !seen[k] {
 			keys = append(keys, k)
 			seen[k] = true
 		}
 	}
 	rest := []string{}
 	for k := range m {
-		if !seen[k] {
+		if !seen[k] && m[k] != nil {
 			rest = append(rest, k)
 		}
 	}

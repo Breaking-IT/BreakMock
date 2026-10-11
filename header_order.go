@@ -3,13 +3,16 @@ package breakmock
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"errors"
 	"io"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 )
 
 const captureMaxHeaderBytes = 1 << 20
@@ -64,36 +67,53 @@ func (s *headerOrderState) pop() []string {
 // Pair with HeaderOrderConnContext and call RequestHeaderOrder exactly once at
 // the start of EVERY request, including administration requests.
 func WrapHeaderOrderListener(listener net.Listener) net.Listener {
-	return &headerOrderListener{Listener: listener}
+	return WrapWireListener(listener, true)
 }
 
-type headerOrderListener struct{ net.Listener }
+// WrapWireListener preserves WireMock v4 HTTP/1 status reasons and optionally request header order.
+func WrapWireListener(listener net.Listener, captureHeaders bool) net.Listener {
+	return &headerOrderListener{Listener: listener, captureHeaders: captureHeaders}
+}
+
+type wireResponseContextKey struct{}
+type headerOrderListener struct {
+	net.Listener
+	captureHeaders bool
+}
 
 func (l *headerOrderListener) Accept() (net.Conn, error) {
 	conn, e := l.Listener.Accept()
 	if e != nil {
 		return nil, e
 	}
+	if !l.captureHeaders {
+		c := &headerOrderConn{Conn: conn}
+		c.responsePending.Store(true)
+		return c, nil
+	}
 	reader, writer := io.Pipe()
 	state := newHeaderOrderState()
 	c := &headerOrderConn{Conn: conn, writer: writer, state: state}
+	c.responsePending.Store(true)
 	go captureRequestHeaderOrders(reader, state)
 	return c, nil
 }
 
 type headerOrderConn struct {
 	net.Conn
-	writer *io.PipeWriter
-	state  *headerOrderState
-	once   sync.Once
+	writer          *io.PipeWriter
+	state           *headerOrderState
+	once            sync.Once
+	captureDisabled atomic.Bool
+	responsePending atomic.Bool
 }
 
 func (c *headerOrderConn) Read(p []byte) (int, error) {
 	n, e := c.Conn.Read(p)
-	if n > 0 {
+	if n > 0 && c.writer != nil && !c.captureDisabled.Load() {
 		_, _ = c.writer.Write(p[:n])
 	}
-	if e != nil {
+	if e != nil && c.writer != nil {
 		// net/http uses temporary expired read deadlines to interrupt its
 		// background keep-alive read. A timeout must not end capture forever.
 		if timeout, ok := e.(net.Error); !ok || !timeout.Timeout() {
@@ -103,7 +123,14 @@ func (c *headerOrderConn) Read(p []byte) (int, error) {
 	return n, e
 }
 func (c *headerOrderConn) Close() error {
-	c.once.Do(func() { c.state.stop(); _ = c.writer.Close() })
+	c.once.Do(func() {
+		if c.state != nil {
+			c.state.stop()
+		}
+		if c.writer != nil {
+			_ = c.writer.Close()
+		}
+	})
 	return c.Conn.Close()
 }
 func (c *headerOrderConn) SetLinger(seconds int) error {
@@ -116,7 +143,11 @@ func (c *headerOrderConn) SetLinger(seconds int) error {
 // HeaderOrderConnContext is suitable for http.Server.ConnContext.
 func HeaderOrderConnContext(ctx context.Context, conn net.Conn) context.Context {
 	if c, ok := conn.(*headerOrderConn); ok {
-		return context.WithValue(ctx, headerOrderContextKey{}, c.state)
+		ctx = context.WithValue(ctx, wireResponseContextKey{}, c)
+		if c.state != nil {
+			ctx = context.WithValue(ctx, headerOrderContextKey{}, c.state)
+		}
+		return ctx
 	}
 	return ctx
 }
@@ -124,6 +155,9 @@ func HeaderOrderConnContext(ctx context.Context, conn net.Conn) context.Context 
 // RequestHeaderOrder consumes this request's wire-order metadata. Without the
 // listener integration (e.g. httptest.NewRecorder), it returns nil.
 func RequestHeaderOrder(request *http.Request) []string {
+	if c, ok := request.Context().Value(wireResponseContextKey{}).(*headerOrderConn); ok {
+		c.responsePending.Store(true)
+	}
 	if state, ok := request.Context().Value(headerOrderContextKey{}).(*headerOrderState); ok {
 		return state.pop()
 	}
@@ -203,4 +237,44 @@ func parseWireHeaderOrder(raw []byte) []string {
 		}
 	}
 	return order
+}
+
+func (c *headerOrderConn) Write(p []byte) (int, error) {
+	if c.responsePending.Load() && bytes.HasPrefix(p, []byte("HTTP/1.")) {
+		end := bytes.Index(p, []byte("\r\n"))
+		if end >= 13 {
+			code, err := strconv.Atoi(string(p[9:12]))
+			if err == nil {
+				if code >= 200 || code == 101 {
+					c.responsePending.Store(false)
+				}
+				reason := wireStatusText(code)
+				if string(p[13:end]) != reason {
+					adjusted := make([]byte, 0, len(p)+len(reason))
+					adjusted = append(adjusted, p[:13]...)
+					adjusted = append(adjusted, reason...)
+					adjusted = append(adjusted, p[end:]...)
+					if _, err := c.Conn.Write(adjusted); err != nil {
+						return 0, err
+					}
+					return len(p), nil
+				}
+			}
+		}
+	}
+	return c.Conn.Write(p)
+}
+
+// DisableRequestHeaderCapture detaches the HTTP metadata parser before a protocol upgrade.
+// The connection continues to carry raw upgraded protocol bytes through net/http hijacking.
+func DisableRequestHeaderCapture(r *http.Request) {
+	if c, ok := r.Context().Value(wireResponseContextKey{}).(*headerOrderConn); ok {
+		c.captureDisabled.Store(true)
+		if c.state != nil {
+			c.state.stop()
+		}
+		if c.writer != nil {
+			_ = c.writer.Close()
+		}
+	}
 }

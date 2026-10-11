@@ -2,7 +2,6 @@
 package breakmock
 
 import (
-	"encoding/json"
 	raymond "github.com/Breaking-IT/BreakMock/internal/handlebars"
 	"github.com/antchfx/xmlquery"
 	"reflect"
@@ -23,7 +22,7 @@ func (v templateList) String() string {
 
 type templateJSONArray []any
 
-func (v templateJSONArray) String() string { b, _ := json.Marshal(v); return string(b) }
+func (v templateJSONArray) String() string { return templatePrettyJSON(v, 0) }
 
 type templateJSONObject map[string]any
 
@@ -50,10 +49,17 @@ func (v templateXMLNode) String() string {
 	if v.node.Type == xmlquery.TextNode || v.node.Type == xmlquery.AttributeNode {
 		return v.node.InnerText()
 	}
-	return v.node.OutputXML(true) + "\n"
+	return templateXMLSerialize(v.node, 0, true) + "\n"
 }
 func (v templateXMLNode) Text() string { return v.node.InnerText() }
 func (v templateXMLNode) Name() string { return v.node.Data }
+func (v templateXMLNode) Attributes() map[string]any {
+	a := map[string]any{}
+	for _, attr := range v.node.Attr {
+		a[attr.Name.Local] = attr.Value
+	}
+	return a
+}
 
 type templateXMLValues []templateXMLNode
 
@@ -67,13 +73,16 @@ func (v templateXMLValues) String() string {
 // templatePrettyJSON follows Jackson's default pretty-printer whitespace.
 // Map keys use deterministic lexical order; source-object insertion order is not retained.
 func templatePrettyJSON(value any, depth int) string {
+	if o, ok := value.(templateObject); ok {
+		return templatePrettyJSON(&o, depth)
+	}
 	if o, ok := value.(*templateObject); ok {
 		if len(o.order) == 0 {
 			return "{ }"
 		}
 		parts := make([]string, 0, len(o.order))
 		for _, k := range o.order {
-			key, _ := marshalJSON(k)
+			key, _ := templateMarshalJSON(k)
 			parts = append(parts, strings.Repeat("  ", depth+1)+string(key)+" : "+templatePrettyJSON(o.values[k], depth+1))
 		}
 		return "{\n" + strings.Join(parts, ",\n") + "\n" + strings.Repeat("  ", depth) + "}"
@@ -91,7 +100,7 @@ func templatePrettyJSON(value any, depth int) string {
 		sort.Slice(keys, func(i, j int) bool { return keys[i].String() < keys[j].String() })
 		out := make([]string, len(keys))
 		for i, k := range keys {
-			key, _ := json.Marshal(k.String())
+			key, _ := templateMarshalJSON(k.String())
 			out[i] = strings.Repeat("  ", depth+1) + string(key) + " : " + templatePrettyJSON(r.MapIndex(k).Interface(), depth+1)
 		}
 		return "{\n" + strings.Join(out, ",\n") + "\n" + strings.Repeat("  ", depth) + "}"
@@ -105,13 +114,11 @@ func templatePrettyJSON(value any, depth int) string {
 		}
 		return "[ " + strings.Join(out, ", ") + " ]"
 	default:
-		var buf strings.Builder
-		enc := json.NewEncoder(&buf)
-		enc.SetEscapeHTML(false)
-		if e := enc.Encode(value); e != nil {
+		b, e := templateMarshalJSON(value)
+		if e != nil {
 			panic(e)
 		}
-		return strings.TrimSuffix(buf.String(), "\n")
+		return string(b)
 	}
 }
 
@@ -142,4 +149,29 @@ func templateSlice(value any) []any {
 		}
 	}
 	return v
+}
+
+// templateSegments is a list whose display value retains the original URL path.
+type templateSegments string
+
+func (s templateSegments) String() string { return string(s) }
+func (s templateSegments) TemplateIterationValues() []any {
+	v := []any{}
+	for _, part := range strings.Split(string(s), "/") {
+		if part != "" {
+			v = append(v, part)
+		}
+	}
+	return v
+}
+func (s templateSegments) ResolveTemplateField(k string) (any, bool) {
+	v := s.TemplateIterationValues()
+	if k == "size" {
+		return len(v), true
+	}
+	n, e := strconv.Atoi(k)
+	if e == nil && n >= 0 && n < len(v) {
+		return v[n], true
+	}
+	return nil, false
 }

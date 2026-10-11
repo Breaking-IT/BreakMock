@@ -27,7 +27,8 @@ func DecodeDocument(data []byte) (map[string]any, error) {
 	}
 	return m, nil
 }
-func decodeValue(d *json.Decoder) (any, error) {
+func decodeValue(d *json.Decoder) (any, error) { return decodeValueContext(d, "") }
+func decodeValueContext(d *json.Decoder, context string) (any, error) {
 	t, e := d.Token()
 	if e != nil {
 		return nil, e
@@ -50,8 +51,20 @@ func decodeValue(d *json.Decoder) (any, error) {
 					compact, e = wireJSON(raw)
 				}
 				v = json.RawMessage(compact)
+			} else if context == "body" && key == "data" {
+				var raw json.RawMessage
+				e = d.Decode(&raw)
+				if e == nil {
+					if bytes.HasPrefix(bytes.TrimSpace(raw), []byte("{")) {
+						compact, err := wireJSON(raw)
+						e = err
+						v = json.RawMessage(compact)
+					} else {
+						e = json.Unmarshal(raw, &v)
+					}
+				}
 			} else {
-				v, e = decodeValue(d)
+				v, e = decodeValueContext(d, key)
 			}
 			if e != nil {
 				return nil, e

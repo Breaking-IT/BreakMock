@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/big"
 	"mime"
 	"mime/multipart"
 	"net/http"
@@ -14,19 +15,18 @@ import (
 	"regexp"
 	"strings"
 	"sync"
-	"time"
+	"unicode"
 
 	"github.com/antchfx/xmlquery"
 	"github.com/antchfx/xpath"
 	"github.com/dlclark/regexp2"
-	"github.com/ohler55/ojg/jp"
 	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
 // MatchRequest evaluates the built-in WireMock request pattern. Unknown custom
 // extensions do not match: Go cannot execute a Java RequestMatcherExtension.
 func MatchRequest(pattern map[string]any, request Request) bool {
-	if method, ok := pattern["method"].(string); ok && method != "ANY" && method != request.Method {
+	if !matchRequestMethod(pattern["method"], request.Method) {
 		return false
 	}
 	if clientIP, ok := pattern["clientIp"]; ok && !matchValue(clientIP, request.ClientIP, request.ClientIP != "") {
@@ -36,7 +36,14 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 	if err != nil {
 		return false
 	}
-	for key, value := range pattern {
+	if _, custom := pattern["customMatcher"]; custom {
+		return false
+	}
+	for _, key := range []string{"url", "urlPattern", "urlPath", "urlPathPattern", "urlPathTemplate"} {
+		value, exists := pattern[key]
+		if !exists {
+			continue
+		}
 		s, _ := value.(string)
 		switch key {
 		case "url":
@@ -59,13 +66,18 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 			if _, ok := matchPathTemplate(s, u.EscapedPath()); !ok {
 				return false
 			}
-		case "customMatcher":
+		}
+		break
+	}
+	if host, ok := pattern["host"]; ok {
+		absolute, e := url.Parse(request.AbsoluteURL)
+		if e != nil {
 			return false
 		}
-	}
-	if host, ok := pattern["host"].(string); ok {
-		absolute, e := url.Parse(request.AbsoluteURL)
-		if e != nil || absolute.Hostname() != host {
+		if value, ok := host.(string); ok {
+			host = map[string]any{"equalTo": value}
+		}
+		if !matchValue(host, absolute.Hostname(), true) {
 			return false
 		}
 	}
@@ -93,6 +105,9 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 	}
 	if patterns, ok := pattern["headers"].(map[string]any); ok {
 		for name, p := range patterns {
+			if _, auth := pattern["basicAuthCredentials"]; auth && strings.EqualFold(name, "Authorization") {
+				continue
+			}
 			if !matchMulti(p, request.Headers.Values(name)) {
 				return false
 			}
@@ -106,7 +121,11 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 		}
 	}
 	if patterns, ok := pattern["formParameters"].(map[string]any); ok {
-		form, e := url.ParseQuery(string(request.Body))
+		formBody := string(request.Body)
+		if !strings.HasPrefix(strings.ToLower(request.Headers.Get("Content-Type")), "application/x-www-form-urlencoded") {
+			formBody = ""
+		}
+		form, e := url.ParseQuery(formBody)
 		if e != nil {
 			return false
 		}
@@ -119,16 +138,18 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 	if patterns, ok := pattern["cookies"].(map[string]any); ok {
 		r := &http.Request{Header: request.Headers}
 		for name, p := range patterns {
-			c, e := r.Cookie(name)
-			if e != nil {
-				if !matchValue(p, "", false) {
-					return false
+			var values []string
+			for _, cookie := range r.Cookies() {
+				if cookie.Name == name {
+					values = append(values, cookie.Value)
 				}
-			} else if !matchValue(p, c.Value, true) {
+			}
+			if !matchMulti(p, values) {
 				return false
 			}
 		}
 	}
+
 	if auth, ok := pattern["basicAuthCredentials"].(map[string]any); ok {
 		r := &http.Request{Header: request.Headers}
 		user, pass, valid := r.BasicAuth()
@@ -136,7 +157,7 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 			return false
 		}
 	}
-	if patterns, ok := pattern["pathParameters"].(map[string]any); ok {
+	if patterns, ok := pattern["pathParameters"].(map[string]any); ok && pattern["urlPathTemplate"] != nil && pattern["url"] == nil && pattern["urlPattern"] == nil && pattern["urlPath"] == nil && pattern["urlPathPattern"] == nil {
 		template, _ := pattern["urlPathTemplate"].(string)
 		params, matched := matchPathTemplate(template, u.EscapedPath())
 		if !matched {
@@ -149,7 +170,7 @@ func MatchRequest(pattern map[string]any, request Request) bool {
 			}
 		}
 	}
-	if patterns, ok := pattern["bodyPatterns"].([]any); ok {
+	if patterns, ok := pattern["bodyPatterns"].([]any); ok && request.Body != nil {
 		for _, p := range patterns {
 			if !matchBodyValue(p, request.Body) {
 				return false
@@ -213,12 +234,10 @@ func matchRegex(pattern, value string) bool {
 	re, exists := regexCache.entries[pattern]
 	regexCache.RUnlock()
 	if !exists {
-		re.native, _ = regexp.Compile("(?s)^(?:" + pattern + ")$")
+		translated := javaRegex(pattern)
+		re.native, _ = regexp.Compile("(?s)^(?:" + translated + ")$")
 		if re.native == nil {
-			re.fallback, _ = regexp2.Compile("\\A(?:"+pattern+")\\z", regexp2.Singleline)
-			if re.fallback != nil {
-				re.fallback.MatchTimeout = 100 * time.Millisecond
-			}
+			re.fallback, _ = regexp2.Compile("\\A(?:"+translated+")\\z", regexp2.Singleline)
 		}
 		regexCache.Lock()
 		if len(regexCache.entries) >= 2048 {
@@ -244,6 +263,9 @@ func matchMulti(pattern any, values []string) bool {
 	}
 	for _, key := range []string{"includes", "hasExactly"} {
 		if raw, exists := p[key]; exists {
+			if len(values) == 0 {
+				return false
+			}
 			patterns, ok := raw.([]any)
 			if !ok || (key == "hasExactly" && len(patterns) != len(values)) {
 				return false
@@ -278,6 +300,15 @@ func matchValue(pattern any, actual string, present bool) bool {
 	if !ok {
 		return false
 	}
+	for _, op := range numberOperators {
+		if expected, exists := p[op]; exists {
+			if !present {
+				return false
+			}
+			matched, _ := numberPatternMatch(op, expected, actual)
+			return matched
+		}
+	}
 	if _, ok := p["absent"].(bool); ok {
 		return !present
 	}
@@ -311,9 +342,12 @@ func matchValue(pattern any, actual string, present bool) bool {
 		switch key {
 		case "equalTo":
 			if insensitive, _ := p["caseInsensitive"].(bool); insensitive {
-				return strings.EqualFold(actual, text)
+				return javaEqualsIgnoreCase(actual, text)
 			}
 			return actual == text
+		case "matchesPathTemplate":
+			_, matched := matchPathTemplate(text, actual)
+			return matched
 		case "binaryEqualTo":
 			data, err := base64.StdEncoding.DecodeString(text)
 			return err == nil && bytes.Equal(data, []byte(actual))
@@ -328,13 +362,13 @@ func matchValue(pattern any, actual string, present bool) bool {
 		case "equalToJson":
 			var want, got any
 			if s, ok := expected.(string); ok {
-				if json.Unmarshal([]byte(s), &want) != nil {
+				if decodeMatcherJSON([]byte(s), &want) != nil {
 					return false
 				}
 			} else {
 				want = expected
 			}
-			if json.Unmarshal([]byte(actual), &got) != nil {
+			if decodeMatcherJSON([]byte(actual), &got) != nil {
 				return false
 			}
 			unordered, _ := p["ignoreArrayOrder"].(bool)
@@ -363,7 +397,7 @@ func matchJSON(want, got any, unordered, extras bool) bool {
 			_, ok := got.(string)
 			return ok
 		case "${json-unit.any-number}":
-			_, ok := got.(float64)
+			_, ok := matcherNumber(got)
 			return ok
 		case "${json-unit.any-boolean}":
 			_, ok := got.(bool)
@@ -436,6 +470,10 @@ func matchJSON(want, got any, unordered, extras bool) bool {
 		}
 		return assign(0)
 	default:
+		if n, ok := matcherNumber(want); ok {
+			other, valid := matcherNumber(got)
+			return valid && n.Cmp(other) == 0
+		}
 		return fmt.Sprintf("%T", want) == fmt.Sprintf("%T", got) && fmt.Sprint(want) == fmt.Sprint(got)
 	}
 }
@@ -453,33 +491,20 @@ func matchJSONPath(expected any, actual string) bool {
 	if json.Unmarshal([]byte(actual), &document) != nil {
 		return false
 	}
-	path, err := jp.ParseString(expression)
+	result, err := evaluateMatcherJSONPath(expression, document)
 	if err != nil {
 		return false
 	}
-	values := path.Get(document)
-	if _, isObject := document.(map[string]any); isObject && len(path) > 1 {
-		if _, root := path[0].(jp.Root); root {
-			if _, filter := path[1].(*jp.Filter); filter {
-				values = path.Get([]any{document})
-			}
-		}
-	}
-	var result any
-	if !path.Normal() {
-		result = values
-	} else if len(values) > 0 {
-		result = values[0]
-	}
+
 	if nested == nil {
 		if result == nil {
 			return false
 		}
 		switch v := result.(type) {
 		case []any:
-			return len(v) > 0
+			return len(v) > 0 || matcherJSONPathDefinite(expression)
 		case map[string]any:
-			return len(v) > 0
+			return len(v) > 0 || matcherJSONPathDefinite(expression)
 		}
 		return true
 	}
@@ -495,15 +520,26 @@ func matchJSONPath(expected any, actual string) bool {
 			return matchValue(nested, "", false)
 		}
 		for _, v := range array {
+			if v == nil && matchValue(nested, "null", true) {
+				return true
+			}
 			if v != nil && matchValue(nested, matcherJSONValueString(v), true) {
 				return true
 			}
 		}
 		return false
 	}
+
 	return matchValue(nested, matcherJSONValueString(result), true)
 }
 func matcherJSONValueString(v any) string {
+	if n, ok := v.(jsonPathFloat); ok {
+		s := fmt.Sprint(float64(n))
+		if !strings.ContainsAny(s, ".eE") {
+			s += ".0"
+		}
+		return s
+	}
 	if s, ok := v.(string); ok {
 		return s
 	}
@@ -701,4 +737,43 @@ func matchBodyValue(pattern any, body []byte) bool {
 		}
 	}
 	return matchValue(pattern, string(body), present)
+}
+
+func javaEqualsIgnoreCase(a, b string) bool {
+	ar, br := []rune(a), []rune(b)
+	if len(ar) != len(br) {
+		return false
+	}
+	for i, x := range ar {
+		y := br[i]
+		if x == y {
+			continue
+		}
+		ux, uy := unicode.ToUpper(x), unicode.ToUpper(y)
+		if ux != uy && unicode.ToLower(ux) != unicode.ToLower(uy) {
+			return false
+		}
+	}
+	return true
+}
+func decodeMatcherJSON(data []byte, value *any) error {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	if err := decoder.Decode(value); err != nil {
+		return err
+	}
+	var extra any
+	if err := decoder.Decode(&extra); err != io.EOF {
+		return fmt.Errorf("invalid trailing JSON")
+	}
+	return nil
+}
+func matcherNumber(value any) (*big.Rat, bool) {
+	switch value.(type) {
+	case json.Number, float64, float32, int, int64, uint64:
+		n, ok := new(big.Rat).SetString(fmt.Sprint(value))
+		return n, ok
+	default:
+		return nil, false
+	}
 }

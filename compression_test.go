@@ -17,9 +17,9 @@ import (
 
 func TestWireGzipReferenceBytes(t *testing.T) {
 	data := bytes.Repeat([]byte("hello world "), 400)
-	// Captured directly from WireMock 3.13.2 / Jetty's GzipHandler, with
+	// Captured directly from WireMock 4.0.0-beta.40 / Jetty's GzipHandler, with
 	// OpenJDK linking zlib 1.2.12. Header, DEFLATE blocks, CRC and length all count.
-	want, err := base64.StdEncoding.DecodeString("H4sIAAAAAAAAAO3GsQkAIAwEwFUynEKKh4CN67uGxV11vZOpOyer2t3d3d3d3d3d/bM/KkpQgcASAAA=")
+	want, err := base64.StdEncoding.DecodeString("H4sIAAAAAAAA/+3GsQkAIAwEwFUynEKKh4CN67uGxV11vZOpOyer2t3d3d3d3d3d/bM/KkpQgcASAAA=")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -62,7 +62,7 @@ func BenchmarkWireGzip(b *testing.B) {
 }
 
 func TestWireGzipReferenceCorpus(t *testing.T) {
-	raw, err := os.ReadFile("testdata/gzip/wiremock-3.13.2.json")
+	raw, err := os.ReadFile("testdata/gzip/wiremock-4.0.0-beta.40.json")
 	if err != nil {
 		t.Fatal(err)
 	}

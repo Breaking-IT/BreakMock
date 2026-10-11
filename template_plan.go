@@ -172,7 +172,7 @@ func (p *templatePlan) render(request Request) (string, error) {
 		case "url":
 			value = request.URL
 		case "absoluteUrl":
-			value = request.AbsoluteURL
+			value = ""
 		case "body":
 			value = string(request.Body)
 		case "host":
@@ -194,7 +194,7 @@ func (p *templatePlan) render(request Request) (string, error) {
 				}
 			}
 		case "path", "pathSegments":
-			if len(path) == 2 && path[1] == "path" {
+			if len(path) == 2 {
 				value = u.Path
 				break
 			}
@@ -225,7 +225,9 @@ func (p *templatePlan) render(request Request) (string, error) {
 				cookies = map[string]string{}
 				r := http.Request{Header: request.Headers}
 				for _, c := range r.Cookies() {
-					cookies[c.Name] = c.Value
+					if _, seen := cookies[c.Name]; !seen {
+						cookies[c.Name] = c.Value
+					}
 				}
 			}
 			value = cookies[path[2]]

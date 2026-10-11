@@ -1,0 +1,21 @@
+{
+  "reference": "WireMock3.13.2",
+  "mapping": {
+    "request": {
+      "url": "/template-identity"
+    },
+    "response": {
+      "body": "{{#urlEncode}}a b+c{{/urlEncode}}",
+      "transformers": [
+        "response-template"
+      ]
+    }
+  },
+  "same_request_three_times": [
+    "%7Brequest%3Dcom.github.tomakehurst.wiremock.extension.responsetemplating.RequestTemplateModel%403ca8eb4a%2C+parameters%3D%7B%7D%7D",
+    "%7Brequest%3Dcom.github.tomakehurst.wiremock.extension.responsetemplating.RequestTemplateModel%402fe27ae4%2C+parameters%3D%7B%7D%7D",
+    "%7Brequest%3Dcom.github.tomakehurst.wiremock.extension.responsetemplating.RequestTemplateModel%405a09b2eb%2C+parameters%3D%7B%7D%7D"
+  ],
+  "all_identical": false,
+  "interpretation": "The no-argument urlEncode block encodes the context object including Java request model identity hash. Output differs between identical Java requests; this case remains a strict failure, not normalized."
+}

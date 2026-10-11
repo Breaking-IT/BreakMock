@@ -1,0 +1,589 @@
+{
+  "reference": "WireMock4.0.0-beta.40 AdminRoutes.java",
+  "meaning": "Route implementation inventory, not proof of exhaustive byte compatibility. Strict case results in reports/admin.json.",
+  "globalLimitations": [
+    "Malformed values and JVM stacktrace error bodies are not exhaustively reproduced.",
+    "Missing static assets do not yet reproduce all Jetty-generated HTML error responses.",
+    "Configured Java extension code cannot execute in nativeGo."
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/__admin/",
+      "upstreamTask": "RootTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin",
+      "upstreamTask": "RootRedirectTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/reset",
+      "upstreamTask": "ResetTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/mappings",
+      "upstreamTask": "GetAllStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings",
+      "upstreamTask": "CreateStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/mappings",
+      "upstreamTask": "ResetStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/edit",
+      "upstreamTask": "OldEditStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/save",
+      "upstreamTask": "SaveMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/reset",
+      "upstreamTask": "ResetToDefaultMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/mappings/unmatched",
+      "upstreamTask": "GetUnmatchedStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/mappings/unmatched",
+      "upstreamTask": "RemoveUnmatchedStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/mappings/{id}",
+      "upstreamTask": "GetStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/mappings/{id}",
+      "upstreamTask": "EditStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/remove",
+      "upstreamTask": "RemoveMatchingStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/mappings/{id}",
+      "upstreamTask": "RemoveStubMappingByIdTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/find-by-metadata",
+      "upstreamTask": "FindStubMappingsByMetadataTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/remove-by-metadata",
+      "upstreamTask": "RemoveStubMappingsByMetadataTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/mappings/import",
+      "upstreamTask": "ImportStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/files",
+      "upstreamTask": "GetAllStubFilesTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/files/**",
+      "upstreamTask": "EditStubFileTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/files/**",
+      "upstreamTask": "DeleteStubFileTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/files/**",
+      "upstreamTask": "GetStubFileTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/scenarios",
+      "upstreamTask": "GetAllScenariosTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/scenarios/reset",
+      "upstreamTask": "ResetScenariosTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/scenarios/{name}/state",
+      "upstreamTask": "SetScenarioStateTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/requests",
+      "upstreamTask": "GetAllRequestsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/requests",
+      "upstreamTask": "ResetRequestsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/requests/count",
+      "upstreamTask": "GetRequestCountTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/requests/find",
+      "upstreamTask": "FindRequestsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/requests/unmatched",
+      "upstreamTask": "FindUnmatchedRequestsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/requests/unmatched/near-misses",
+      "upstreamTask": "FindNearMissesForUnmatchedTask",
+      "implemented": true,
+      "caveats": [
+        "Matcher distance coverage limits apply."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/requests/{id}",
+      "upstreamTask": "GetServedStubTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/requests/{id}",
+      "upstreamTask": "RemoveServeEventTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/requests/remove",
+      "upstreamTask": "RemoveServeEventsByRequestPatternTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/requests/remove-by-metadata",
+      "upstreamTask": "RemoveServeEventsByStubMetadataTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/recordings/snapshot",
+      "upstreamTask": "SnapshotTask",
+      "implemented": true,
+      "caveats": [
+        "Custom Java transformer plugins are unavailable; extraction filename and advanced options need expanded oracle coverage."
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/recordings/start",
+      "upstreamTask": "StartRecordingTask",
+      "implemented": true,
+      "caveats": [
+        "Custom Java transformer plugins are unavailable; extraction filename and advanced options need expanded oracle coverage."
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/recordings/stop",
+      "upstreamTask": "StopRecordingTask",
+      "implemented": true,
+      "caveats": [
+        "Custom Java transformer plugins are unavailable; extraction filename and advanced options need expanded oracle coverage."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/recordings/status",
+      "upstreamTask": "GetRecordingStatusTask",
+      "implemented": true,
+      "caveats": [
+        "Custom Java transformer plugins are unavailable; extraction filename and advanced options need expanded oracle coverage."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/recorder",
+      "upstreamTask": "GetRecordingsIndexTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/near-misses/request",
+      "upstreamTask": "FindNearMissesForRequestTask",
+      "implemented": true,
+      "caveats": [
+        "Matcher distance coverage limits apply."
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/near-misses/request-pattern",
+      "upstreamTask": "FindNearMissesForRequestPatternTask",
+      "implemented": true,
+      "caveats": [
+        "Matcher distance coverage limits apply."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/settings",
+      "upstreamTask": "GetGlobalSettingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/settings",
+      "upstreamTask": "GlobalSettingsUpdateTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/settings",
+      "upstreamTask": "GlobalSettingsUpdateTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PATCH",
+      "path": "/__admin/settings/extended",
+      "upstreamTask": "PatchExtendedSettingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/shutdown",
+      "upstreamTask": "ShutdownServerTask",
+      "implemented": true,
+      "caveats": [
+        "Requires shutdown callback when used as an embedded library; CLI wires it."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/docs/swagger",
+      "upstreamTask": "GetSwaggerSpecTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/docs",
+      "upstreamTask": "GetDocIndexTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/certs/wiremock-ca.crt",
+      "upstreamTask": "GetCaCertTask",
+      "implemented": true,
+      "caveats": [
+        "Default missing-keystore500 empty response matches. Configured Java JKS certificate export is unavailable."
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/health",
+      "upstreamTask": "HealthCheckTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/version",
+      "upstreamTask": "GetVersionTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/channels",
+      "upstreamTask": "GetAllMessageChannelsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/channels/{id}",
+      "upstreamTask": "GetMessageChannelTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/channels/{id}",
+      "upstreamTask": "RemoveMessageChannelTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/channels",
+      "upstreamTask": "CreateFixedChannelTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/channels/send",
+      "upstreamTask": "SendChannelMessageTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/channel-providers",
+      "upstreamTask": "GetAllChannelProvidersTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/channel-providers",
+      "upstreamTask": "RegisterChannelProviderTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/channel-providers/{name}",
+      "upstreamTask": "GetChannelProviderTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/channel-providers/{name}",
+      "upstreamTask": "UpdateChannelProviderTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/channel-providers/{name}",
+      "upstreamTask": "RemoveChannelProviderTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/messages",
+      "upstreamTask": "GetAllMessageEventsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/messages",
+      "upstreamTask": "ResetMessageJournalTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/count",
+      "upstreamTask": "GetMessageEventCountTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/find",
+      "upstreamTask": "FindMessageEventsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/remove",
+      "upstreamTask": "RemoveMessageServeEventsByPatternTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/remove-by-metadata",
+      "upstreamTask": "RemoveMessageServeEventsByMetadataTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/wait",
+      "upstreamTask": "WaitForMessageEventTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/messages/wait-for-count",
+      "upstreamTask": "WaitForMessageEventsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/messages/{id}",
+      "upstreamTask": "GetMessageServeEventTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/messages/{id}",
+      "upstreamTask": "RemoveMessageServeEventTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/message-mappings",
+      "upstreamTask": "GetAllMessageStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/message-mappings",
+      "upstreamTask": "CreateMessageStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/message-mappings",
+      "upstreamTask": "ResetMessageStubMappingsTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "GET",
+      "path": "/__admin/message-mappings/{id}",
+      "upstreamTask": "GetMessageStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "PUT",
+      "path": "/__admin/message-mappings/{id}",
+      "upstreamTask": "EditMessageStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/__admin/message-mappings/{id}",
+      "upstreamTask": "RemoveMessageStubMappingTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/message-mappings/find-by-metadata",
+      "upstreamTask": "FindMessageStubMappingsByMetadataTask",
+      "implemented": true,
+      "caveats": []
+    },
+    {
+      "method": "POST",
+      "path": "/__admin/message-mappings/remove-by-metadata",
+      "upstreamTask": "RemoveMessageStubMappingsByMetadataTask",
+      "implemented": true,
+      "caveats": []
+    }
+  ]
+}

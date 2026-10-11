@@ -1,48 +1,43 @@
 # Benchmark measurements
 
-Measured on 2026-10-11 against WireMock 3.13.2. These are small same-host HTTP
-workloads, not a capacity guarantee or evidence of complete compatibility.
+Measured on 2026-10-11 against **WireMock 4.0.0-beta.40** using the current v4 port.
+Two alternating-order rounds per server, 32 persistent clients, a three-second
+warmup and five-second measurement per workload. Every run reported zero errors.
+The same local Go load generator drove both servers and checked response bodies.
 
-Platform: `macOS-27.0.1-arm64-arm-64bit-Mach-O` (`arm64`).
-Go: `go version go1.27.1 darwin/arm64`. Java details and reference JAR hash are in the raw report.
+These are small same-host workloads, not a production capacity guarantee. The
+client shares CPU with the server. RSS is sampled every 100 ms; Java heap growth,
+GC, JIT warmup, body sizes, mapping counts and journal settings affect results.
 
-## Journaling disabled
+| Journal | Workload | Java mean RPS | BreakMock mean RPS | Go / Java | Java peak RSS MiB | BreakMock peak RSS MiB |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Disabled | static | 89,569 | 112,340 | 1.254× | 485–636 | 29–29 |
+| Disabled | template | 89,611 | 109,591 | 1.223× | 501–646 | 31–31 |
+| Capped at 1,000 | static | 83,063 | 83,969 | 1.011× | 762–769 | 44–44 |
+| Capped at 1,000 | template | 83,171 | 81,220 | 0.977× | 911–926 | 45–45 |
 
-| Workload | Java RPS | BreakMock RPS | Throughput ratio | Java peak RSS MiB | BreakMock peak RSS MiB |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| static | 75,187 | 100,858 | 1.34× | 516.5 | 27.5 |
-| template | 77,937 | 100,441 | 1.29× | 641.3 | 28.2 |
+Without journals, BreakMock delivered about 22–25% more RPS. With journals capped
+at 1,000, throughput was close: approximately 1% faster for static responses and
+2% slower for this template workload. Lower memory use is established in these
+runs; a significant throughput improvement is **not** established for journaled
+workloads.
 
-Medians of three rounds; zero request errors in every round. RSS column is the
-median of each round’s sampled peak. Raw results: [benchmark.json](testdata/reports/benchmark.json).
+The template workload is `Hello {{request.query.name}}: {{math 2 '+' 3}}`.
+It exercises the optimized deterministic template path, not the full helper suite.
+Memory ranged from 29–45 MiB for BreakMock and 485–926 MiB for Java across measured
+workloads. Startup includes process launch and readiness polling, so sub-second
+startup values are only coarse observations.
 
-## Journal capped at 1,000 entries on both servers
-
-| Workload | Java RPS | BreakMock RPS | Throughput ratio | Java peak RSS MiB | BreakMock peak RSS MiB |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| static | 59,045 | 79,365 | 1.34× | 790.4 | 48.9 |
-| template | 55,646 | 77,097 | 1.39× | 849.9 | 49.2 |
-
-Same three-round method; zero request errors. Raw results:
-[benchmark-journal.json](testdata/reports/benchmark-journal.json). The CLI’s
-inbound header-order capture is enabled in this configuration. Both journals are
-explicitly capped; unbounded retention is not represented by these RSS values.
-
-## Method and limitations
-
-- The same Go HTTP client uses 32 persistent connections for both servers.
-- Each workload gets a three-second warmup and five-second measurement.
-- Server order alternates by round; only one measured server runs at a time.
-- Static response: `Hello, benchmark!`. Template combines a query parameter with a math helper.
-- The script verifies the response body before loading each server; the load phase checks status/read errors.
-- RSS is sampled every 100 ms. JVM heap policy and GC influence these measurements.
-- Client and server share the same machine and CPU; background host activity is not isolated.
-- These workloads do not exercise TLS, gzip throughput, thousands of mappings, large bodies or complex templates.
-- The template fast path is general straight-line interpolation. Stateful/random/time/dynamic/block templates use the full renderer.
+Platform: macOS arm64, Go 1.27.1, OpenJDK 27. Runtime details and the pinned JAR
+checksum are recorded in [no-journal results](testdata/reports/benchmark-v4.json)
+and [bounded-journal results](testdata/reports/benchmark-v4-journal.json).
 
 Reproduce:
 
 ```sh
-python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rounds 3 --duration 5s
-python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rounds 3 --duration 5s --journal-limit 1000 --output testdata/reports/benchmark-journal.json
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rounds 2 --duration 5s --output testdata/reports/benchmark-v4.json
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rounds 2 --duration 5s --journal-limit 1000 --output testdata/reports/benchmark-v4-journal.json
 ```
+
+Earlier v3.13.2 measurements are retained in `benchmark.json` and
+`benchmark-journal.json` for history; they describe a different revision/reference.

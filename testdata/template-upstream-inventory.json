@@ -1,0 +1,640 @@
+{
+  "upstream_version": "3.13.2",
+  "attribution": "WireMock Apache-2.0, Copyright Thomas Akehurst; Handlebars.java Apache-2.0, Copyright Edgar Espina",
+  "scope": "Historical 3.13.2 inventory, retained for fixture provenance. Not a v4 feature coverage claim. Inventory only: names present in local corpus does not mean all variants verified. Java JUnit suite itself has not been executed against Go. All local differential outputs compared as raw bytes.",
+  "helpers": {
+    "xPath": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "soapXPath": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "jsonPath": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "randomValue": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "hostname": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "date": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "now": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "parseDate": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "truncateDate": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "trim": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "base64": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "urlEncode": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "formData": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "regexExtract": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "size": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "pickRandom": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "randomInt": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "randomDecimal": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "range": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "array": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "arrayAdd": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "arrayRemove": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "parseJson": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "matches": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "contains": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "math": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "val": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "arrayJoin": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "formatJson": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "formatXml": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "toJson": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "jsonMerge": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "jsonRemove": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "jsonArrayAdd": {
+      "source": "WireMockHelpers.java",
+      "appears_in_local_corpus": true
+    },
+    "capitalizeFirst": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "center": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "cut": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "defaultIfEmpty": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "join": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "ljust": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "rjust": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "substring": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "lower": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "upper": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "slugify": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "stringFormat": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "stripTags": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "capitalize": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "abbreviate": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "wordWrap": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "replace": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "yesno": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "dateFormat": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "numberFormat": {
+      "source": "StringHelpers",
+      "appears_in_local_corpus": true
+    },
+    "eq": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "neq": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "gt": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "gte": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "lt": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "lte": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "and": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "or": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "not": {
+      "source": "ConditionalHelpers",
+      "appears_in_local_corpus": true
+    },
+    "isEven": {
+      "source": "NumberHelper",
+      "appears_in_local_corpus": true
+    },
+    "isOdd": {
+      "source": "NumberHelper",
+      "appears_in_local_corpus": true
+    },
+    "stripes": {
+      "source": "NumberHelper",
+      "appears_in_local_corpus": true
+    },
+    "assign": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "systemValue": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "if": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "unless": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "each": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "with": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "lookup": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    },
+    "log": {
+      "source": "TemplateEngine registration / Handlebars built-in",
+      "appears_in_local_corpus": true
+    }
+  },
+  "upstream_test_methods": {
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/ResponseTemplateTransformerTest.java": [
+      "queryParameters",
+      "showsNothingWhenNoQueryParamsPresent",
+      "requestHeaders",
+      "requestHeadersCaseInsensitive",
+      "cookies",
+      "multiValueCookies",
+      "urlPath",
+      "urlPathNodes",
+      "urlPathNodesForRootPath",
+      "fullUrl",
+      "clientIp",
+      "templatizeBodyFile",
+      "requestBody",
+      "singleValueTemplatedResponseHeaders",
+      "multiValueTemplatedResponseHeaders",
+      "stringHelper",
+      "conditionalHelper",
+      "customHelper",
+      "areConditionalHelpersLoaded",
+      "proxyBaseUrlWithAdditionalRequestHeader",
+      "jsonPathValueDefaultsToEmptyString",
+      "jsonPathValueDefaultCanBeProvided",
+      "transformerParametersAreAppliedToTemplate",
+      "unknownTransformerParametersAreNotCausingIssues",
+      "requestLineScheme",
+      "requestLineHost",
+      "requestLinePort",
+      "requestLinePath",
+      "requestLineUrl",
+      "requestLineBaseUrlNonStandardPort",
+      "requestLineBaseUrlHttp",
+      "requestLineBaseUrlHttps",
+      "requestLinePathSegment",
+      "requestLinePathSegment0",
+      "requestLinequeryParameters",
+      "requestIdIsAvailableIdInTheTemplateModel",
+      "trimContent",
+      "trimValue",
+      "base64EncodeContent",
+      "base64EncodeValue",
+      "base64EncodeValueWithoutPadding",
+      "base64DecodeValue",
+      "base64DecodeValueWithoutPadding",
+      "urlEncodeValue",
+      "urlDecodeValue",
+      "extractFormValue",
+      "extractFormMultiValue",
+      "extractFormValueWithUrlDecoding",
+      "extractSingleRegexValue",
+      "extractMultipleRegexValues",
+      "returnsReasonableDefaultWhenRegexExtractDoesNotMatchAnything",
+      "regexExtractSupportsSpecifyingADefaultForWhenNothingMatches",
+      "calculateStringSize",
+      "calculateListSize",
+      "calculateMapSize",
+      "firstListElement",
+      "lastListElement",
+      "listElementOffsetFromEnd",
+      "listElementOffsetFromEnd2",
+      "picksRandomElementFromLiteralList",
+      "picksRandomElementFromListVariable",
+      "picksRandomObjectFromListVariable",
+      "picksAsManyRandomItemsAsPossibleFromListVariableWhenCountSpecifiedHigherThanItemCount",
+      "squareBracketedRequestParameters1",
+      "squareBracketedRequestParameters2",
+      "correctlyRendersWhenContentExistsEitherSideOfTemplate",
+      "clearsTemplateCacheOnReset",
+      "clearsTemplateCacheWhenAnyStubRemovedReset",
+      "honoursCacheSizeLimit",
+      "honours0CacheSizeLimit",
+      "arrayStyleQueryParametersCanBeResolvedViaLookupHelper",
+      "generatesARandomInt",
+      "generatesARandomDecimal",
+      "generatesARangeOfNumbersInAnArray",
+      "generatesAnArrayLiteral",
+      "addsArrayItemWthSpecifiedIntegerPosition",
+      "addsArrayItemWthSpecifiedStartPosition",
+      "addsArrayItemWthSpecifiedEndPosition",
+      "addsArrayItemWithNoPositionAddsToEnd",
+      "addsArrayItemWithNegativePositionThrowsAnError",
+      "addsArrayItemWithPositionGreaterThanTheArrayLengthThrowsAnError",
+      "addsArrayItemWithMissingValueToAdd",
+      "deletesArrayItemWthSpecifiedIntegerPosition",
+      "deletesArrayItemWthSpecifiedStartPosition",
+      "deletesArrayItemWthSpecifiedEndPosition",
+      "deletesArrayItemWithNoPositionRemovesFromEnd",
+      "deletesArrayItemWithNegativePositionThrowsAnError",
+      "deletesArrayItemWithPositionGreaterThanTheArrayLengthThrowsAnError",
+      "parsesJsonLiteralToAMapOfMapsVariable",
+      "parsesJsonVariableToAMapOfMapsVariable",
+      "parsesJsonVariableToAndReturns",
+      "parseJsonReportsInvalidParameterErrors",
+      "parsesEmptyJsonLiteralToAnEmptyMap",
+      "parsesEmptyJsonVariableToAnEmptyMap",
+      "conditionalBranchingOnStringMatchesRegexInline",
+      "conditionalBranchingOnStringMatchesRegexBlock",
+      "matchesRegexReturnsErrorIfMissingParameter",
+      "conditionalBranchingOnStringContainsInline",
+      "stringContainsCopesWithNullString",
+      "conditionalBranchingOnStringContainsBlock",
+      "conditionalBranchingOnArrayContainsBlock",
+      "mathematicalOperations",
+      "dateTruncation",
+      "formatDecimalAsCurrencyWithLocale",
+      "canTruncateARenderableDateToFirstOfMonth",
+      "canTruncateARenderableDateToFirstHourOfDay",
+      "canParseLocalYearMonth",
+      "canParseLocalYear",
+      "valHelperReturnsDefaultsNullValue",
+      "valHelperReturnsValueIfNotNullValue",
+      "valHelperCanAssignValueToNamedVariable",
+      "valHelperCanAssignValueToNamedVariableAndMaintainsType",
+      "joinWithObjectBody",
+      "joinWithArrayOfStrings",
+      "joinWithItemsListed",
+      "joinWithNumbersListed",
+      "joinWithEmptyArray",
+      "joinWithNoSeparatorShouldReturnError",
+      "joinWithNoParameterShouldReturnError",
+      "joinWithStringAsParameterShouldReturnError",
+      "joinWithItemsListedAndPrefixAndSuffix",
+      "joinWithNumbersListedAndPrefix",
+      "joinWithNumbersListedAndSuffix",
+      "joinWithNumbersListedAndPrefixAndSuffix",
+      "joinWithDifferentSeparators"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/SystemKeyAuthorisorTest.java": [
+      "permitsAllowedKeys",
+      "forbidsNonAllowedKeys",
+      "defaultsToWireMockPrefixIfNoPatternsSpecified"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ArrayAddHelperTest.java": [
+      "appendsValueWhenNoPositionSpecified",
+      "appendsValueWhenEndPositionSpecified",
+      "prependsValueWhenStartPositionSpecified",
+      "insertsValueAtPositionSpecifiedAsInteger",
+      "insertsValueAtPositionSpecifiedAsString",
+      "returnsAnErrorWhenPostionNotValidType"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ArrayRemoveHelperTest.java": [
+      "deletesTheLastValueWhenNoPositionSpecified",
+      "deletesTheValueAtTheIntegerPositionSpecified"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/FormatJsonHelperTest.java": [
+      "formatJsonCompactFormatReturnsJsonInCompactFormat",
+      "formatJsonFormatsJsonInAVariable",
+      "anInvalidFormatFieldResultsInAnError",
+      "formatJsonReturnsAnErrorWhenJsonIsInvalid",
+      "emptyJsonPassedIntoTheFormatJsonHelper",
+      "noContentPassedIntoTheFormatJsonHelper",
+      "nullVariablePassedToTheFormatJsonHelper",
+      "whitespacePassedIntoTheFormatJsonHelper",
+      "invalidFormatType"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/FormatXmlHelperTest.java": [
+      "formatXmlHelperGivesGoodErrorOnUnknownFormat",
+      "formatXmlHelperGivesGoodErrorOnNoInput",
+      "formatXmlHelperGivesGoodErrorOnInvalidXml",
+      "formatXmlHelperFormatsXmlCompact",
+      "formatXmlHelperFormatsPrettyXmlCompact",
+      "invalidFormatType"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HandlebarsCurrentDateHelperTest.java": [
+      "rendersNowDateTime",
+      "rendersNowDateTimeWithCustomFormat",
+      "rendersPassedDateTimeWithDayOffset",
+      "rendersNowWithDayOffset",
+      "rendersNowAsUnixEpochInMilliseconds",
+      "rendersNowAsUnixEpochInSeconds",
+      "adjustsISO8601ToSpecifiedTimezone",
+      "adjustsCustomFormatToSpecifiedTimezone",
+      "helperIsIncludedInTemplateTransformerWithNowTagName",
+      "helperIsIncludedInTemplateTransformerWithDateTagName",
+      "acceptsDateParameterwithDateTagName"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HandlebarsJsonPathHelperTest.java": [
+      "mergesASimpleValueFromRequestIntoResponseBody",
+      "includesAnErrorInTheResponseBodyWhenTheJsonPathIsInvalid",
+      "listResultFromJsonPathQueryCanBeUsedByHandlebarsEachHelper",
+      "mapResultFromJsonPathQueryCanBeUsedByHandlebarsEachHelper",
+      "singleValueResultFromJsonPathQueryCanBeUsedByHandlebarsIfHelper",
+      "extractsASingleStringValueFromTheInputJson",
+      "extractsASingleNumberValueFromTheInputJson",
+      "extractsASingleBooleanValueFromTheInputJson",
+      "extractsAJsonObjectFromTheInputJson",
+      "extractsAJsonArrayFromTheInputJson",
+      "rendersAMeaningfulErrorWhenInputJsonIsInvalid",
+      "rendersAMeaningfulErrorWhenJsonPathIsInvalid",
+      "rendersAnEmptyStringWhenJsonValueUndefined",
+      "rendersAnEmptyStringWhenJsonValueUndefinedAndOptionsEmpty",
+      "rendersDefaultValueWhenShallowJsonValueUndefined",
+      "rendersDefaultValueWhenDeepJsonValueUndefined",
+      "rendersDefaultValueWhenJsonValueNull",
+      "ignoresDefaultWhenJsonValueEmpty",
+      "ignoresDefaultWhenJsonValueZero",
+      "rendersAnEmptyStringWhenJsonIsNull",
+      "rendersAnEmptyStringWhenJsonIsEmptyString",
+      "rendersAMeaningfulErrorWhenJsonPathIsNull",
+      "extractsValueFromAMap",
+      "returnsCorrectResultWhenSameExpressionUsedTwiceOnIdenticalDocuments",
+      "returnsCorrectResultWhenSameExpressionUsedTwiceOnDifferentDocuments",
+      "returnsCorrectResultWhenDifferentExpressionsUsedOnSameDocument",
+      "helperCanBeCalledDirectlyWithoutSupplyingRequestCache"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HandlebarsRandomValuesHelperTest.java": [
+      "generatesRandomAlphaNumericOfSpecifiedLength",
+      "generatesUppercaseRandomAlphaNumericOfSpecifiedLength",
+      "generatesRandomAlphabeticOfSpecifiedLength",
+      "generatesRandomNumericOfSpecifiedLength",
+      "generatesRandomStringOfSpecifiedLength",
+      "generatesRandomHexadecimalOfSpecifiedLength",
+      "randomValuesCanBeAssignedToVariables",
+      "generatesRandomUUID"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HandlebarsSoapHelperTest.java": [
+      "extractsASimpleBodyValue",
+      "rendersASimpleValue",
+      "negativeTestResponseTemplate"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HandlebarsXPathHelperTest.java": [
+      "rendersASimpleValue",
+      "rendersNothingWhenTheXPathExpressionResolvesNoContent",
+      "extractsASimpleValue",
+      "extractsAnAttribute",
+      "extractsASubElement",
+      "rendersAMeaningfulErrorWhenTheInputXmlIsInvalid",
+      "rendersAMeaningfulErrorWhenTheXPathExpressionIsInvalid",
+      "rendersAMeaningfulErrorWhenTheXPathExpressionIsAbsent",
+      "rendersABlankWhenTheInputXmlIsAbsent",
+      "returnsCorrectResultWhenSameExpressionUsedTwiceOnIdenticalDocuments",
+      "returnsCorrectResultWhenSameExpressionUsedTwiceOnDifferentDocuments",
+      "returnsCorrectResultWhenDifferentExpressionsUsedOnSameDocument",
+      "rendersXmlWhenElementIsSelected",
+      "supportsIterationOverNodeListWithEachHelper",
+      "supportsIterationOverElementsWithAttributes",
+      "supportsIterationOverNamespacedElements",
+      "rendersNamespacedElement",
+      "rendersElementNames",
+      "rendersElementWhenXPathSelectorReturnsPrimitiveStringResult",
+      "rendersElementWhenXPathSelectorReturnsPrimitiveNumberResult"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/HostnameHelperTest.java": [
+      "generatesHostname"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/JsonArrayAddHelperTest.java": [
+      "helperIsAccessibleFromResponseBody",
+      "returnsAnErrorWhenMaxItemsIsANegativeInteger"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/JsonMergeHelperTest.java": [
+      "helperIsAccessibleFromResponseBody",
+      "jsonObjectsAreMergedRecursively",
+      "nullAttributesAreRemovedWhenRemoveNullsParameterIsSetInline",
+      "nullAttributesAreRemovedWhenRemoveNullsParameterIsSetBlock"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/JsonRemoveHelperTest.java": [
+      "helperIsAccessibleFromResponseBody",
+      "errorsIfJsonpathExpressionCannotBeAppliedToADeleteOperation",
+      "errorsIfJsonpathIsNotProvided",
+      "errorsIfMoreThanOneParameterIsProvided"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/MathsHelperTest.java": [
+      "returnsAnErrorIfNotExactlyTwoParameters",
+      "returnsAnErrorIfOperatorNotRecognised",
+      "addsTwoIntegers",
+      "addsTwoLongs",
+      "addsAStringAndInteger",
+      "addsADoubleAndInteger",
+      "addsAStringDoubleAndDouble",
+      "addsADoubleAndFloat",
+      "subtractsTwoIntegers",
+      "multipliesTwoIntegers",
+      "dividesTwoIntegers",
+      "modsTwoIntegers",
+      "coercesEpochFormattedRenderableDateParameterCorrectly",
+      "handlesLargeNegativeIntegerResults"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ParseDateHelperTest.java": [
+      "parsesAnISO8601DateWhenNoFormatSpecified",
+      "parsesAnRFC1123DateWhenNoFormatSpecified",
+      "parsesDateWithSuppliedFormat",
+      "parsesLocalDateTimeWithSuppliedFormat",
+      "parsesDateTimeWithEpochFormat"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ParseJsonHelperTest.java": [
+      "parsesASimpleJsonObject",
+      "parsesAJsonObjectContainingArray",
+      "parseANestedJsonObject",
+      "parsesJsonWithTopLevelArray",
+      "parsesNullJsonIfSection",
+      "parsesNullJsonIfNotSection",
+      "parsesEmptyJsonIfSection",
+      "parsesEmptyJsonWithBracesIfSection",
+      "parsesEmptyJsonIfSectionIfVariableNameNull",
+      "parsesEmptyJsonIfNotSection",
+      "parsesEmptyJsonWithBracesIfNotSection",
+      "parsesEmptyJsonIfNotSectionIfVariableNameAbsent"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/RegexExtractHelperTest.java": [
+      "canExtractSingleRegexMatch",
+      "canExtractMultipleRegexMatches",
+      "noMatchErrorWhenNoRegexMatch",
+      "invalidRegExErrorWhenRegexStringIsInvalid"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/RenderableDateTest.java": [
+      "writesToJsonInStringFormat"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/SystemValueHelperTest.java": [
+      "getExistingEnvironmentVariableShouldNotNull",
+      "getExistingEnvironmentVariableWithDefault",
+      "getNonExistingEnvironmentVariableShouldNull",
+      "getNonExistingEnvironmentVariableWithDefault",
+      "getForbiddenEnvironmentVariableShouldReturnError",
+      "getEmptyKeyShouldReturnError",
+      "getNonExistingSystemPropertyShouldNull",
+      "getNonExistingSystemPropertyWithDefault",
+      "getDefaultType"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ToJsonHelperTest.java": [
+      "convertArrayToJson",
+      "convertNullToJson",
+      "convertStringToJson",
+      "convertBooleanToJson",
+      "convertNumberToJson"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/TruncateDateTimeHelperTest.java": [
+      "truncatesDateObject"
+    ],
+    "src/test/java/com/github/tomakehurst/wiremock/extension/responsetemplating/helpers/ValHelperTest.java": [
+      "returnsTheValuePassedInWhenNoOtherParameters",
+      "returnsTheDefaultValueWhenValueIsNull",
+      "returnsTheValueWhenNotNullAndDefaultIsSpecified",
+      "assignsToTheNamedVariable"
+    ]
+  },
+  "upstream_test_count": 286
+}

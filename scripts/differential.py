@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare BreakMock against a running WireMock 3.13.2 reference.
+"""Compare BreakMock against a running WireMock 4.0.0-beta.40 reference.
 Bodies are compared byte-for-byte for stub responses; admin JSON is compared
 semantically, excluding generated IDs and timestamps. This is a bounded corpus,
 not a claim of complete WireMock compatibility.
@@ -13,7 +13,7 @@ def call(base,path,method='GET',body=None,headers=None):
     except urllib.error.HTTPError as e:r=e
     return r.status,dict(r.headers),r.read()
 reference_version=call(a.reference,'/__admin/version')
-assert reference_version[0]==200 and json.loads(reference_version[2]).get('version')=='3.13.2', ('Wrong reference server',reference_version)
+assert reference_version[0]==200 and json.loads(reference_version[2]).get('version')=='4.0.0-beta.40', ('Wrong reference server',reference_version)
 def mapping(request,response=None,**extra):return {'request':request,'response':response or {'status':200,'body':'matched'},**extra}
 cases=[]
 def add(name,m,path,method='GET',body=None,headers=None):cases.append((name,m,path,method,body,headers))
@@ -69,7 +69,7 @@ for name,path,method,body in [('mapping list','/__admin/mappings','GET',None),('
     result={'name':name,'passed':r[0]==c[0] and ok}
     if not result['passed']:result.update(reference=repr(r),candidate=repr(c))
     results.append(result);print(('PASS' if result['passed'] else 'FAIL')+' '+name)
-report={'reference':'WireMock 3.13.2','passed':sum(r['passed'] for r in results),'total':len(results),'results':results}
+report={'reference':'WireMock 4.0.0-beta.40','passed':sum(r['passed'] for r in results),'total':len(results),'results':results}
 if a.output:
     with open(a.output,'w')as f:json.dump(report,f,indent=2)
 print(f"{report['passed']}/{report['total']} passed")

@@ -51,7 +51,7 @@ func wireGzip(data []byte) ([]byte, error) {
 		return nil, fmt.Errorf("gzip output bound too large")
 	}
 	result := make([]byte, 10+int(bound)+8)
-	copy(result, []byte{0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 0})
+	copy(result, []byte{0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 255})
 	var input *C.uchar
 	if len(data) > 0 {
 		input = (*C.uchar)(unsafe.Pointer(&data[0]))

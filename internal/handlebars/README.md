@@ -15,3 +15,4 @@ retaining indexed access and allows WireMock helpers with optional arguments.
 - Request header maps can resolve property names without case sensitivity.
 - Ordered JSON objects preserve source field order during field lookup and iteration.
 - Helpers can distinguish their own block from an enclosing block's subexpression.
+- Helper exceptions retain the innermost statement position, including nested subexpressions.

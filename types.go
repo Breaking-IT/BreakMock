@@ -8,12 +8,16 @@ type Mapping = map[string]any
 
 // Request captures the bytes and metadata used for matching and journaling.
 type Request struct {
-	ClientIP    string
-	PathParams  map[string]string
-	Method      string
-	URL         string
-	AbsoluteURL string
-	Headers     http.Header
-	HeaderOrder []string
-	Body        []byte
+	UnmatchedReport      string
+	UnmatchedContentType string
+	ProcessTimeMillis    int64
+	AddedDelayMillis     int64
+	ClientIP             string
+	PathParams           map[string]string
+	Method               string
+	URL                  string
+	AbsoluteURL          string
+	Headers              http.Header
+	HeaderOrder          []string
+	Body                 []byte
 }

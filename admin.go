@@ -27,6 +27,7 @@ type adminHandler struct {
 }
 
 func NewAdminHandler(store *Store, rootDir string) http.Handler {
+	store.Messaging().rootDir = rootDir
 	return &adminHandler{store: store, root: rootDir, recordStatus: "NeverStarted"}
 }
 func adminJSON(w http.ResponseWriter, status int, v any) {
@@ -53,22 +54,53 @@ func adminDecode(w http.ResponseWriter, r *http.Request) (map[string]any, bool) 
 	return v, true
 }
 func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/__admin"), "/")
+	w.Header().Set("X-BreakMock-Version", "0.1.0")
+	if serveAdminAsset(w, r) {
+		return
+	}
+	if a.serveMessaging(w, r) {
+		return
+	}
+	if serveNearMissAdmin(w, r, a.store) {
+		return
+	}
+	p := strings.TrimPrefix(r.URL.Path, "/__admin")
+	if p == "/" {
+		p = ""
+	}
 	s := a.store
 	switch {
 	case p == "" && r.Method == "GET":
-		a.writeJSON(w, 200, map[string]any{"mappings": s.Mappings()})
+		if r.URL.Path == "/__admin" {
+			w.Header().Set("Location", "/__admin/")
+			w.WriteHeader(302)
+			return
+		}
+		all := s.Mappings()
+		a.writeJSON(w, 200, map[string]any{"mappings": paginateMappings(all, r), "meta": map[string]any{"total": len(all)}})
 		return
 	case p == "/health" && r.Method == "GET":
-		a.writeJSON(w, 200, map[string]any{"status": "healthy", "message": "Wiremock is ok", "version": "BreakMock 0.1.0", "timestamp": time.Now().UTC().Format(time.RFC3339Nano), "uptimeInSeconds": int(time.Since(adminStart).Seconds())})
+		a.writeJSON(w, 200, map[string]any{"status": "healthy", "message": "Wiremock is ok", "version": "4.0.0-beta.40", "timestamp": time.Now().UTC().Format(time.RFC3339Nano), "uptimeInSeconds": int(time.Since(adminStart).Seconds())})
 		return
 	case p == "/version" && r.Method == "GET":
 		if strings.Contains(r.Header.Get("Accept"), "text/plain") {
 			w.Header().Set("Content-Type", "text/plain")
-			_, _ = w.Write([]byte("BreakMock 0.1.0"))
+			_, _ = w.Write([]byte("4.0.0-beta.40"))
 		} else {
-			a.writeJSON(w, 200, map[string]any{"version": "BreakMock 0.1.0"})
+			a.writeJSON(w, 200, map[string]any{"version": "4.0.0-beta.40"})
 		}
+		return
+	case p == "/shutdown" && r.Method == "POST":
+		w.WriteHeader(200)
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+		if fn := s.shutdownHandler(); fn != nil {
+			go fn()
+		}
+		return
+	case p == "/certs/wiremock-ca.crt" && r.Method == "GET":
+		w.WriteHeader(500)
 		return
 	case p == "/reset" && r.Method == "POST":
 		if err := a.reloadDefaults(); err != nil {
@@ -88,9 +120,23 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if !ok {
 				return
 			}
+			if !validateAdminMapping(w, v) {
+				return
+			}
+			id, _ := v["id"].(string)
+
+			id = strings.ToLower(id)
+			if id != "" && s.GetMapping(id) != nil {
+				adminProblem(w, 422, 109, "Duplicate stub mapping ID", "ID of the provided stub mapping '"+id+"' is already taken by another stub mapping", "")
+				return
+			}
 			m, err := a.addMappingDocument(v, r)
 			if err != nil {
 				adminError(w, 422, err.Error())
+				return
+			}
+			if err = a.persistMapping(m); err != nil {
+				adminError(w, 500, err.Error())
 				return
 			}
 			a.writeJSON(w, 201, m)
@@ -121,13 +167,17 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				adminError(w, 422, "mapping must be an object")
 				return
 			}
-			if _, ok = m["request"].(map[string]any); !ok {
-				adminError(w, 422, "request must be an object")
-				return
+			if m["request"] != nil {
+				if _, ok = m["request"].(map[string]any); !ok {
+					adminError(w, 422, "request must be an object")
+					return
+				}
 			}
-			if _, ok = m["response"].(map[string]any); !ok {
-				adminError(w, 422, "response must be an object")
-				return
+			if m["response"] != nil {
+				if _, ok = m["response"].(map[string]any); !ok {
+					adminError(w, 422, "response must be an object")
+					return
+				}
 			}
 		}
 		rawImport, _ := io.ReadAll(r.Body)
@@ -162,7 +212,15 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if index < len(importSource.Mappings) {
 				order, _ = decodeAdminOrder(importSource.Mappings[index])
 			}
-			_, _ = s.addMapping(m, order, true)
+			added, err := s.addMapping(m, order, true)
+			if err != nil {
+				adminError(w, 422, err.Error())
+				return
+			}
+			if err = a.persistMapping(added); err != nil {
+				adminError(w, 500, err.Error())
+				return
+			}
 		}
 		w.WriteHeader(200)
 		return
@@ -180,8 +238,7 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			m := cloneMap(original)
 			m["persistent"] = true
 			m, _ = s.AddMapping(m)
-			data, _ := marshalAdminJSONWithStore(m, s)
-			if err := os.WriteFile(filepath.Join(dir, filepath.Base(m["id"].(string))+".json"), data, 0644); err != nil {
+			if err := a.persistMapping(m); err != nil {
 				adminError(w, 500, err.Error())
 				return
 			}
@@ -273,6 +330,33 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case p == "/files" || strings.HasPrefix(p, "/files/"):
 		a.files(w, r, p)
 		return
+	case p == "/mappings/edit" && r.Method == "POST":
+		v, ok := adminDecode(w, r)
+		if !ok {
+			return
+		}
+		if !validateAdminMapping(w, v) {
+			return
+		}
+		id, _ := v["id"].(string)
+		if id == "" {
+			id, _ = v["uuid"].(string)
+		}
+		if s.GetMapping(id) == nil {
+			w.WriteHeader(404)
+			return
+		}
+		m, err := a.addMappingDocument(v, r)
+		if err != nil {
+			adminError(w, 422, err.Error())
+			return
+		}
+		if err = a.persistMapping(m); err != nil {
+			adminError(w, 500, err.Error())
+			return
+		}
+		w.WriteHeader(204)
+		return
 	case strings.HasPrefix(p, "/mappings/"):
 		id := strings.TrimPrefix(p, "/mappings/")
 		if strings.Contains(id, "/") || id == "unmatched" || id == "find-by-metadata" || id == "remove-by-metadata" || id == "edit" {
@@ -299,9 +383,17 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			v["id"] = id
+			v["uuid"] = id
+			if !validateAdminMapping(w, v) {
+				return
+			}
 			m, err := a.addMappingDocument(v, r)
 			if err != nil {
 				adminError(w, 422, err.Error())
+				return
+			}
+			if err = a.persistMapping(m); err != nil {
+				adminError(w, 500, err.Error())
 				return
 			}
 			a.writeJSON(w, 200, m)
@@ -310,42 +402,29 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	case p == "/scenarios" && r.Method == "GET":
-		states := map[string]map[string]bool{}
+		names := []string{}
+		seen := map[string]bool{}
 		for _, m := range s.Mappings() {
-			name, _ := m["scenarioName"].(string)
-			if name == "" {
-				continue
-			}
-			if states[name] == nil {
-				states[name] = map[string]bool{"Started": true}
-			}
-			for _, k := range []string{"requiredScenarioState", "newScenarioState"} {
-				if v, ok := m[k].(string); ok {
-					states[name][v] = true
-				}
+			if name, ok := m["scenarioName"].(string); ok && !seen[name] {
+				names = append(names, name)
+				seen[name] = true
 			}
 		}
+		javaHashOrder(names)
 		out := []any{}
-		for name, st := range states {
+		for _, name := range names {
+			related := s.scenarioMappings(name)
 			possible := []string{}
-			for v := range st {
-				possible = append(possible, v)
-			}
-			sort.Slice(possible, func(i, j int) bool {
-				if possible[i] == "Started" {
-					return true
-				}
-				if possible[j] == "Started" {
-					return false
-				}
-				return possible[i] < possible[j]
-			})
-			related := []Mapping{}
-			for _, m := range s.Mappings() {
-				if m["scenarioName"] == name {
-					related = append(related, m)
+			known := map[string]bool{}
+			for _, field := range []string{"requiredScenarioState", "newScenarioState"} {
+				for _, m := range related {
+					if value, ok := m[field].(string); ok && !known[value] {
+						known[value] = true
+						possible = append(possible, value)
+					}
 				}
 			}
+			javaHashOrder(possible)
 			out = append(out, map[string]any{"id": name, "name": name, "state": s.ScenarioState(name), "possibleStates": possible, "mappings": related})
 		}
 		a.writeJSON(w, 200, map[string]any{"scenarios": out})
@@ -356,21 +435,86 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	case strings.HasPrefix(p, "/scenarios/") && strings.HasSuffix(p, "/state") && r.Method == "PUT":
 		name := strings.TrimSuffix(strings.TrimPrefix(p, "/scenarios/"), "/state")
+		if !a.scenarioKnown(name) {
+			adminProblem(w, 404, 404, "Scenario "+name+" does not exist", "", "")
+			return
+		}
+		raw, _ := io.ReadAll(r.Body)
+		state := "Started"
+		if len(raw) > 0 {
+			v, err := DecodeDocument(raw)
+			if err != nil {
+				adminError(w, 422, "Invalid JSON")
+				return
+			}
+			state, _ = v["state"].(string)
+			valid := false
+			for _, m := range s.Mappings() {
+				if m["scenarioName"] == name && (m["requiredScenarioState"] == state || m["newScenarioState"] == state) {
+					valid = true
+				}
+			}
+			if !valid {
+				label := state
+				if v["state"] == nil {
+					label = "null"
+				}
+				adminProblem(w, 422, 11, "Scenario "+name+" does not support state "+label, "", "")
+				return
+			}
+		}
+		s.SetScenarioState(name, state)
+		a.writeJSON(w, 200, map[string]any{})
+		return
+	case p == "/settings/extended" && r.Method == "PATCH":
 		v, ok := adminDecode(w, r)
 		if !ok {
 			return
 		}
-		state, _ := v["state"].(string)
-		if state == "" {
-			state = "Started"
+		current := s.Settings()
+		extended, ok := current["extended"].(map[string]any)
+		if !ok {
+			w.WriteHeader(500)
+			return
 		}
-		s.SetScenarioState(name, state)
+		incoming, _ := v["extended"].(map[string]any)
+		for k, value := range incoming {
+			extended[k] = value
+		}
+		current["extended"] = extended
+		current["proxyPassThrough"] = true
+		s.SetSettings(current)
+		raw, _ := io.ReadAll(r.Body)
+		newOrder, _ := decodeAdminOrder(raw)
+		oldOrder := s.settingsOrderSnapshot()
+		combined := &adminOrder{children: map[string]*adminOrder{}}
+		if oldOrder != nil {
+			combined.keys = append(combined.keys, oldOrder.keys...)
+			for k, v := range oldOrder.children {
+				combined.children[k] = v
+			}
+		}
+		extOrder := &adminOrder{children: map[string]*adminOrder{}}
+		if old := oldOrder.child("extended"); old != nil {
+			extOrder.keys = append(extOrder.keys, old.keys...)
+			for k, v := range old.children {
+				extOrder.children[k] = v
+			}
+		}
+		if next := newOrder.child("extended"); next != nil {
+			extOrder.keys = append(extOrder.keys, next.keys...)
+			for k, v := range next.children {
+				extOrder.children[k] = v
+			}
+		}
+		combined.children["extended"] = extOrder
+		s.setSettingsOrder(combined)
 		a.writeJSON(w, 200, map[string]any{})
 		return
 	case p == "/settings":
 		switch r.Method {
 		case "GET":
-			a.writeJSON(w, 200, map[string]any{"settings": s.Settings()})
+			a.writeJSON(w, 200, map[string]any{"settings": adminOrderedValue{s.Settings(), s.settingsOrderSnapshot()}})
 		case "PUT", "POST":
 			v, ok := adminDecode(w, r)
 			if !ok {
@@ -380,6 +524,12 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				v = nested
 			}
 			s.SetSettings(v)
+			raw, _ := io.ReadAll(r.Body)
+			order, _ := decodeAdminOrder(raw)
+			if order.child("settings") != nil {
+				order = order.child("settings")
+			}
+			s.setSettingsOrder(order)
 			w.WriteHeader(200)
 		default:
 			adminError(w, 405, "Method not allowed")
@@ -392,7 +542,7 @@ func (a *adminHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		a.requests(w, r, p)
 		return
 	default:
-		adminError(w, 501, "This admin operation is not implemented")
+		w.WriteHeader(404)
 	}
 }
 func jsonEqual(a, b any) bool {
@@ -423,6 +573,21 @@ func (a *adminHandler) requests(w http.ResponseWriter, r *http.Request, p string
 		s.ResetRequests()
 		a.writeJSON(w, 200, map[string]any{})
 		return
+	}
+	var since *time.Time
+	if p == "/requests" && r.Method == "GET" {
+		if id := r.URL.Query().Get("matchingStub"); id != "" && !validMappingUUID(id) {
+			adminProblem(w, 400, 15, "Query parameter matchingStub value '"+id+"' is not a valid UUID", "", "")
+			return
+		}
+		if raw := r.URL.Query().Get("since"); raw != "" {
+			parsed, err := time.Parse(time.RFC3339Nano, raw)
+			if err != nil {
+				adminProblem(w, 400, 10, raw+" is not a valid ISO8601 date", "", "since")
+				return
+			}
+			since = &parsed
+		}
 	}
 	entries := s.journalSnapshot()
 	events := []any{}
@@ -468,7 +633,7 @@ func (a *adminHandler) requests(w http.ResponseWriter, r *http.Request, p string
 		} else if pattern != nil && !MatchRequest(pattern, e.request) {
 			continue
 		}
-		if p == "/requests/unmatched" && e.event["wasMatched"] == true {
+		if (p == "/requests/unmatched" || p == "/requests" && r.URL.Query().Get("unmatched") == "true") && e.event["wasMatched"] == true {
 			continue
 		}
 		if id := r.URL.Query().Get("matchingStub"); id != "" {
@@ -491,6 +656,18 @@ func (a *adminHandler) requests(w http.ResponseWriter, r *http.Request, p string
 		a.writeJSON(w, 200, map[string]any{"serveEvents": events})
 	default:
 		total := len(events)
+		if since != nil {
+			keep := []any{}
+			for _, v := range events {
+				item := v.(adminOrderedValue).value.(map[string]any)
+				req := item["request"].(map[string]any)
+				logged, _ := req["loggedDate"].(int64)
+				if logged > since.UnixMilli() {
+					keep = append(keep, v)
+				}
+			}
+			events = keep
+		}
 		if limit, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil && limit >= 0 && limit < len(events) {
 			events = events[:limit]
 		}

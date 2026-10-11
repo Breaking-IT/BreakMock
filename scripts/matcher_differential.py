@@ -12,9 +12,11 @@ def call(base,path,body=None,headers=None,method=None):
     except urllib.error.HTTPError as e:r=e
     return r.status,r.read()
 version_status,version_data=call(args.reference,'/__admin/version')
-assert version_status==200 and json.loads(version_data).get('version')=='3.13.2', ('Wrong reference server',version_data)
+assert version_status==200 and json.loads(version_data).get('version')=='4.0.0-beta.40', ('Wrong reference server',version_data)
+from oracle import identify
+identify(args.reference,"java");identify(args.candidate,"go")
 cases=[]
-def add(name,pattern,body=None,path='/test',headers=None):cases.append((name,pattern,body,path,headers))
+def add(name,pattern,body=None,path='/test',headers=None,method=None):cases.append((name,pattern,body,path,headers,method))
 for op,val,body in [('equalTo','abc','abc'),('equalTo','abc','abcd'),('contains','bc','abc'),('doesNotContain','bc','abc'),('matches','a(?=b)b','ab'),('matches','(a)\\1','aa'),('matches','a','ba'),('doesNotMatch','a',''),('before','2026-01-01','2025-01-01'),('after','2026-01-01','2027-01-01')]:add(op+str(len(cases)),{'bodyPatterns':[{op:val}]},body)
 for path in ['/test?q=1&q=2','/test?q=1','/test?q=2&q=1&q=3']:
  for op in ['includes','hasExactly']:add(op+path,{'queryParameters':{'q':{op:[{'equalTo':'1'},{'equalTo':'2'}]}}},path=path)
@@ -22,7 +24,7 @@ for pattern,body in [({'equalToJson':'{"a":"${json-unit.any-number}"}'},'{"a":2}
 for op in ['doesNotMatch','doesNotContain']:add('missing '+op,{'headers':{'X-Missing':{op:'abc'}}})
 add('template',{'urlPathTemplate':'/users/{id}','pathParameters':{'id':{'matches':'[0-9]+'}}},path='/users/12')
 add('encoded path',{'urlPath':'/a%20b'},path='/a%20b')
-# Cases adapted from WireMock 3.13.2 EqualToXmlPatternTest, date matcher tests,
+# Cases adapted from WireMock 4.0.0-beta.40 EqualToXmlPatternTest, date matcher tests,
 # and request matcher tests; retain upstream Apache 2.0 attribution in NOTICE.
 for xml in ['<a><b>1</b><c>2</c></a>', '<a><c>2</c><b>1</b></a>', '<a><b>2</b><c>1</c></a>']:
  add('XML order '+str(len(cases)),{'bodyPatterns':[{'equalToXml':'<a><b>1</b><c>2</c></a>'}]},xml)
@@ -62,21 +64,31 @@ for headers in [{'X-Test':'yes'},{'X-Test':'no'},{}]:
  add('header logical '+str(len(cases)),{'headers':{'X-Test':{'or':[{'equalTo':'yes'},{'absent':True}]}}},headers=headers)
 for expression in ['/a/@id','string(/a/b)','count(/a/b)']:
  add('XPath primitive '+str(len(cases)),{'bodyPatterns':[{'matchesXPath':{'expression':expression,'equalTo':'1'}}]},'<a id="1"><b>1</b></a>')
+from matcher_extended_cases import add_extended
+add_extended(add)
+for key in ['oneOf','noneOf']:
+ for methods in [[],['GET'],['GET','POST'],['ANY'],['QUERY']]:
+  for actual in ['GET','POST','QUERY']:add('v4 method '+key+str(methods)+actual,{'method':{key:methods}},method=actual)
+for operator in ['equalToNumber','greaterThanNumber','greaterThanEqualNumber','lessThanNumber','lessThanEqualNumber']:
+ for actual in ['1','1.0','0','2','-1','1e0','1.0f',' 1 ','NaN','Infinity','0x1.0p0','nonsense']:
+  add('v4 number '+operator+actual,{'bodyPatterns':[{operator:1}]},actual)
+for expression in ['$.empty','$.obj','$.missing','$.values[*]']:
+ for nested in [None,{'equalTo':'null'},{'absent':True}]:add('v4 JSONPath empty/null '+expression+str(nested),{'bodyPatterns':[{'matchesJsonPath':expression if nested is None else {'expression':expression,**nested}}]},'{"empty":[],"obj":{},"values":[null]}')
 failed=[]
 results=[]
-for name,pattern,body,path,headers in cases:
+for name,pattern,body,path,headers,method in cases:
  responses=[]
  for base in [args.reference,args.candidate]:
   call(base,'/__admin/reset',method='POST')
   call(base,'/__admin/mappings',{'priority':1000,'request':{'method':'ANY'},'response':{'status':200,'body':'unmatched'}})
   status,data=call(base,'/__admin/mappings',{'request':pattern,'response':{'status':200,'body':'matched'}})
   if status!=201:responses.append(('rejected',status,data));continue
-  status,data=call(base,path,body,headers);responses.append((status,data))
+  status,data=call(base,path,body,headers,method);responses.append((status,data))
  ok=responses[0]==responses[1]
  results.append({'name':name,'passed':ok,'reference':repr(responses[0]),'candidate':repr(responses[1]),'request':pattern,'body':body,'path':path})
  print(('PASS ' if ok else 'FAIL ')+name)
  if not ok:failed.append((name,responses));print(responses)
 print(f'{len(cases)-len(failed)}/{len(cases)} matched reference')
 if args.output:
- with open(args.output,'w') as f:json.dump({'reference':'WireMock 3.13.2','passed':len(cases)-len(failed),'total':len(cases),'results':results},f,indent=2)
+ with open(args.output,'w') as f:json.dump({'reference':'WireMock 4.0.0-beta.40','passed':len(cases)-len(failed),'total':len(cases),'results':results},f,indent=2)
 raise SystemExit(bool(failed))

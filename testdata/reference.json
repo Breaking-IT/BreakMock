@@ -1,0 +1,8 @@
+{
+  "version": "4.0.0-beta.40",
+  "source_repository": "https://github.com/wiremock/wiremock",
+  "source_commit": "0f5b90519fecfcc66accc5d6ddc884484fa1a1e1",
+  "jar_url": "https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/4.0.0-beta.40/wiremock-standalone-4.0.0-beta.40.jar",
+  "jar_sha256": "3a53dec6c814ff73da4abb0bc51624215ea2b913beec8d19aa6d54e4c62161d3",
+  "historical_fixture_provenance": "Version-specific source notices remain with original v3 fixtures."
+}

@@ -168,10 +168,7 @@ func TestInvalidTemplatedJSONLoggingBehavior(t *testing.T) {
 		s.Store.AddMapping(m)
 		w := httptest.NewRecorder()
 		s.ServeHTTP(w, httptest.NewRequest("GET", "/json?value=%22hello%22", nil))
-		want := 500
-		if disable {
-			want = 200
-		}
+		want := 200 // v4 emits the rendered bytes without reparsing JSON.
 		if w.Code != want {
 			t.Fatalf("disable logging=%v status=%d want=%d", disable, w.Code, want)
 		}

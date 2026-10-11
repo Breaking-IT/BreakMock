@@ -1,0 +1,290 @@
+[
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[0]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[1]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[2]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "\"name\""
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[3]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "true"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[4]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "null"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[5]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "123"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[6]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[0]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[1]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[2]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[3]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[4]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[]",
+      "item": "[]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[5]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true}}",
+    "parameters": {
+      "array": "[]",
+      "item": "[null]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[0]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=false maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"}]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[1]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=false maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[2]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=false maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"},{\"id\":666,\"name\":\"jason\"}]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[3]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=false maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"},{\"id\":666,\"name\":\"jason\"},{\"id\":789,\"name\":\"max\"}]",
+      "item": "{\"id\":321,\"name\":\"sam\"}"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[4]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[5]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"},{\"id\":789,\"name\":\"max\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[6]",
+    "template": "{{jsonArrayAdd parameters.array parameters.item flatten=true maxItems=3}}",
+    "parameters": {
+      "array": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "item": "[{\"id\":321,\"name\":\"sam\"},{\"id\":666,\"name\":\"jason\"},{\"id\":789,\"name\":\"max\"},{\"id\":987,\"name\":\"sue\"}]"
+    }
+  },
+  {
+    "name": "upstream JsonMergeHelperTest.mergesJsonObjects[0]",
+    "template": "{{jsonMerge parameters.base parameters.merge}}",
+    "parameters": {
+      "base": "{ \"id\": 456, \"name\": \"bob\" }",
+      "merge": "{ \"roles\": [ \"admin\", \"user\" ], \"dob\": \"2024-06-18\" }"
+    }
+  },
+  {
+    "name": "upstream JsonMergeHelperTest.mergesJsonObjects[1]",
+    "template": "{{jsonMerge parameters.base parameters.merge}}",
+    "parameters": {
+      "base": "{ \"id\": 456, \"name\": \"bob\", \"roles\": [ \"viewer\" ] }",
+      "merge": "{ \"roles\": [ \"admin\", \"user\" ], \"dob\": \"2024-06-18\" }"
+    }
+  },
+  {
+    "name": "upstream JsonMergeHelperTest.mergesJsonObjects[2]",
+    "template": "{{jsonMerge parameters.base parameters.merge}}",
+    "parameters": {
+      "base": "{}",
+      "merge": "{ \"roles\": [ \"admin\", \"user\" ], \"dob\": \"2024-06-18\" }"
+    }
+  },
+  {
+    "name": "upstream JsonMergeHelperTest.mergesJsonObjects[3]",
+    "template": "{{jsonMerge parameters.base parameters.merge}}",
+    "parameters": {
+      "base": "{ \"id\": 456, \"name\": \"bob\" }",
+      "merge": "{}"
+    }
+  },
+  {
+    "name": "upstream JsonMergeHelperTest.mergesJsonObjects[4]",
+    "template": "{{jsonMerge parameters.base parameters.merge}}",
+    "parameters": {
+      "base": "{ \"id\": 456, \"name\": \"bob\", \"data\": { \"field\": \"value\" } }",
+      "merge": "{ \"data\": [ 123, true ] }"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[0]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"},{\"id\":321,\"name\":\"sam\"}]",
+      "path": "$.[?(@.id == 123)]"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[1]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"},{\"id\":123,\"name\":\"sam\"}]",
+      "path": "$[?(@.id == 123)]"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[2]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"},{\"id\":321,\"name\":\"sam\"}]",
+      "path": "$.[?(@.id == 123)].name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[3]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "{\"id\":456,\"name\":\"bob\"}",
+      "path": "$.name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[4]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\",\"roles\":[\"admin\",\"user\"]},{\"id\":123,\"name\":\"alice\",\"roles\":[\"admin\",\"user\"]}]",
+      "path": "$.[?(@.name == \"alice\")].roles[?(@ == \"admin\")]"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[0]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "path": "$.[?(@.id == 321)]"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[1]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "[{\"id\":456,\"name\":\"bob\"},{\"id\":123,\"name\":\"alice\"}]",
+      "path": "$.name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[2]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "{\"id\":456}",
+      "path": "$.name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[3]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "true",
+      "path": "$.name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[4]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "null",
+      "path": "$.name"
+    }
+  },
+  {
+    "name": "upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[5]",
+    "template": "{{jsonRemove parameters.input parameters.path}}",
+    "parameters": {
+      "input": "123",
+      "path": "$.name"
+    }
+  }
+]

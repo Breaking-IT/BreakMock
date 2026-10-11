@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic runtime differential against WireMock 3.13.2.
+"""Deterministic runtime differential against WireMock 4.0.0-beta.40.
 Compares status, exact body bytes, and application response headers. Date,
 server headers, generated IDs, and transport framing are excluded. Dedicated
 servers are required: each case resets mappings, requests and settings.
@@ -21,7 +21,7 @@ def call(base,path,method='GET',body=None,headers=None):
         return {'status':r.status,'body':base64.b64encode(payload).decode(),'decoded_body':base64.b64encode(decoded).decode(),'headers':selected,'elapsed_ms':(time.monotonic()-start)*1000}
     finally:conn.close()
 def decode(result):return json.loads(base64.b64decode(result['body']))
-version=decode(call(args.reference,'/__admin/version'));assert version.get('version')=='3.13.2',('wrong reference',version)
+version=decode(call(args.reference,'/__admin/version'));assert version.get('version')=='4.0.0-beta.40',('wrong reference',version)
 class Backend(http.server.BaseHTTPRequestHandler):
     protocol_version='HTTP/1.1'
     def handle(self):
@@ -103,8 +103,11 @@ try:
     case('gzip request matching',[mapping({'body':'decoded'},request={'url':'/runtime','bodyPatterns':[{'equalTo':'hello compressed'}]})],[{'path':'/runtime','method':'POST','body':gzip.compress(b'hello compressed',mtime=0),'headers':{'Content-Encoding':'gzip','Content-Type':'text/plain'}}])
     case('inline negotiated gzip',[mapping({'body':'hello world '*400,'headers':{'Content-Type':'text/plain'}})],[{'path':'/runtime','headers':{'Accept-Encoding':'gzip'}}])
     case('proxy gzip bytes',[mapping({'proxyBaseUrl':proxy},request={'urlPathPattern':'.*'})],[{'path':'/gzip','headers':{'Accept-Encoding':'gzip'}}])
+    case('unknown transformer ignored',[mapping({'body':'unchanged {{request.method}}','transformers':['unknown-extension']})])
+    case('unknown transformer alongside template',[mapping({'body':'{{request.method}}','transformers':['unknown-extension','response-template']})])
+    case('templated proxy additional header',[mapping({'proxyBaseUrl':proxy,'additionalProxyRequestHeaders':{'X-Extra':'{{request.method}}/{{request.query.q}}'},'transformers':['response-template']})],requests=[{'path':'/runtime?q=yes'}])
 finally:backend.shutdown();backend.server_close()
-report={'reference':'WireMock 3.13.2','passed':sum(r['passed'] for r in results),'total':len(results),'results':results}
+report={'reference':'WireMock 4.0.0-beta.40','passed':sum(r['passed'] for r in results),'total':len(results),'results':results}
 if args.output:
     with open(args.output,'w')as f:json.dump(report,f,indent=2)
 print(f"{report['passed']}/{report['total']} passed")

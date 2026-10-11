@@ -27,11 +27,14 @@ type journalEntry struct {
 
 // Store keeps immutable mappings and a request journal protected against concurrent access.
 type Store struct {
+	messaging       *MessageStore
 	mu              sync.RWMutex
 	mappings        map[string]storedMapping
 	scenarios       map[string]string
 	journal         []journalEntry
 	settings        map[string]any
+	settingsOrder   *adminOrder
+	shutdown        func()
 	sequence        uint64
 	sorted          []Mapping
 	journalDisabled bool
@@ -58,13 +61,53 @@ func cloneMap(m map[string]any) map[string]any {
 }
 func (s *Store) AddMapping(m Mapping) (Mapping, error) { return s.addMapping(m, nil, false) }
 func (s *Store) addMapping(m Mapping, sourceOrder *adminOrder, replaceOrder bool) (Mapping, error) {
-	if _, ok := m["request"].(map[string]any); !ok {
-		return nil, fmt.Errorf("request must be an object")
+	if m["request"] != nil {
+		if _, ok := m["request"].(map[string]any); !ok {
+			return nil, fmt.Errorf("request must be an object")
+		}
 	}
-	if _, ok := m["response"].(map[string]any); !ok {
-		return nil, fmt.Errorf("response must be an object")
+	if m["response"] != nil {
+		if _, ok := m["response"].(map[string]any); !ok {
+			return nil, fmt.Errorf("response must be an object")
+		}
 	}
 	c := cloneMap(m)
+	if c["request"] == nil {
+		c["request"] = map[string]any{}
+	}
+	if c["response"] == nil {
+		c["response"] = map[string]any{}
+	}
+	response := c["response"].(map[string]any)
+
+	if str, ok := response["status"].(string); ok {
+		if n, err := strconv.Atoi(str); err == nil {
+			response["status"] = float64(n)
+		}
+	}
+	if _, ok := response["jsonBody"]; ok {
+		delete(response, "body")
+		delete(response, "base64Body")
+		delete(response, "bodyFileName")
+	} else if response["base64Body"] != nil {
+		delete(response, "body")
+		delete(response, "bodyFileName")
+	} else if response["bodyFileName"] != nil {
+		delete(response, "body")
+	}
+
+	if response["fromConfiguredStub"] != false {
+		delete(response, "fromConfiguredStub")
+	}
+	for _, key := range []string{"transformers", "removeProxyRequestHeaders"} {
+		if v, ok := response[key].([]any); ok && len(v) == 0 {
+			delete(response, key)
+		}
+	}
+
+	if response["status"] == nil || bmNumber(response["status"], 0) <= 0 {
+		response["status"] = float64(200)
+	}
 	if req, ok := c["request"].(map[string]any); ok {
 		if req["method"] == nil {
 			req["method"] = "ANY"
@@ -72,13 +115,14 @@ func (s *Store) addMapping(m Mapping, sourceOrder *adminOrder, replaceOrder bool
 	}
 	id, _ := c["id"].(string)
 	if id == "" {
-		id, _ = c["uuid"].(string)
-	}
-	if id == "" {
 		id = newID()
 	}
+	if validMappingUUID(id) {
+		id = strings.ToLower(id)
+	}
 	c["id"] = id
-	c["uuid"] = id
+	delete(c, "uuid")
+	delete(c, "$schema")
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	existing, exists := s.mappings[id]
@@ -187,14 +231,14 @@ func (s *Store) SetSettings(v map[string]any) {
 }
 func (s *Store) ResetRequests()                          { s.mu.Lock(); defer s.mu.Unlock(); s.journal = nil }
 func (s *Store) Record(r Request, m Mapping, status int) { s.RecordServed(r, m, status, nil, nil) }
-func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders http.Header, responseBody []byte, responseHeaderOrder ...[]string) {
+func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders http.Header, responseBody []byte, responseHeaderOrder ...[]string) string {
 	s.mu.RLock()
 	disabled := s.journalDisabled
 	s.mu.RUnlock()
 	if disabled {
-		return
+		return ""
 	}
-	now := time.Now()
+	now := time.Now().Truncate(time.Millisecond)
 	id := newID()
 	headers := map[string]any{}
 	for k, v := range r.Headers {
@@ -208,7 +252,7 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	queryOrder := []string{}
 	cookieOrder := []string{}
 	formOrder := []string{}
-	req := map[string]any{"url": r.URL, "absoluteUrl": r.AbsoluteURL, "method": r.Method, "headers": headers, "body": string(r.Body), "bodyAsBase64": base64.StdEncoding.EncodeToString(r.Body), "loggedDate": now.UnixMilli(), "loggedDateString": now.UTC().Format("2006-01-02T15:04:05.000Z"), "cookies": map[string]any{}, "queryParams": map[string]any{}}
+	req := map[string]any{"url": r.URL, "absoluteUrl": r.AbsoluteURL, "method": r.Method, "headers": headers, "body": string(r.Body), "bodyAsBase64": base64.StdEncoding.EncodeToString(r.Body), "loggedDate": now.UnixMilli(), "loggedDateString": now.UTC().Format(time.RFC3339Nano), "cookies": map[string]any{}, "queryParams": map[string]any{}}
 	req["clientIp"] = r.ClientIP
 	req["browserProxyRequest"] = false
 	req["protocol"] = "HTTP/1.1"
@@ -249,12 +293,12 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 		req["formParams"] = form
 		formOrder = queryKeys(string(r.Body))
 	}
-	event := map[string]any{"id": id, "request": req, "wasMatched": m != nil, "responseDefinition": map[string]any{"status": status}, "timing": map[string]any{"addedDelay": 0, "processTime": 0, "responseSendTime": 0, "serveTime": 0, "totalTime": 0}, "subEvents": []any{}}
+	event := map[string]any{"id": id, "request": req, "wasMatched": m != nil, "responseDefinition": map[string]any{"status": status}, "timing": map[string]any{"addedDelay": r.AddedDelayMillis, "processTime": r.ProcessTimeMillis, "responseSendTime": 0, "serveTime": r.ProcessTimeMillis, "totalTime": r.ProcessTimeMillis + r.AddedDelayMillis}, "subEvents": []any{}}
 	if m != nil {
 		event["stubMapping"] = m
 		event["responseDefinition"] = m["response"]
 	}
-	response := map[string]any{"status": status, "body": string(responseBody), "bodyAsBase64": base64.StdEncoding.EncodeToString(responseBody)}
+	response := map[string]any{"status": status, "body": string(responseBody), "bodyAsBase64": base64.StdEncoding.EncodeToString(responseBody), "fromProxy": false}
 	if len(responseHeaders) > 0 {
 		h := map[string]any{}
 		for k, v := range responseHeaders {
@@ -269,14 +313,32 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 		}
 		response["headers"] = h
 	}
+	if m != nil {
+		if def, ok := m["response"].(map[string]any); ok && def["proxyBaseUrl"] != nil {
+			response["fromProxy"] = true
+		}
+	}
 	event["response"] = response
+	if m == nil && r.UnmatchedReport != "" {
+		definition := map[string]any{"status": 404, "fromConfiguredStub": false}
+		defaultID := newID()
+		event["responseDefinition"] = definition
+		event["response"] = map[string]any{"status": 404, "bodyAsBase64": "", "body": "", "fromProxy": false}
+		event["stubMapping"] = map[string]any{"id": defaultID, "request": map[string]any{"method": "ANY"}, "response": definition}
+		ct := r.UnmatchedContentType
+		if ct == "" {
+			ct = "text/plain"
+		}
+		event["subEvents"] = []any{map[string]any{"type": "REQUEST_NOT_MATCHED", "timeOffsetNanos": r.ProcessTimeMillis * 1000000, "data": map[string]any{"status": 404, "contentType": ct, "report": r.UnmatchedReport}}}
+	}
+
 	r.Body = append([]byte(nil), r.Body...)
 	r.Headers = r.Headers.Clone()
 	r.HeaderOrder = append([]string(nil), r.HeaderOrder...)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.journalDisabled {
-		return
+		return ""
 	}
 	order := &adminOrder{children: map[string]*adminOrder{}}
 	order.children["request"] = &adminOrder{children: map[string]*adminOrder{"headers": {keys: append([]string(nil), r.HeaderOrder...)}, "queryParams": {keys: queryOrder}, "cookies": {keys: cookieOrder}, "formParams": {keys: formOrder}}}
@@ -304,6 +366,7 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 		clear(s.journal[:discard])
 		s.journal = s.journal[discard:]
 	}
+	return id
 }
 func (s *Store) journalSnapshot() []journalEntry {
 	s.mu.RLock()
@@ -410,4 +473,79 @@ func queryKeys(raw string) []string {
 		}
 	}
 	return keys
+}
+
+func (s *Store) setSettingsOrder(order *adminOrder) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.settingsOrder = order
+}
+func (s *Store) settingsOrderSnapshot() *adminOrder {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.settingsOrder
+}
+
+func (s *Store) scenarioMappings(name string) []Mapping {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	items := []storedMapping{}
+	for _, item := range s.mappings {
+		if item.mapping["scenarioName"] == name {
+			items = append(items, item)
+		}
+	}
+	sort.Slice(items, func(i, j int) bool { return items[i].sequence < items[j].sequence })
+	out := []Mapping{}
+	for _, item := range items {
+		out = append(out, item.mapping)
+	}
+	return out
+}
+
+func (s *Store) SetShutdownHandler(fn func()) { s.mu.Lock(); defer s.mu.Unlock(); s.shutdown = fn }
+func (s *Store) shutdownHandler() func()      { s.mu.RLock(); defer s.mu.RUnlock(); return s.shutdown }
+
+// AppendSubEvent replaces the immutable journal event so concurrent readers remain safe.
+func (s *Store) AppendSubEvent(eventID, kind string, data map[string]any) {
+	s.appendSubEvent(eventID, kind, data, nil)
+}
+func (s *Store) appendSubEvent(eventID, kind string, data map[string]any, order *adminOrder) {
+	if eventID == "" {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i := range s.journal {
+		e := &s.journal[i]
+		if e.event["id"] != eventID {
+			continue
+		}
+		event := make(map[string]any, len(e.event))
+		for k, v := range e.event {
+			event[k] = v
+		}
+		items := append([]any(nil), event["subEvents"].([]any)...)
+		subEvent := map[string]any{"type": kind, "data": cloneMap(data)}
+		if kind != "ERROR" {
+			subEvent["timeOffsetNanos"] = 0
+		}
+		event["subEvents"] = append(items, subEvent)
+		root := &adminOrder{children: map[string]*adminOrder{}}
+		if e.order != nil {
+			for k, v := range e.order.children {
+				root.children[k] = v
+			}
+		}
+		previous := root.children["subEvents"]
+		entries := []*adminOrder{}
+		if previous != nil {
+			entries = append(entries, previous.elements...)
+		}
+		entries = append(entries, &adminOrder{children: map[string]*adminOrder{"data": order}})
+		root.children["subEvents"] = &adminOrder{elements: entries}
+		e.order = root
+		e.event = event
+		return
+	}
 }

@@ -63,13 +63,34 @@ func TestSnapshotFilteringAndIDs(t *testing.T) {
 		t.Fatal(req)
 	}
 }
-func TestRecordingUnsupportedOptionsAreExplicit(t *testing.T) {
+func TestRecordingUnregisteredTransformersAreIgnored(t *testing.T) {
 	h := NewAdminHandler(NewStore(), t.TempDir())
 	r := httptest.NewRequest("POST", "/__admin/recordings/start", strings.NewReader(`{"transformers":["custom"]}`))
 	w := httptest.NewRecorder()
 	h.ServeHTTP(w, r)
 	b, _ := io.ReadAll(w.Result().Body)
-	if w.Code != 501 || !strings.Contains(string(b), "not implemented") {
+	if w.Code != 200 {
 		t.Fatal(w.Code, string(b))
+	}
+}
+
+func TestSnapshotExtractedBodyRetainsBytes(t *testing.T) {
+	root := t.TempDir()
+	s := NewStore()
+	m, _ := s.AddMapping(Mapping{"request": map[string]any{"url": "/extract"}, "response": map[string]any{"status": 200}})
+	s.RecordServed(Request{URL: "/extract", Method: "GET"}, m, 200, http.Header{"Content-Type": []string{"text/plain"}}, []byte("é😀"))
+	h := NewAdminHandler(s, root)
+	v := adminCall(t, h, "POST", "/recordings/snapshot", `{"persist":false,"filters":{"allowNonProxied":true},"extractBodyCriteria":{"textSizeThreshold":2}}`, 200)
+	mapping := v["mappings"].([]any)[0].(map[string]any)
+	response := mapping["response"].(map[string]any)
+	filename, ok := response["bodyFileName"].(string)
+	if !ok {
+		t.Fatal("UTF16 threshold must count supplementary character as two units", response)
+	}
+	r := httptest.NewRequest("GET", "/__admin/files/"+filename, nil)
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != 200 || w.Body.String() != "é😀" {
+		t.Fatalf("extracted bytes %d %q", w.Code, w.Body.String())
 	}
 }

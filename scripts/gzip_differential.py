@@ -8,7 +8,7 @@ def call(base,path,body=None,headers=None,method=None):
  u=urllib.parse.urlsplit(base);c=http.client.HTTPConnection(u.hostname,u.port,timeout=30)
  if isinstance(body,dict):body=json.dumps(body).encode();headers={'Content-Type':'application/json',**(headers or {})}
  c.request(method or ('POST' if body is not None else 'GET'),path,body,headers or {});r=c.getresponse();data=r.read();result=(r.status,dict((k.lower(),v)for k,v in r.getheaders()),data);c.close();return result
-assert json.loads(call(args.reference,'/__admin/version')[2])['version']=='3.13.2'
+assert json.loads(call(args.reference,'/__admin/version')[2])['version']=='4.0.0-beta.40'
 def input_bytes(kind,size):
  if kind=='repeat':return (b'hello world '*((size+11)//12))[:size]
  if kind=='counter':return bytes(i%256 for i in range(size))
@@ -55,10 +55,10 @@ for name,accept,ctype,size,extra in (
  row={'name':name,'passed':passed,'reference_encoding':ref[1].get('content-encoding'),'candidate_encoding':candidate[1].get('content-encoding'),'reference_sha256':hashlib.sha256(ref[2]).hexdigest(),'candidate_sha256':hashlib.sha256(candidate[2]).hexdigest()};results.append(row)
  print(('PASS 'if passed else'FAIL ')+name)
  if not passed:print(json.dumps(row))
-report={'reference':'WireMock 3.13.2','passed':sum(r['passed']for r in results),'total':len(results),'results':results}
+report={'reference':'WireMock 4.0.0-beta.40','passed':sum(r['passed']for r in results),'total':len(results),'results':results}
 if args.output:
  with open(args.output,'w')as f:json.dump(report,f,indent=2)
 if args.capture_fixtures:
- with open(args.capture_fixtures,'w')as f:json.dump({'reference':'WireMock 3.13.2, OpenJDK system zlib 1.2.12','fixtures':fixtures},f,indent=2)
+ with open(args.capture_fixtures,'w')as f:json.dump({'reference':'WireMock 4.0.0-beta.40, OpenJDK system zlib 1.2.12','fixtures':fixtures},f,indent=2)
 print(f"{report['passed']}/{report['total']} strict gzip cases pass")
 raise SystemExit(report['passed']!=report['total'])

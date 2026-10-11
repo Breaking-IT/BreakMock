@@ -107,3 +107,45 @@ func TestTemplatePlanMatchesFullEvaluator(t *testing.T) {
 		}
 	}
 }
+
+// Expected outputs were checked byte-for-byte against WireMock 3.13.2.
+func TestTemplateExpandedCompatibilityRegressions(t *testing.T) {
+	cases := []struct{ source, want string }{
+		{`{{regexExtract 'aa' '(a)\1'}}`, "aa"},
+		{`{{regexExtract 'abc' 'a(?=b)'}}`, "a"},
+		{`{{defaultIfEmpty false 'fallback'}}`, "fallback"},
+		{`{{join (array 'a' 'b') ',' prefix='[' suffix=']'}}`, "[a,b]"},
+		{`{{jsonRemove '{"a":1,"nested":{"a":2}}' '$..a'}}`, `{"nested":{}}`},
+		{`{{toJson (parseJson '{"x":null,"y":1e3}')}}`, "{\n  \"y\" : 1000\n}"},
+		{`{{formatJson '{"x":"\u001f"}'}}`, "{\n  \"x\" : \"\\u001F\"\n}"},
+		{`{{jsonMerge '[]' '{}'}}`, "[ERROR: Base JSON is not a JSON object ('[]')]"},
+		{`{{arrayAdd (array 1 2) 3 position='bad'}}`, "[ERROR: position must be 'start', 'end' or an integer]"},
+		{`{{math 1 '+'}}`, "[ERROR: All maths functions require two operands and an operator as parameters e.g. 3 '+' 2]"},
+		{`{{numberFormat 12345.678 'percent' 'en_US'}}`, "1,234,568%"},
+	}
+	for _, c := range cases {
+		t.Run(c.source, func(t *testing.T) {
+			got, e := RenderTemplate(c.source, Request{URL: "/"}, nil)
+			if e != nil || got != c.want {
+				t.Fatalf("got %q error %v; want %q", got, e, c.want)
+			}
+		})
+	}
+	for _, c := range []struct{ source, want string }{
+		{`{{math 1 '/' 0}}`, "1:2: java.lang.ArithmeticException: / by zero"},
+		{`{{#each (array 1)}}{{math 1 '/' 0}}{{/each}}`, "1:21: java.lang.ArithmeticException: / by zero"},
+		{`{{toJson (parseJson '1')}}`, "Cannot deserialize value of type `java.util.LinkedHashMap<java.lang.String,java.lang.Object>` from Integer value (token `JsonToken.VALUE_NUMBER_INT`)"},
+	} {
+		_, e := RenderTemplate(c.source, Request{URL: "/"}, nil)
+		if e == nil || e.Error() != c.want {
+			t.Fatalf("%s error %v; want %s", c.source, e, c.want)
+		}
+	}
+}
+
+func TestWebhookTemplateOriginalRequest(t *testing.T) {
+	got, e := RenderWebhookTemplate(`{{originalRequest.method}} {{originalRequest.query.q}} {{parameters.name}} {{request.method}}`, Request{Method: "POST", URL: "/?q=hello"}, map[string]any{"name": "world"}, t.TempDir())
+	if e != nil || got != "POST hello world " {
+		t.Fatalf("got %q error %v", got, e)
+	}
+}

@@ -2,14 +2,20 @@
 package breakmock
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/text/unicode/norm"
 	"io"
+	"math"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -110,13 +116,16 @@ func (a *adminHandler) recordings(w http.ResponseWriter, r *http.Request, p stri
 	}
 }
 func validateRecordSpec(spec map[string]any) error {
-	for _, k := range []string{"transformers", "extractBodyCriteria"} {
-		if spec[k] != nil {
-			return fmt.Errorf("recording option %s is not implemented", k)
+	if criteria, ok := spec["extractBodyCriteria"].(map[string]any); ok {
+		for _, key := range []string{"textSizeThreshold", "binarySizeThreshold"} {
+			if _, err := recordingThreshold(criteria[key]); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
+
 func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (map[string]any, error) {
 	filters, _ := spec["filters"].(map[string]any)
 	pattern := cloneMap(filters)
@@ -157,7 +166,11 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 				for _, value := range v {
 					exact = append(exact, map[string]any{"equalTo": value})
 				}
-				q[k] = map[string]any{"hasExactly": exact}
+				if len(exact) == 1 {
+					q[k] = exact[0]
+				} else {
+					q[k] = map[string]any{"hasExactly": exact}
+				}
 			}
 			req["queryParameters"] = q
 		}
@@ -236,12 +249,24 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 		if len(rh) > 0 {
 			response["headers"] = rh
 		}
-		body, _ := logged["body"].(string)
+		bodyBytes, _ := base64.StdEncoding.DecodeString(bmString(logged["bodyAsBase64"]))
+		for k, v := range headers {
+			if strings.EqualFold(k, "Content-Encoding") && strings.EqualFold(fmt.Sprint(v), "gzip") {
+				if reader, err := gzip.NewReader(bytes.NewReader(bodyBytes)); err == nil {
+					decoded, err := io.ReadAll(reader)
+					reader.Close()
+					if err == nil {
+						bodyBytes = decoded
+					}
+				}
+			}
+		}
+		body := string(bodyBytes)
 		if body != "" {
-			if ct == "" || strings.HasPrefix(ct, "text/") || strings.Contains(ct, "json") || strings.Contains(ct, "xml") {
+			if recordingTextType(ct) {
 				response["body"] = body
 			} else {
-				response["base64Body"] = logged["bodyAsBase64"]
+				response["base64Body"] = base64.StdEncoding.EncodeToString(bodyBytes)
 			}
 		}
 		keyBytes, _ := json.Marshal(req)
@@ -252,7 +277,7 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 		seen[key] = true
 		name := ""
 		if u != nil {
-			name = strings.Trim(strings.ReplaceAll(u.Path, "/", "_"), "_")
+			name = recordingName(u.Path)
 		}
 		m := Mapping{"request": req, "response": response, "name": name}
 		if spec["persist"] != false {
@@ -263,6 +288,39 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 			return nil, err
 		}
 		a.store.setMappingOrder(m["id"].(string), &adminOrder{children: map[string]*adminOrder{"response": entry.order.child("response")}})
+		if criteria, ok := spec["extractBodyCriteria"].(map[string]any); ok && len(bodyBytes) > 0 {
+			thresholdKey := "binarySizeThreshold"
+			size := len(bodyBytes)
+			if recordingTextType(ct) {
+				thresholdKey = "textSizeThreshold"
+				size = templateUTF16Len(body)
+			}
+			threshold, _ := recordingThreshold(criteria[thresholdKey])
+			if int64(size) > threshold {
+				ext := recordingExtension(entry.request.URL, ct, bodyBytes)
+				filename := name
+				if filename == "" {
+					filename = strings.ToLower(entry.request.Method) + "-" + recordingName(entry.request.URL)
+				}
+				filename += "-" + m["id"].(string) + "." + ext
+				dir := filepath.Join(a.root, "__files")
+				if err := os.MkdirAll(dir, 0755); err != nil {
+					return nil, err
+				}
+				if err := os.WriteFile(filepath.Join(dir, filename), bodyBytes, 0644); err != nil {
+					return nil, err
+				}
+				response = m["response"].(map[string]any)
+				delete(response, "body")
+				delete(response, "base64Body")
+				response["bodyFileName"] = filename
+				m, err = a.store.AddMapping(m)
+				if err != nil {
+					return nil, err
+				}
+			}
+		}
+
 		mappings = append(mappings, m)
 		ids = append(ids, m["id"].(string))
 		if spec["persist"] != false && a.root != "" {
@@ -326,5 +384,83 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 	if format, _ := spec["outputFormat"].(string); strings.EqualFold(format, "ids") {
 		return map[string]any{"ids": ids}, nil
 	}
-	return map[string]any{"mappings": mappings}, nil
+	return map[string]any{"mappings": mappings, "errors": []any{}}, nil
+}
+
+func recordingTextType(ct string) bool {
+	for _, token := range []string{"text", "json", "xml", "html", "yaml", "csv", "x-www-form-urlencoded"} {
+		if strings.Contains(ct, token) {
+			return true
+		}
+	}
+	return false
+}
+func recordingThreshold(v any) (int64, error) {
+	if v == nil {
+		return math.MaxInt64, nil
+	}
+	if n, ok := v.(float64); ok {
+		return int64(n), nil
+	}
+	s, ok := v.(string)
+	if !ok {
+		return 0, fmt.Errorf("invalid recording threshold")
+	}
+	s = strings.ToLower(strings.TrimSpace(strings.ReplaceAll(s, ",", ".")))
+	s = strings.TrimSuffix(s, "b")
+	scale := float64(1)
+	for suffix, n := range map[string]float64{"k": 1024, "m": 1024 * 1024, "g": 1024 * 1024 * 1024} {
+		if strings.HasSuffix(s, suffix) {
+			scale = n
+			s = strings.TrimSuffix(s, suffix)
+			break
+		}
+	}
+	value, err := strconv.ParseFloat(strings.TrimSpace(s), 64)
+	if err != nil {
+		return 0, fmt.Errorf("Invalid size string: %q", v)
+	}
+	return int64(math.Round(value * scale)), nil
+}
+
+var recordingSlug = regexp.MustCompile(`[^\w-.]`)
+var recordingWhitespace = regexp.MustCompile(`\s`)
+
+func recordingName(path string) string {
+	path = strings.ReplaceAll(path, "/", "_")
+	path = recordingWhitespace.ReplaceAllString(path, "-")
+	path = norm.NFD.String(path)
+	path = strings.Trim(strings.ToLower(recordingSlug.ReplaceAllString(path, "")), "_")
+	if len(path) > 200 {
+		path = path[:200]
+	}
+	return path
+}
+func recordingExtension(rawURL, ct string, body []byte) string {
+	mime, _, _ := strings.Cut(ct, ";")
+	for _, key := range []string{"json", "xml", "text"} {
+		if strings.Contains(mime, key) {
+			if key == "text" {
+				return "txt"
+			}
+			return key
+		}
+	}
+	common := map[string]string{"image/jpeg": "jpeg", "image/gif": "gif", "image/tiff": "tiff", "image/png": "png", "image/x-icon": "ico", "image/svg+xml": "svg", "audio/x-aiff": "aiff", "video/x-ms-asf": "asf", "video/mpeg": "mp2", "audio/mpeg": "mp3", "video/quicktime": "mov", "application/pdf": "pdf"}
+	if ext := common[mime]; ext != "" {
+		return ext
+	}
+	u, _ := url.Parse(rawURL)
+	if u != nil {
+		if ext := filepath.Ext(u.Path); ext != "" {
+			return strings.TrimPrefix(ext, ".")
+		}
+	}
+	if json.Valid(body) {
+		return "json"
+	}
+	if strings.HasPrefix(strings.TrimSpace(string(body)), "<") {
+		return "xml"
+	}
+	return "txt"
 }

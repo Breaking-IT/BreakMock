@@ -16,6 +16,9 @@ func matchXML(expected, actual string, options map[string]any) bool {
 	if err != nil {
 		return false
 	}
+	if xmlUnsortablePI(a) || xmlUnsortablePI(b) {
+		return false
+	}
 	exempt := map[string]bool{}
 	if raw, ok := options["exemptedComparisons"].([]any); ok {
 		for _, v := range raw {
@@ -46,6 +49,9 @@ func matchXML(expected, actual string, options map[string]any) bool {
 	attrs := func(n *xmlquery.Node) map[string]string {
 		out := map[string]string{}
 		for _, a := range n.Attr {
+			if mode != "NONE" && a.NamespaceURI == "http://www.w3.org/2001/XMLSchema-instance" && (a.Name.Local == "schemaLocation" || a.Name.Local == "noNamespaceSchemaLocation") {
+				continue
+			}
 			if mode != "NONE" && (a.Name.Local == "xmlns" || a.Name.Space == "xmlns") {
 				continue
 			}
@@ -90,6 +96,9 @@ func matchXML(expected, actual string, options map[string]any) bool {
 		if at != bt && !exempt["NODE_TYPE"] {
 			return false
 		}
+		if at == xmlquery.ProcessingInstruction {
+			return (exempt["PROCESSING_INSTRUCTION_TARGET"] || a.ProcInst.Target == b.ProcInst.Target) && (exempt["PROCESSING_INSTRUCTION_DATA"] || a.ProcInst.Inst == b.ProcInst.Inst)
+		}
 		if at == xmlquery.TextNode || at == xmlquery.CharDataNode {
 			return exempt["TEXT_VALUE"] || valueEqual(strings.TrimSpace(a.Data), strings.TrimSpace(b.Data))
 		}
@@ -99,6 +108,31 @@ func matchXML(expected, actual string, options map[string]any) bool {
 			}
 			if mode != "NONE" && mode != "LEGACY" && a.NamespaceURI != b.NamespaceURI && !exempt["NAMESPACE_URI"] {
 				return false
+			}
+			if mode != "NONE" {
+				for _, attr := range a.Attr {
+					if attr.NamespaceURI != "http://www.w3.org/2001/XMLSchema-instance" {
+						continue
+					}
+					kind := ""
+					if attr.Name.Local == "schemaLocation" {
+						kind = "SCHEMA_LOCATION"
+					}
+					if attr.Name.Local == "noNamespaceSchemaLocation" {
+						kind = "NO_NAMESPACE_SCHEMA_LOCATION"
+					}
+					if kind != "" && !exempt[kind] {
+						value := ""
+						for _, other := range b.Attr {
+							if other.NamespaceURI == attr.NamespaceURI && other.Name.Local == attr.Name.Local {
+								value = other.Value
+							}
+						}
+						if attr.Value != value {
+							return false
+						}
+					}
+				}
 			}
 			aa, ba := attrs(a), attrs(b)
 			if len(aa) != len(ba) && !exempt["ELEMENT_NUM_ATTRIBUTES"] {
@@ -129,4 +163,31 @@ func matchXML(expected, actual string, options map[string]any) bool {
 		return true
 	}
 	return equal(a, b)
+}
+
+// XMLMatchComparisonWarning identifies the XMLUnit sorter warning produced by
+// processing instructions mixed with sibling nodes in WireMock's exact matcher.
+func XMLMatchComparisonWarning(expected, actual string) bool {
+	for _, source := range []string{expected, actual} {
+		n, err := xmlquery.Parse(strings.NewReader(source))
+		if err == nil && xmlUnsortablePI(n) {
+			return true
+		}
+	}
+	return false
+}
+func xmlUnsortablePI(n *xmlquery.Node) bool {
+	count := 0
+	pi := false
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == xmlquery.CommentNode || c.Type == xmlquery.DeclarationNode || (c.Type == xmlquery.TextNode && strings.TrimSpace(c.Data) == "") {
+			continue
+		}
+		count++
+		pi = pi || c.Type == xmlquery.ProcessingInstruction
+		if xmlUnsortablePI(c) {
+			return true
+		}
+	}
+	return count > 1 && pi
 }

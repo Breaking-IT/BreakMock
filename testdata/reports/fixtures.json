@@ -1,5 +1,5 @@
 {
-  "reference": "WireMock 3.13.2",
+  "reference": "WireMock 4.0.0-beta.40",
   "source": "src/test/resources/remoteloader (unmodified)",
   "passed": 9,
   "total": 9,

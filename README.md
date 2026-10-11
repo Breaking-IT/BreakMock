@@ -1,12 +1,12 @@
 # BreakMock
 
-A Go implementation of WireMock-style HTTP mocking, response templating, and
-administration. Built by Breaking-IT as a foundation for API simulation, test data,
+A Go implementation of WireMock-style HTTP mocking, WebSockets, Server-Sent Events,
+response templating, and administration. Built by Breaking-IT as a foundation for API simulation, test data,
 and controlled failures.
 
 **Development status:** a compatibility port under active construction, not a
-complete drop-in replacement. The reference is **WireMock 3.13.2**, the latest
-stable release when this work started. See [COMPATIBILITY.md](COMPATIBILITY.md)
+complete drop-in replacement. The pinned reference is **WireMock 4.0.0-beta.40**. Upstream is a beta release;
+BreakMock exposes its implemented messaging features by default, without a beta flag. See [COMPATIBILITY.md](COMPATIBILITY.md)
 for tested coverage and known gaps. Performance and compatibility are separate
 claims; neither is inferred from the implementation language.
 
@@ -23,6 +23,8 @@ go build -trimpath -o bin/breakmock ./cmd/breakmock
 
 `stubs/mappings/` contains WireMock JSON mapping files; `stubs/__files/` contains
 response body files. Mapping files may contain one mapping or a `mappings` array.
+Message mappings load from `stubs/message-mappings/`, as individual mappings or a
+`messageMappings` array.
 
 ```sh
 curl -X POST http://localhost:8080/__admin/mappings \
@@ -41,12 +43,36 @@ A multi-stage Dockerfile is included. Its runtime is a native executable and CA
 certificates; no Java runtime is required. Mount writable `/data` if using admin
 persistence or recording persistence. The image runs as UID 65532.
 
+## WebSockets and SSE
+
+Open a WebSocket channel with an HTTP mapping and attach message actions:
+
+```json
+{"request":{"urlPath":"/socket"},"response":{"openWebsocketChannel":true}}
+```
+
+POST the following to `/__admin/message-mappings` to echo incoming messages:
+
+```json
+{"trigger":{"type":"message"},"actions":[{"type":"send","message":{"body":"Echo: {{message.body}}"}}]}
+```
+
+Use `openSseChannel: true` for SSE. HTTP-triggered message mappings can push to
+matching open channels using `channelTarget.type: "request-initiated"` and a
+`requestPattern`; an optional `channelType` selects `websocket` or `sse`.
+The `/__admin/channels` and `/__admin/messages` APIs provide channel management,
+message journals, verification and server push. These features require no extra flag.
+
+WebSocket limits use `--websocket-idle-timeout` (milliseconds),
+`--websocket-max-text-message-size` and `--websocket-max-binary-message-size` (bytes).
+Defaults match the reference: five minutes idle and 10 MiB per message.
+
 ## Test against the original Java server
 
 ```sh
 go test -race ./...
 go vet ./...
-curl -fL https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/3.13.2/wiremock-standalone-3.13.2.jar -o /tmp/wiremock.jar
+curl -fL https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/4.0.0-beta.40/wiremock-standalone-4.0.0-beta.40.jar -o /tmp/wiremock.jar
 python3 scripts/verify.py --jar /tmp/wiremock.jar
 ```
 
@@ -56,8 +82,10 @@ same mappings and requests to both implementations. Application response bodies
 are compared as bytes. Admin response bodies are compared with exact formatting and property order,
 with only nondeterministic scalar values (generated IDs, timestamps, timings and
 local origins) substituted. Gzip response bytes are compared without decompression.
-Two invalid-template diagnostic bodies remain known strict-byte failures; their
-HTTP status checks are reported separately. This is a
+Every template case compares actual status and body bytes, including errors.
+WebSocket frames, SSE events, fault socket output and status lines have separate
+strict suites. Reference nondeterminism remains a reported strict failure; the
+harness does not turn failures into passes. This is a
 bounded differential corpus, not the entire upstream Java test suite.
 
 ## Benchmark
@@ -70,14 +98,14 @@ The same Go HTTP load generator drives both servers with 32 persistent clients,
 with request journals disabled on both by default. Add `--journal-limit 1000` to
 measure both servers with bounded journals. The script validates response bodies,
 warms up each workload, alternates server order, and records RPS, latency and
-sampled RSS. Results describe this workload and machine; they are not a universal
+sampled RSS. Current v4 measurements include both disabled and bounded journals. Results describe this workload and machine; they are not a universal
 throughput guarantee. See [BENCHMARKS.md](BENCHMARKS.md).
 
 ## License and provenance
 
 Apache License 2.0; see [LICENSE](LICENSE) and [NOTICE.txt](NOTICE.txt).
 The compatibility reference is WireMock commit
-`88587aa13b4899da080538e1b21bec0da105491e`. Upstream fixtures are retained under
+`0f5b90519fecfcc66accc5d6ddc884484fa1a1e1`. Upstream fixtures are retained under
 `testdata/upstream/`. The modified Handlebars runtime in `internal/handlebars/`
 retains Raymond's MIT license and documents local changes.
 

@@ -1,0 +1,1481 @@
+[
+  {
+    "name": "helper center 0",
+    "template": "{{center 'hi' 8}}",
+    "body": ""
+  },
+  {
+    "name": "helper ljust 0",
+    "template": "{{ljust 'hi' 8}}",
+    "body": ""
+  },
+  {
+    "name": "helper rjust 0",
+    "template": "{{rjust 'hi' 8}}",
+    "body": ""
+  },
+  {
+    "name": "helper slugify 0",
+    "template": "{{slugify 'Hello, World!'}}",
+    "body": ""
+  },
+  {
+    "name": "helper slugify 1",
+    "template": "{{slugify 'H\u00e9ll\u00f6 World'}}",
+    "body": ""
+  },
+  {
+    "name": "helper stringFormat 0",
+    "template": "{{stringFormat 'x=%s y=%s' 'a' 'b'}}",
+    "body": ""
+  },
+  {
+    "name": "helper stripTags 0",
+    "template": "{{stripTags '<b>Hello</b><i> world</i>'}}",
+    "body": ""
+  },
+  {
+    "name": "helper abbreviate 0",
+    "template": "{{abbreviate 'abcdefghijk' 8}}",
+    "body": ""
+  },
+  {
+    "name": "helper wordWrap 0",
+    "template": "{{wordWrap 'one two three four' 7}}",
+    "body": ""
+  },
+  {
+    "name": "helper yesno 0",
+    "template": "{{yesno true 'yes,no,maybe'}}",
+    "body": ""
+  },
+  {
+    "name": "helper yesno 1",
+    "template": "{{yesno false 'yes,no,maybe'}}",
+    "body": ""
+  },
+  {
+    "name": "helper yesno 2",
+    "template": "{{yesno missing 'yes,no,maybe'}}",
+    "body": ""
+  },
+  {
+    "name": "helper numberFormat 0",
+    "template": "{{numberFormat 12345.678 '###,###.00'}}",
+    "body": ""
+  },
+  {
+    "name": "helper dateFormat 0",
+    "template": "{{dateFormat (parseDate '2020-02-03') 'yyyy-MM-dd'}}",
+    "body": ""
+  },
+  {
+    "name": "helper isEven 0",
+    "template": "{{isEven 2}}",
+    "body": ""
+  },
+  {
+    "name": "helper isEven 1",
+    "template": "{{isEven 3}}",
+    "body": ""
+  },
+  {
+    "name": "helper isOdd 0",
+    "template": "{{isOdd 2}}",
+    "body": ""
+  },
+  {
+    "name": "helper isOdd 1",
+    "template": "{{isOdd 3}}",
+    "body": ""
+  },
+  {
+    "name": "helper stripes 0",
+    "template": "{{stripes 0}}",
+    "body": ""
+  },
+  {
+    "name": "helper stripes 1",
+    "template": "{{stripes 1}}",
+    "body": ""
+  },
+  {
+    "name": "helper stripes 2",
+    "template": "{{stripes 1 'odd' 'even'}}",
+    "body": ""
+  },
+  {
+    "name": "helper hostname 0",
+    "template": "{{hostname }}",
+    "body": ""
+  },
+  {
+    "name": "helper systemValue 0",
+    "template": "{{systemValue key='wiremock.missing' default='fallback'}}",
+    "body": ""
+  },
+  {
+    "name": "helper systemValue 1",
+    "template": "{{systemValue key='wiremock.missing' type='PROPERTY' default='fallback'}}",
+    "body": ""
+  },
+  {
+    "name": "helper systemValue 2",
+    "template": "{{systemValue key='HOME'}}",
+    "body": ""
+  },
+  {
+    "name": "helper systemValue 3",
+    "template": "{{systemValue }}",
+    "body": ""
+  },
+  {
+    "name": "conditional eq 2 3",
+    "template": "{{#if (eq 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional eq 3 3",
+    "template": "{{#if (eq 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional eq 'a' 'b'",
+    "template": "{{#if (eq 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional eq 2 '2'",
+    "template": "{{#if (eq 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional neq 2 3",
+    "template": "{{#if (neq 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional neq 3 3",
+    "template": "{{#if (neq 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional neq 'a' 'b'",
+    "template": "{{#if (neq 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional neq 2 '2'",
+    "template": "{{#if (neq 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gt 2 3",
+    "template": "{{#if (gt 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gt 3 3",
+    "template": "{{#if (gt 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gt 'a' 'b'",
+    "template": "{{#if (gt 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gt 2 '2'",
+    "template": "{{#if (gt 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gte 2 3",
+    "template": "{{#if (gte 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gte 3 3",
+    "template": "{{#if (gte 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gte 'a' 'b'",
+    "template": "{{#if (gte 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional gte 2 '2'",
+    "template": "{{#if (gte 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lt 2 3",
+    "template": "{{#if (lt 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lt 3 3",
+    "template": "{{#if (lt 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lt 'a' 'b'",
+    "template": "{{#if (lt 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lt 2 '2'",
+    "template": "{{#if (lt 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lte 2 3",
+    "template": "{{#if (lte 2 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lte 3 3",
+    "template": "{{#if (lte 3 3)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lte 'a' 'b'",
+    "template": "{{#if (lte 'a' 'b')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional lte 2 '2'",
+    "template": "{{#if (lte 2 '2')}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional andtrue true",
+    "template": "{{#if (and true true)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional andtrue false",
+    "template": "{{#if (and true false)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional orfalse true",
+    "template": "{{#if (or false true)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "conditional notfalse",
+    "template": "{{#if (not false)}}true{{else}}false{{/if}}",
+    "body": ""
+  },
+  {
+    "name": "contains array true",
+    "template": "{{contains (array 'foo' 'bar') 'foo'}}",
+    "body": ""
+  },
+  {
+    "name": "contains array partial",
+    "template": "{{contains (array 'foobar') 'foo'}}",
+    "body": ""
+  },
+  {
+    "name": "contains inverse",
+    "template": "{{#contains 'a' 'z'}}yes{{else}}no{{/contains}}",
+    "body": ""
+  },
+  {
+    "name": "matches inverse",
+    "template": "{{#matches 'a' 'z'}}yes{{else}}no{{/matches}}",
+    "body": ""
+  },
+  {
+    "name": "matches lookahead",
+    "template": "{{matches 'abc' 'a(?=b)bc'}}",
+    "body": ""
+  },
+  {
+    "name": "regex backreference",
+    "template": "{{regexExtract 'abab' '(ab)\\\\1'}}",
+    "body": ""
+  },
+  {
+    "name": "arrayJoin variadic",
+    "template": "{{arrayJoin ', ' 'a' 'b' 'c'}}",
+    "body": ""
+  },
+  {
+    "name": "arrayJoin block",
+    "template": "{{#arrayJoin ',' (array 'a' 'b')}}<{{this}}>{{/arrayJoin}}",
+    "body": ""
+  },
+  {
+    "name": "arrayJoin empty",
+    "template": "{{arrayJoin ',' (array) prefix='[' suffix=']'}}",
+    "body": ""
+  },
+  {
+    "name": "array nested display",
+    "template": "{{array (array 'a' 'b') 'c'}}",
+    "body": ""
+  },
+  {
+    "name": "array remove negative",
+    "template": "{{arrayRemove (array 1 2) position=-1}}",
+    "body": ""
+  },
+  {
+    "name": "array add missing",
+    "template": "{{arrayAdd (array 1 2)}}",
+    "body": ""
+  },
+  {
+    "name": "range reverse",
+    "template": "{{range 3 1}}",
+    "body": ""
+  },
+  {
+    "name": "size emoji",
+    "template": "{{size '\ud83d\ude00'}}",
+    "body": ""
+  },
+  {
+    "name": "substring emoji",
+    "template": "{{substring '\ud83d\ude00a' 0 2}}",
+    "body": ""
+  },
+  {
+    "name": "base64 block",
+    "template": "{{#base64}}hello{{/base64}}",
+    "body": ""
+  },
+  {
+    "name": "urlEncode block",
+    "template": "{{#urlEncode}}a b+c{{/urlEncode}}",
+    "body": ""
+  },
+  {
+    "name": "urlEncode star",
+    "template": "{{urlEncode '*~'}}",
+    "body": ""
+  },
+  {
+    "name": "trim block",
+    "template": "{{#trim}}  hello  {{/trim}}",
+    "body": ""
+  },
+  {
+    "name": "formdata duplicate",
+    "template": "{{formData 'a=one&a=two' 'x'}}{{x.a}}|{{x.a.[1]}}",
+    "body": ""
+  },
+  {
+    "name": "formdata equals",
+    "template": "{{formData 'a=x=y' 'x'}}{{x.a}}",
+    "body": ""
+  },
+  {
+    "name": "formdata missing",
+    "template": "{{formData 'a&b=' 'x'}}{{toJson x}}",
+    "body": ""
+  },
+  {
+    "name": "parseJson array each",
+    "template": "{{#each (parseJson request.body)}}{{@index}}={{this}};{{/each}}",
+    "body": "[1,2]"
+  },
+  {
+    "name": "parseJson escaped",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"<>&\\u2028\\u2029\\t\\n\\r\"}"
+  },
+  {
+    "name": "parseJson surrogate",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"\\ud800\"}"
+  },
+  {
+    "name": "parseJson low surrogate",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"\\udc00\"}"
+  },
+  {
+    "name": "parseJson pair",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"\\ud83d\\ude00\"}"
+  },
+  {
+    "name": "jsonPath scalar null",
+    "template": "{{jsonPath request.body '$.x' default='fallback'}}",
+    "body": "{\"x\":null}"
+  },
+  {
+    "name": "jsonPath array objects",
+    "template": "{{jsonPath request.body '$.x'}}",
+    "body": "{\"x\":[{\"z\":1,\"a\":2}]}"
+  },
+  {
+    "name": "jsonPath large integer",
+    "template": "{{jsonPath request.body '$.x'}}",
+    "body": "{\"x\":9007199254740993}"
+  },
+  {
+    "name": "jsonPath sum",
+    "template": "{{jsonPath request.body '$.x.sum()'}}",
+    "body": "{\"x\":[1,2,3]}"
+  },
+  {
+    "name": "jsonPath length",
+    "template": "{{jsonPath request.body '$.x.length()'}}",
+    "body": "{\"x\":[1,2,3]}"
+  },
+  {
+    "name": "toJson missing",
+    "template": "{{toJson missing}}",
+    "body": ""
+  },
+  {
+    "name": "toJson string",
+    "template": "{{toJson 'abc'}}",
+    "body": ""
+  },
+  {
+    "name": "formatJson order",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"z\":1,\"a\":2}"
+  },
+  {
+    "name": "formatJson block",
+    "template": "{{#formatJson}}{\"z\":1,\"a\":2}{{/formatJson}}",
+    "body": ""
+  },
+  {
+    "name": "jsonRemove root",
+    "template": "{{jsonRemove request.body '$'}}",
+    "body": "{\"a\":1}"
+  },
+  {
+    "name": "jsonRemove wildcard",
+    "template": "{{jsonRemove request.body '$.x[*].a'}}",
+    "body": "{\"x\":[{\"a\":1,\"b\":2},{\"a\":3}]}"
+  },
+  {
+    "name": "jsonArrayAdd maxzero",
+    "template": "{{jsonArrayAdd request.body '3' maxItems=0}}",
+    "body": "[1,2]"
+  },
+  {
+    "name": "jsonArrayAdd nested",
+    "template": "{{jsonArrayAdd request.body '[3,4]'}}",
+    "body": "[1,2]"
+  },
+  {
+    "name": "xpath attributes",
+    "template": "{{#each (xPath request.body '/a/b')}}{{this.attributes.id}}:{{this.name}}:{{this.text}};{{/each}}",
+    "body": "<a><b id=\"1\">one</b><b id=\"2\">two</b></a>"
+  },
+  {
+    "name": "xpath count",
+    "template": "{{xPath request.body 'count(/a/b)'}}",
+    "body": "<a><b/><b/></a>"
+  },
+  {
+    "name": "xpath local name",
+    "template": "{{xPath request.body 'local-name(/*)' }}",
+    "body": "<a/>"
+  },
+  {
+    "name": "xpath nested format",
+    "template": "{{xPath request.body '/a'}}",
+    "body": "<a><b>one</b><b>two</b></a>"
+  },
+  {
+    "name": "formatXml attributes",
+    "template": "{{formatXml request.body}}",
+    "body": "<a z=\"1\" b=\"2\"><b/></a>"
+  },
+  {
+    "name": "formatXml mixed",
+    "template": "{{formatXml request.body}}",
+    "body": "<a>hello <b>world</b> !</a>"
+  },
+  {
+    "name": "formatXml declaration",
+    "template": "{{formatXml request.body}}",
+    "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><a/>"
+  },
+  {
+    "name": "nested parent",
+    "template": "{{#each (parseJson request.body)}}{{name}}:{{#each items}}{{../name}}={{this}};{{/each}}{{/each}}",
+    "body": "[{\"name\":\"one\",\"items\":[1,2]}]"
+  },
+  {
+    "name": "block params",
+    "template": "{{#each (parseJson request.body) as |item idx|}}{{idx}}={{item.name}};{{/each}}",
+    "body": "[{\"name\":\"one\"},{\"name\":\"two\"}]"
+  },
+  {
+    "name": "assign nested",
+    "template": "{{#each (array 'a' 'b')}}{{#assign 'x'}}{{this}}{{/assign}}{{x}};{{/each}}|{{x}}",
+    "body": ""
+  },
+  {
+    "name": "lookup typed",
+    "template": "{{lookup (parseJson request.body) 'x'}}",
+    "body": "{\"x\":[1,2]}"
+  },
+  {
+    "name": "date format yyyy-MM-dd HH:mm:ss.SSS XXX",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='yyyy-MM-dd HH:mm:ss.SSS XXX'}}",
+    "body": ""
+  },
+  {
+    "name": "date format EEE, dd MMM yyyy HH:mm:ss Z",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='EEE, dd MMM yyyy HH:mm:ss Z'}}",
+    "body": ""
+  },
+  {
+    "name": "date format yyyyMMdd",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='yyyyMMdd'}}",
+    "body": ""
+  },
+  {
+    "name": "date format yy-M-d h:mm a",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='yy-M-d h:mm a'}}",
+    "body": ""
+  },
+  {
+    "name": "date format epoch",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='epoch'}}",
+    "body": ""
+  },
+  {
+    "name": "date format unix",
+    "template": "{{date (parseDate '2020-02-03T14:05:06.123+02:00') format='unix'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset 1 seconds",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='1 seconds'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset -2 minutes",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='-2 minutes'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset 3 hours",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='3 hours'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset -1 weeks",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='-1 weeks'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset 2 months",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='2 months'}}",
+    "body": ""
+  },
+  {
+    "name": "date offset 1 years",
+    "template": "{{date (parseDate '2020-01-31T10:00:00Z') offset='1 years'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first second of minute",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first second of minute'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first minute of hour",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first minute of hour'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first hour of day",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first hour of day'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first day of month",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first day of month'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first day of next month",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first day of next month'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate last day of month",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'last day of month'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first day of year",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first day of year'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate first day of next year",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'first day of next year'}}",
+    "body": ""
+  },
+  {
+    "name": "date truncate last day of year",
+    "template": "{{truncateDate (parseDate '2020-02-03T14:05:06Z') 'last day of year'}}",
+    "body": ""
+  },
+  {
+    "name": "parseDate epoch",
+    "template": "{{parseDate '1580738706123' format='epoch'}}",
+    "body": ""
+  },
+  {
+    "name": "parseDate unix",
+    "template": "{{parseDate '1580738706' format='unix'}}",
+    "body": ""
+  },
+  {
+    "name": "parseDate yyyy-MM",
+    "template": "{{parseDate '2020-02' format='yyyy-MM'}}",
+    "body": ""
+  },
+  {
+    "name": "parseDate yyyy",
+    "template": "{{parseDate '2020' format='yyyy'}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue ALPHANUMERIC",
+    "template": "{{size (randomValue type='ALPHANUMERIC' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue ALPHABETIC",
+    "template": "{{size (randomValue type='ALPHABETIC' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue NUMERIC",
+    "template": "{{size (randomValue type='NUMERIC' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue ALPHANUMERIC_AND_SYMBOLS",
+    "template": "{{size (randomValue type='ALPHANUMERIC_AND_SYMBOLS' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue UUID",
+    "template": "{{size (randomValue type='UUID' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomValue HEXADECIMAL",
+    "template": "{{size (randomValue type='HEXADECIMAL' length=12)}}",
+    "body": ""
+  },
+  {
+    "name": "randomDecimal observable",
+    "template": "{{math (randomDecimal lower=0 upper=1) '*' 0}}",
+    "body": ""
+  },
+  {
+    "name": "pickRandom count observable",
+    "template": "{{size (pickRandom (array 'a' 'b' 'c') count=2)}}",
+    "body": ""
+  },
+  {
+    "name": "now fixed literal",
+    "template": "{{now format=\"'constant'\"}}",
+    "body": ""
+  },
+  {
+    "name": "parameters model",
+    "template": "{{parameters.name}}|{{parameters.nested.x}}|{{#each parameters.values}}{{this}};{{/each}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "x": "ok"
+      },
+      "values": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "name": "parameters root nested",
+    "template": "{{#each parameters.values}}{{@root.parameters.name}}={{this}};{{/each}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "values": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "name": "center size=8",
+    "template": "{{center 'hi' size=8}}",
+    "body": ""
+  },
+  {
+    "name": "center size=7 pad='ab'",
+    "template": "{{center 'hi' size=7 pad='ab'}}",
+    "body": ""
+  },
+  {
+    "name": "center size=1",
+    "template": "{{center 'hi' size=1}}",
+    "body": ""
+  },
+  {
+    "name": "ljust size=8",
+    "template": "{{ljust 'hi' size=8}}",
+    "body": ""
+  },
+  {
+    "name": "ljust size=7 pad='ab'",
+    "template": "{{ljust 'hi' size=7 pad='ab'}}",
+    "body": ""
+  },
+  {
+    "name": "ljust size=1",
+    "template": "{{ljust 'hi' size=1}}",
+    "body": ""
+  },
+  {
+    "name": "rjust size=8",
+    "template": "{{rjust 'hi' size=8}}",
+    "body": ""
+  },
+  {
+    "name": "rjust size=7 pad='ab'",
+    "template": "{{rjust 'hi' size=7 pad='ab'}}",
+    "body": ""
+  },
+  {
+    "name": "rjust size=1",
+    "template": "{{rjust 'hi' size=1}}",
+    "body": ""
+  },
+  {
+    "name": "numberFormat '###,###.00' 'en_US'",
+    "template": "{{numberFormat 12345.678 '###,###.00' 'en_US'}}",
+    "body": ""
+  },
+  {
+    "name": "numberFormat '###,###.00' 'de_DE'",
+    "template": "{{numberFormat 12345.678 '###,###.00' 'de_DE'}}",
+    "body": ""
+  },
+  {
+    "name": "numberFormat 'integer' 'en_US'",
+    "template": "{{numberFormat 12345.678 'integer' 'en_US'}}",
+    "body": ""
+  },
+  {
+    "name": "numberFormat 'percent' 'en_US'",
+    "template": "{{numberFormat 12345.678 'percent' 'en_US'}}",
+    "body": ""
+  },
+  {
+    "name": "numberFormat 'default' 'en_US' groupingUsed=false maximumFractionDigits=1",
+    "template": "{{numberFormat 12345.678 'default' 'en_US' groupingUsed=false maximumFractionDigits=1}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block eq",
+    "template": "{{#eq 3 3}}yes{{else}}no{{/eq}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block neq",
+    "template": "{{#neq 3 3}}yes{{else}}no{{/neq}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block gt",
+    "template": "{{#gt 4 3}}yes{{else}}no{{/gt}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block and",
+    "template": "{{#and true false}}yes{{else}}no{{/and}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block or",
+    "template": "{{#or false true}}yes{{else}}no{{/or}}",
+    "body": ""
+  },
+  {
+    "name": "conditional block not",
+    "template": "{{#not false}}yes{{else}}no{{/not}}",
+    "body": ""
+  },
+  {
+    "name": "invalid arrayAddmissing 'a'",
+    "template": "{{arrayAdd missing 'a'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid arrayRemove(array 1 2) position='bad'",
+    "template": "{{arrayRemove (array 1 2) position='bad'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid arrayAdd(array 1 2) 'a' position='bad'",
+    "template": "{{arrayAdd (array 1 2) 'a' position='bad'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid arrayRemove(array)",
+    "template": "{{arrayRemove (array)}}",
+    "body": ""
+  },
+  {
+    "name": "invalid range1",
+    "template": "{{range 1}}",
+    "body": ""
+  },
+  {
+    "name": "invalid math1 '+'",
+    "template": "{{math 1 '+'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid math1 '/' 0",
+    "template": "{{math 1 '/' 0}}",
+    "body": ""
+  },
+  {
+    "name": "invalid math'abc' '+' 2",
+    "template": "{{math 'abc' '+' 2}}",
+    "body": ""
+  },
+  {
+    "name": "invalid contains'abc'",
+    "template": "{{contains 'abc'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid matches'abc'",
+    "template": "{{matches 'abc'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid regexExtract'abc' '('",
+    "template": "{{regexExtract 'abc' '('}}",
+    "body": ""
+  },
+  {
+    "name": "invalid regexExtract'abc' 'z' default='none'",
+    "template": "{{regexExtract 'abc' 'z' default='none'}}",
+    "body": ""
+  },
+  {
+    "name": "toJson value {}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{}"
+  },
+  {
+    "name": "formatJson value {}",
+    "template": "{{formatJson request.body}}",
+    "body": "{}"
+  },
+  {
+    "name": "toJson value []",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "[]"
+  },
+  {
+    "name": "formatJson value []",
+    "template": "{{formatJson request.body}}",
+    "body": "[]"
+  },
+  {
+    "name": "toJson value null",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "null"
+  },
+  {
+    "name": "formatJson value null",
+    "template": "{{formatJson request.body}}",
+    "body": "null"
+  },
+  {
+    "name": "toJson value 1",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "1"
+  },
+  {
+    "name": "formatJson value 1",
+    "template": "{{formatJson request.body}}",
+    "body": "1"
+  },
+  {
+    "name": "toJson value true",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "true"
+  },
+  {
+    "name": "formatJson value true",
+    "template": "{{formatJson request.body}}",
+    "body": "true"
+  },
+  {
+    "name": "toJson value \"abc\"",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "\"abc\""
+  },
+  {
+    "name": "formatJson value \"abc\"",
+    "template": "{{formatJson request.body}}",
+    "body": "\"abc\""
+  },
+  {
+    "name": "toJson value {\"x\":null}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":null}"
+  },
+  {
+    "name": "formatJson value {\"x\":null}",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"x\":null}"
+  },
+  {
+    "name": "toJson value {\"x\":1.0}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":1.0}"
+  },
+  {
+    "name": "formatJson value {\"x\":1.0}",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"x\":1.0}"
+  },
+  {
+    "name": "toJson value {\"x\":1e3}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":1e3}"
+  },
+  {
+    "name": "formatJson value {\"x\":1e3}",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"x\":1e3}"
+  },
+  {
+    "name": "toJson value {\"x\":\"\\u0001\\u001f\"}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"\\u0001\\u001f\"}"
+  },
+  {
+    "name": "formatJson value {\"x\":\"\\u0001\\u001f\"}",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"x\":\"\\u0001\\u001f\"}"
+  },
+  {
+    "name": "toJson value {\"x\":\"\\\\u2028\"}",
+    "template": "{{toJson (parseJson request.body)}}",
+    "body": "{\"x\":\"\\\\u2028\"}"
+  },
+  {
+    "name": "formatJson value {\"x\":\"\\\\u2028\"}",
+    "template": "{{formatJson request.body}}",
+    "body": "{\"x\":\"\\\\u2028\"}"
+  },
+  {
+    "name": "jsonMerge invalid notjson{}",
+    "template": "{{jsonMerge request.body '{}'}}",
+    "body": "notjson"
+  },
+  {
+    "name": "jsonMerge invalid []{}",
+    "template": "{{jsonMerge request.body '{}'}}",
+    "body": "[]"
+  },
+  {
+    "name": "jsonMerge invalid {}notjson",
+    "template": "{{jsonMerge request.body 'notjson'}}",
+    "body": "{}"
+  },
+  {
+    "name": "jsonMerge invalid {}[]",
+    "template": "{{jsonMerge request.body '[]'}}",
+    "body": "{}"
+  },
+  {
+    "name": "jsonMerge invalid null{}",
+    "template": "{{jsonMerge request.body '{}'}}",
+    "body": "null"
+  },
+  {
+    "name": "jsonRemove expression ",
+    "template": "{{jsonRemove request.body ''}}",
+    "body": "{\"a\":1,\"nested\":{\"a\":2}}"
+  },
+  {
+    "name": "jsonRemove expression bad[",
+    "template": "{{jsonRemove request.body 'bad['}}",
+    "body": "{\"a\":1,\"nested\":{\"a\":2}}"
+  },
+  {
+    "name": "jsonRemove expression $..a",
+    "template": "{{jsonRemove request.body '$..a'}}",
+    "body": "{\"a\":1,\"nested\":{\"a\":2}}"
+  },
+  {
+    "name": "jsonRemove expression $.*",
+    "template": "{{jsonRemove request.body '$.*'}}",
+    "body": "{\"a\":1,\"nested\":{\"a\":2}}"
+  },
+  {
+    "name": "invalid {{jsonMerge 1 '{}'}}",
+    "template": "{{jsonMerge 1 '{}'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid {{jsonRemove 1 '$.a'}}",
+    "template": "{{jsonRemove 1 '$.a'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid {{jsonArrayAdd '{}' '1'}}",
+    "template": "{{jsonArrayAdd '{}' '1'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid {{jsonArrayAdd '[]' 'bad'}}",
+    "template": "{{jsonArrayAdd '[]' 'bad'}}",
+    "body": ""
+  },
+  {
+    "name": "invalid {{jsonArrayAdd '[1,2]' '3' maxItems=-1}}",
+    "template": "{{jsonArrayAdd '[1,2]' '3' maxItems=-1}}",
+    "body": ""
+  },
+  {
+    "name": "invalid {{jsonArrayAdd '[1,2]' '3' flatten='yes'}}",
+    "template": "{{jsonArrayAdd '[1,2]' '3' flatten='yes'}}",
+    "body": ""
+  },
+  {
+    "name": "xpath variant /a/b/@id",
+    "template": "{{xPath request.body '/a/b/@id'}}",
+    "body": "<a><b id=\"one\">abc</b><b id=\"two\">def</b></a>"
+  },
+  {
+    "name": "xpath variant string(/a/b)",
+    "template": "{{xPath request.body 'string(/a/b)'}}",
+    "body": "<a><b id=\"one\">abc</b><b id=\"two\">def</b></a>"
+  },
+  {
+    "name": "xpath variant boolean(/a/b)",
+    "template": "{{xPath request.body 'boolean(/a/b)'}}",
+    "body": "<a><b id=\"one\">abc</b><b id=\"two\">def</b></a>"
+  },
+  {
+    "name": "xpath variant /a/b[2]/text()",
+    "template": "{{xPath request.body '/a/b[2]/text()'}}",
+    "body": "<a><b id=\"one\">abc</b><b id=\"two\">def</b></a>"
+  },
+  {
+    "name": "XML variant <a z=\"1\" a=\"2\"/>",
+    "template": "{{formatXml request.body}}",
+    "body": "<a z=\"1\" a=\"2\"/>"
+  },
+  {
+    "name": "XML variant <a><!-- hi --><b><![CDATA[hello & world]]></b></a>",
+    "template": "{{formatXml request.body}}",
+    "body": "<a><!-- hi --><b><![CDATA[hello & world]]></b></a>"
+  },
+  {
+    "name": "XML variant <a xmlns:x=\"urn:x\"><x:b x:id=\"1\">v</x:b></a>",
+    "template": "{{formatXml request.body}}",
+    "body": "<a xmlns:x=\"urn:x\"><x:b x:id=\"1\">v</x:b></a>"
+  },
+  {
+    "name": "each else",
+    "template": "{{#each (array)}}yes{{else}}none{{/each}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "with parent",
+    "template": "{{#with parameters.nested}}{{value}}|{{../parameters.name}}{{/with}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "unless",
+    "template": "{{#unless false}}yes{{else}}no{{/unless}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "null equality",
+    "template": "{{eq missing missing}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "lookup number",
+    "template": "{{lookup (array 'a' 'b') 1}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "val boolean",
+    "template": "{{val false default=true}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "val empty",
+    "template": "{{val '' default='fallback'}}",
+    "body": "",
+    "parameters": {
+      "name": "Ada",
+      "nested": {
+        "value": "ok"
+      }
+    }
+  },
+  {
+    "name": "defaultIfEmpty nil",
+    "template": "{{defaultIfEmpty missing 'fallback'}}",
+    "body": ""
+  },
+  {
+    "name": "defaultIfEmpty empty",
+    "template": "{{defaultIfEmpty '' 'fallback'}}",
+    "body": ""
+  },
+  {
+    "name": "defaultIfEmpty false",
+    "template": "{{defaultIfEmpty false 'fallback'}}",
+    "body": ""
+  },
+  {
+    "name": "join array",
+    "template": "{{join (array 'a' 'b') ','}}",
+    "body": ""
+  },
+  {
+    "name": "join hash",
+    "template": "{{join (array 'a' 'b') ',' prefix='[' suffix=']'}}",
+    "body": ""
+  },
+  {
+    "name": "log builtin",
+    "template": "{{log 'hello'}}ok",
+    "body": ""
+  },
+  {
+    "name": "regex backreference actual",
+    "template": "{{regexExtract 'aa' '(a)\\1'}}",
+    "body": ""
+  },
+  {
+    "name": "regex lookahead",
+    "template": "{{regexExtract 'abc' 'a(?=b)'}}",
+    "body": ""
+  },
+  {
+    "name": "nested helper error",
+    "template": "{{#each (array 1)}}{{math 1 '/' 0}}{{/each}}",
+    "body": ""
+  },
+  {
+    "name": "request model extra fields",
+    "template": "{{request.bodyAsBase64}}|{{request.binary}}|{{request.multipart}}|{{request.requestLine.method}}|{{request.requestLine.path}}|{{request.clientIp}}",
+    "body": "abc",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  },
+  {
+    "name": "request binary body",
+    "template": "{{request.binary}}|{{request.bodyAsBase64}}",
+    "body": "abc",
+    "headers": {
+      "Content-Type": "application/octet-stream"
+    }
+  },
+  {
+    "name": "request multipart fields",
+    "template": "{{request.multipart}}|{{request.parts.a.name}}|{{request.parts.a.body}}|{{request.parts.a.bodyAsBase64}}|{{request.parts.a.binary}}|{{request.parts.a.headers.content-type}}",
+    "body": "--BOUND\r\nContent-Disposition: form-data; name=\"a\"\r\nContent-Type: text/plain\r\n\r\nhello\r\n--BOUND--\r\n",
+    "headers": {
+      "Content-Type": "multipart/form-data; boundary=BOUND"
+    }
+  },
+  {
+    "name": "jsonMerge invalid base missing",
+    "template": "{{jsonMerge missing '{}'}}"
+  },
+  {
+    "name": "jsonMerge invalid base true",
+    "template": "{{jsonMerge true '{}'}}"
+  },
+  {
+    "name": "jsonMerge invalid base 3",
+    "template": "{{jsonMerge 3 '{}'}}"
+  },
+  {
+    "name": "jsonMerge invalid base 'invalid'",
+    "template": "{{jsonMerge 'invalid' '{}'}}"
+  },
+  {
+    "name": "jsonMerge invalid second missing",
+    "template": "{{jsonMerge '{}' missing}}"
+  },
+  {
+    "name": "jsonMerge invalid second true",
+    "template": "{{jsonMerge '{}' true}}"
+  },
+  {
+    "name": "jsonMerge invalid second 3",
+    "template": "{{jsonMerge '{}' 3}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid base missing",
+    "template": "{{jsonArrayAdd missing '{}'}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid base true",
+    "template": "{{jsonArrayAdd true '{}'}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid base 3",
+    "template": "{{jsonArrayAdd 3 '{}'}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid base 'invalid'",
+    "template": "{{jsonArrayAdd 'invalid' '{}'}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid second missing",
+    "template": "{{jsonArrayAdd '[]' missing}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid second true",
+    "template": "{{jsonArrayAdd '[]' true}}"
+  },
+  {
+    "name": "jsonArrayAdd invalid second 3",
+    "template": "{{jsonArrayAdd '[]' 3}}"
+  },
+  {
+    "name": "jsonRemove invalid base missing",
+    "template": "{{jsonRemove missing '$.a'}}"
+  },
+  {
+    "name": "jsonRemove invalid base true",
+    "template": "{{jsonRemove true '$.a'}}"
+  },
+  {
+    "name": "jsonRemove invalid base 3",
+    "template": "{{jsonRemove 3 '$.a'}}"
+  },
+  {
+    "name": "jsonRemove invalid base 'invalid'",
+    "template": "{{jsonRemove 'invalid' '$.a'}}"
+  },
+  {
+    "name": "jsonRemove invalid second missing",
+    "template": "{{jsonRemove '{}' missing}}"
+  },
+  {
+    "name": "jsonRemove invalid second true",
+    "template": "{{jsonRemove '{}' true}}"
+  },
+  {
+    "name": "jsonRemove invalid second 3",
+    "template": "{{jsonRemove '{}' 3}}"
+  },
+  {
+    "name": "jsonArrayAdd option maxItems='3'",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' maxItems='3'}}"
+  },
+  {
+    "name": "jsonArrayAdd option maxItems=3.1",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' maxItems=3.1}}"
+  },
+  {
+    "name": "jsonArrayAdd option maxItems=true",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' maxItems=true}}"
+  },
+  {
+    "name": "jsonArrayAdd option maxItems=0",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' maxItems=0}}"
+  },
+  {
+    "name": "jsonArrayAdd option jsonPath=''",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' jsonPath=''}}"
+  },
+  {
+    "name": "jsonArrayAdd option jsonPath=3",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' jsonPath=3}}"
+  },
+  {
+    "name": "jsonArrayAdd option jsonPath='$.missing'",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' jsonPath='$.missing'}}"
+  },
+  {
+    "name": "jsonArrayAdd option jsonPath='$.x'",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' jsonPath='$.x'}}"
+  },
+  {
+    "name": "jsonArrayAdd option jsonPath='$['",
+    "template": "{{jsonArrayAdd '{\"x\":1}' '1' jsonPath='$['}}"
+  },
+  {
+    "name": "json helper signature {{jsonRemove '{}' }}",
+    "template": "{{jsonRemove '{}' }}"
+  },
+  {
+    "name": "json helper signature {{jsonRemove '{}' '$.a' '$.b'}}",
+    "template": "{{jsonRemove '{}' '$.a' '$.b'}}"
+  },
+  {
+    "name": "json helper signature {{#jsonMerge '{}' '{}' }}{\"x\":1}{{/jsonMerge}}",
+    "template": "{{#jsonMerge '{}' '{}' }}{\"x\":1}{{/jsonMerge}}"
+  },
+  {
+    "name": "json helper signature {{#jsonArrayAdd '[]' '[]'}}1{{/jsonArrayAdd}}",
+    "template": "{{#jsonArrayAdd '[]' '[]'}}1{{/jsonArrayAdd}}"
+  },
+  {
+    "name": "dateFormat valid 'yyyy-MM-dd'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'yyyy-MM-dd'}}"
+  },
+  {
+    "name": "dateFormat valid format='dd/MM/yyyy'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') format='dd/MM/yyyy'}}"
+  },
+  {
+    "name": "dateFormat valid 'short' 'en_US'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'short' 'en_US'}}"
+  },
+  {
+    "name": "dateFormat valid 'medium' 'en_US'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'medium' 'en_US'}}"
+  },
+  {
+    "name": "dateFormat valid 'yyyy-MM-dd HH:mm' tz='America/New_York'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'yyyy-MM-dd HH:mm' tz='America/New_York'}}"
+  },
+  {
+    "name": "dateFormat input '2020-02-03'",
+    "template": "{{dateFormat '2020-02-03' 'yyyy'}}"
+  },
+  {
+    "name": "dateFormat input 3",
+    "template": "{{dateFormat 3 'yyyy'}}"
+  },
+  {
+    "name": "dateFormat input missing",
+    "template": "{{dateFormat missing 'yyyy'}}"
+  },
+  {
+    "name": "request model variant {{request.absoluteUrl}}",
+    "template": "{{request.absoluteUrl}}",
+    "headers": {
+      "Cookie": "a=one; a=two"
+    }
+  },
+  {
+    "name": "request model variant {{request.pathSegments}}",
+    "template": "{{request.pathSegments}}",
+    "headers": {
+      "Cookie": "a=one; a=two"
+    }
+  },
+  {
+    "name": "request model variant {{request.requestLine.pathSegments}}",
+    "template": "{{request.requestLine.pathSegments}}",
+    "headers": {
+      "Cookie": "a=one; a=two"
+    }
+  },
+  {
+    "name": "request model variant {{request.cookies.a}}|{{request.cookies.a.[0]}}|{{request.cookies.a.[1]}}|{{request.cookies.a.size}}",
+    "template": "{{request.cookies.a}}|{{request.cookies.a.[0]}}|{{request.cookies.a.[1]}}|{{request.cookies.a.size}}",
+    "headers": {
+      "Cookie": "a=one; a=two"
+    }
+  },
+  {
+    "name": "request model variant {{#each request.pathSegments}}{{@index}}={{this}};{{/each}}",
+    "template": "{{#each request.pathSegments}}{{@index}}={{this}};{{/each}}",
+    "headers": {
+      "Cookie": "a=one; a=two"
+    }
+  },
+  {
+    "name": "dateFormat locale variant 'short' 'en_GB'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'short' 'en_GB'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'full' 'en_US'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'full' 'en_US'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'medium' 'en_US' time='short'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'medium' 'en_US' time='short'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'medium' 'en_US' time='long'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'medium' 'en_US' time='long'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'medium' 'de_DE'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'medium' 'de_DE'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'medium' 'fr_FR'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'medium' 'fr_FR'}}"
+  },
+  {
+    "name": "dateFormat locale variant 'short' 'de_DE'",
+    "template": "{{dateFormat (parseDate '2020-02-03' format='yyyy-MM-dd') 'short' 'de_DE'}}"
+  }
+]

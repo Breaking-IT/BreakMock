@@ -60,3 +60,15 @@ func TestHeaderCasingKeepsFirstSpelling(t *testing.T) {
 		t.Fatal(headers)
 	}
 }
+
+func TestAdminDistanceJavaDoubleFormatting(t *testing.T) {
+	for _, tc := range []struct {
+		value float64
+		want  string
+	}{{0, "0.0"}, {1, "1.0"}, {0.001, "0.001"}, {0.00001, "1.0E-5"}, {10000000, "1.0E7"}} {
+		data, err := marshalAdminJSON(map[string]any{"distance": tc.value})
+		if err != nil || !strings.Contains(string(data), `"distance" : `+tc.want) {
+			t.Fatalf("%v: %s %v", tc.value, data, err)
+		}
+	}
+}

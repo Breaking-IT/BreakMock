@@ -1,0 +1,1 @@
+Response fixtures captured from Java WireMock 4.0.0-beta.40 using one GET /expected mapping, fixed ID 11111111-1111-4111-8111-111111111111, then GET /actual or POST /__admin/near-misses/request. No normalization. Apache-2.0; upstream copyright Thomas Akehurst and WireMock contributors.

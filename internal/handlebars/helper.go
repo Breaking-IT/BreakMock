@@ -307,6 +307,9 @@ func withHelper(context interface{}, options *Options) interface{} {
 
 // #each block helper
 func eachHelper(context interface{}, options *Options) interface{} {
+	if iterable, ok := context.(interface{ TemplateIterationValues() []interface{} }); ok {
+		context = iterable.TemplateIterationValues()
+	}
 	if !IsTrue(context) {
 		return options.Inverse()
 	}
@@ -399,4 +402,12 @@ func equalHelper(a interface{}, b interface{}, options *Options) interface{} {
 func (options *Options) IsBlock() bool {
 	block := options.eval.curBlock()
 	return block != nil && block.Expression == options.eval.curExpr()
+}
+
+// ErrorPosition returns the source position at which a helper error is reported.
+func (options *Options) ErrorPosition() int {
+	if n := len(options.eval.errorPositions); n > 0 {
+		return options.eval.errorPositions[n-1]
+	}
+	return 0
 }
