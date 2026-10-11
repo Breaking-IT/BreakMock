@@ -124,10 +124,19 @@ def ws_http_stub(base):
  c=WS(base)
  try:call(base,'/trigger');return c.frame()
  finally:c.close()
+def wait_for_channels(base,count):
+ # Jetty may flush upgrade headers before its onOpen callback registers the channel.
+ # Wait for the observable registration, then compare unchanged transport bytes.
+ deadline=time.monotonic()+3
+ while time.monotonic()<deadline:
+  status,body=call(base,'/__admin/channels')
+  if status==200 and len(json.loads(body).get('channels',[]))>=count:return
+  time.sleep(.005)
+ raise TimeoutError('streaming channels not registered')
 def ws_broadcast(base):
  setup(base,actions=[dict(send('broadcast'),channelTarget={'type':'request-initiated','channelType':'websocket','requestPattern':{'urlPath':'/stream'}})])
  c,d=WS(base),WS(base)
- try:c.write('hello');return c.frame()+d.frame()
+ try:wait_for_channels(base,2);c.write('hello');return c.frame()+d.frame()
  finally:c.close();d.close()
 def ws_sse_broadcast(base):
  actions=[]
@@ -137,6 +146,7 @@ def ws_sse_broadcast(base):
  client.request('GET','/events');stream=client.getresponse();initial=stream.read(8)
  c,d=WS(base),WS(base)
  try:
+  wait_for_channels(base,3)
   c.write('broadcast');out=initial+c.frame()+d.frame();out+=stream.readline()+stream.readline()
   c.write('ping',9);d.write('ping',9);out+=c.frame()+d.frame();return out
  finally:c.close();d.close();stream.close();client.close()

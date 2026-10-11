@@ -53,7 +53,7 @@ fn layout(s: &str) -> String {
             'm' => "%M",
             's' => "%S",
             'S' => "%3f",
-            'a' => "%P",
+            'a' => "%p",
             'X' | 'x' => {
                 if n == 3 {
                     "%:z"
@@ -186,7 +186,7 @@ pub fn eval(
             ("medium", _) => d.format("%b %-d, %Y").to_string(),
             ("full", _) => d.format("%A, %B %-d, %Y").to_string(),
             ("long", _) => d.format("%B %-d, %Y").to_string(),
-            _ => d.format(&layout(&format)).to_string(),
+            _ => format_pattern(d, &format, &locale),
         };
         let time = h("time");
         let result = if time.is_empty() {
@@ -310,6 +310,91 @@ pub fn eval(
         "epoch" => d.timestamp_millis().to_string(),
         "unix" => d.timestamp().to_string(),
         "" => iso(d),
-        _ => d.format(&layout(&format)).to_string(),
+        _ => format_pattern(d, &format, ""),
     }))
+}
+
+// Match the Go implementation's Java locale symbols rather than assuming that
+// AM/PM casing follows the operating system. en-NL uses "pm", en-US uses "PM",
+// and other locales can use entirely different day-period text.
+fn locale_period(locale: &str, hour: u32) -> String {
+    use std::io::Read;
+    use std::sync::OnceLock;
+    static DATA: OnceLock<Value> = OnceLock::new();
+    let data = DATA.get_or_init(|| {
+        let compressed = include_bytes!("../../internal/localeassets/java-date-locales.json.gz");
+        let mut decoder = flate2::read::GzDecoder::new(compressed.as_slice());
+        let mut decoded = Vec::new();
+        if decoder.read_to_end(&mut decoded).is_err() {
+            return Value::Null;
+        }
+        serde_json::from_slice(&decoded).unwrap_or(Value::Null)
+    });
+    let locale = if locale.is_empty() {
+        crate::matcher::default_locale()
+    } else {
+        locale.to_string()
+    };
+    let mut tag = locale.replace('_', "-");
+    loop {
+        if let Some(period) = data["locales"][&tag]["symbols"]["a"]
+            .get((hour * 2) as usize)
+            .and_then(Value::as_str)
+        {
+            return period.to_string();
+        }
+        if let Some(index) = tag.rfind('-') {
+            tag.truncate(index);
+        } else if tag != "und" {
+            tag = "und".into();
+        } else {
+            return if hour < 12 { "AM" } else { "PM" }.into();
+        }
+    }
+}
+fn format_pattern(date: DateTime<FixedOffset>, pattern: &str, locale: &str) -> String {
+    let translated = layout(pattern);
+    if !translated.contains("%p") {
+        return date.format(&translated).to_string();
+    }
+    let period = locale_period(locale, date.hour()).replace('%', "%%");
+    let mut chars = translated.chars().peekable();
+    let mut localized = String::new();
+    while let Some(c) = chars.next() {
+        if c == '%' {
+            if chars.peek() == Some(&'%') {
+                localized.push_str("%%");
+                chars.next();
+                continue;
+            }
+            if chars.peek() == Some(&'p') {
+                localized.push_str(&period);
+                chars.next();
+                continue;
+            }
+        }
+        localized.push(c);
+    }
+    date.format(&localized).to_string()
+}
+#[cfg(test)]
+mod locale_period_tests {
+    use super::*;
+    #[test]
+    fn java_day_period_depends_on_locale_not_platform() {
+        let date = DateTime::parse_from_rfc3339("2020-02-03T14:05:06+02:00").unwrap();
+        assert_eq!(
+            format_pattern(date, "yy-M-d h:mm a", "en_US"),
+            "20-2-3 2:05 PM"
+        );
+        assert_eq!(
+            format_pattern(date, "yy-M-d h:mm a", "en_NL"),
+            "20-2-3 2:05 pm"
+        );
+        assert_eq!(format_pattern(date, "h:mm a", "nl_NL"), "2:05 p.m.");
+        assert_eq!(format_pattern(date, "h:mm 'a'", "en_US"), "2:05 a");
+        let morning = date.with_hour(2).unwrap();
+        assert_eq!(format_pattern(morning, "h:mm a", "en_US"), "2:05 AM");
+        assert_eq!(format_pattern(morning, "h:mm a", "en_NL"), "2:05 am");
+    }
 }
