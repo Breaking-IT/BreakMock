@@ -1,0 +1,38 @@
+{
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "go_version": "go version go1.27.1 darwin/arm64",
+  "rust_version": "rustc 1.98.1 (48a229cea 2026-09-01) (Homebrew)",
+  "notes": [
+    "One sample per build mode; not a statistical comparison.",
+    "Fresh Go GOCACHE and Rust target directory. Downloaded module/crate sources and OS file cache already warm.",
+    "Go default optimized build; Rust release thin LTO/codegen-units1 as configured. No-change rebuild includes dependency fingerprint checks.",
+    "No Java source build measured: comparison uses published reference JAR.",
+    "Temporary caches removed after completion; no user caches cleared."
+  ],
+  "results": [
+    {
+      "language": "go",
+      "stage": "clean_artifacts",
+      "wall_seconds": 5.792254457948729,
+      "binary_bytes": 31673634
+    },
+    {
+      "language": "go",
+      "stage": "no_change_incremental",
+      "wall_seconds": 0.16870916704647243,
+      "binary_bytes": 31673634
+    },
+    {
+      "language": "rust",
+      "stage": "clean_artifacts",
+      "wall_seconds": 27.455514208995737,
+      "binary_bytes": 22949792
+    },
+    {
+      "language": "rust",
+      "stage": "no_change_incremental",
+      "wall_seconds": 0.23009666695725173,
+      "binary_bytes": 22949792
+    }
+  ]
+}

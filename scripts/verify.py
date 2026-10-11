@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 """Build and run isolated differential suites against pinned Java WireMock."""
 from oracle import identify
-import argparse,hashlib,json,pathlib,subprocess,tempfile,time,urllib.request,shutil,sys
-p=argparse.ArgumentParser();p.add_argument('--jar',required=True);a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
+import argparse,hashlib,json,pathlib,subprocess,tempfile,time,urllib.request,shutil,sys,os
+p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--candidate-language',choices=['go','rust'],default='go');p.add_argument('--output-dir');p.add_argument('--suite',action='append');a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
 pin=json.loads((root/'testdata/reference.json').read_text())
 if hashlib.sha256(pathlib.Path(a.jar).read_bytes()).hexdigest()!=pin['jar_sha256']:raise SystemExit('Reference JAR does not match testdata/reference.json SHA-256')
-subprocess.run(['go','build','-o','bin/breakmock','./cmd/breakmock'],cwd=root,check=True)
+if a.candidate_language=='rust':
+ subprocess.run(['cargo','build','--release','--manifest-path','rust/Cargo.toml'],cwd=root,check=True)
+ binary=root/'rust/target/release/breakmock-rust'
+ os.environ['BREAKMOCK_CANDIDATE_KIND']='rust'
+else:
+ subprocess.run(['go','build','-o','bin/breakmock','./cmd/breakmock'],cwd=root,check=True)
+ binary=root/'bin/breakmock'
+output=pathlib.Path(a.output_dir or ('testdata/reports/rust' if a.candidate_language=='rust' else 'testdata/reports'));output.mkdir(parents=True,exist_ok=True)
 reference='http://127.0.0.1:18111';candidate='http://127.0.0.1:18112';results=[]
 for suite in ['fixtures_differential.py','differential.py','matcher_differential.py','template_differential.py','admin_differential.py','runtime_differential.py','gzip_differential.py','diagnostics_differential.py','matcher_distance_differential.py','webhook_differential.py','fault_differential.py','entity_differential.py','messaging_differential.py','streaming_differential.py','status_differential.py','streaming_journal_differential.py']:
+ if a.suite and suite not in a.suite:continue
  processes=[]
  with tempfile.TemporaryDirectory(prefix='breakmock-verify-')as tmp:
   try:
@@ -15,7 +23,7 @@ for suite in ['fixtures_differential.py','differential.py','matcher_differential
     files=pathlib.Path(tmp)/(kind+str(port))
     if suite=='fixtures_differential.py':shutil.copytree(root/'testdata/upstream/remoteloader',files)
     else:files.mkdir()
-    cmd=['java','-jar',str(pathlib.Path(a.jar).resolve()),'--port',str(port),'--root-dir',str(files),'--disable-banner'] if kind=='java' else [str(root/'bin/breakmock'),'--port',str(port),'--root-dir',str(files),'--bind-address','127.0.0.1']
+    cmd=['java','-jar',str(pathlib.Path(a.jar).resolve()),'--port',str(port),'--root-dir',str(files),'--disable-banner'] if kind=='java' else [str(binary),'--port',str(port),'--root-dir',str(files),'--bind-address','127.0.0.1']
     if port in (18113,18114):cmd+=['--websocket-idle-timeout','200','--websocket-max-text-message-size','8','--websocket-max-binary-message-size','12']
     proc=subprocess.Popen(cmd,cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);processes.append(proc)
     for _ in range(100):
@@ -27,14 +35,14 @@ for suite in ['fixtures_differential.py','differential.py','matcher_differential
     else:raise RuntimeError(kind+' startup timeout')
    cmd=[sys.executable,str(root/'scripts'/suite),'--reference',reference,'--candidate',candidate]
    reports={'differential.py':'compatibility','matcher_differential.py':'matcher','admin_differential.py':'admin','runtime_differential.py':'runtime','template_differential.py':'template','gzip_differential.py':'gzip','diagnostics_differential.py':'diagnostics','matcher_distance_differential.py':'matcher-distance','webhook_differential.py':'webhook','fault_differential.py':'faults','entity_differential.py':'entities','messaging_differential.py':'messaging','streaming_differential.py':'streaming','status_differential.py':'status','streaming_journal_differential.py':'streaming-journal'}
-   if suite in reports:cmd+=['--output',f'testdata/reports/{reports[suite]}.json']
+   if suite in reports:cmd+=['--output',str(output/(reports[suite]+'.json'))]
    if suite=='template_differential.py':cmd+=['--discover']
    if suite=='streaming_differential.py':cmd+=['--limit-reference','http://127.0.0.1:18113','--limit-candidate','http://127.0.0.1:18114']
-   result=subprocess.run(cmd,cwd=root);results.append({'suite':suite,'exit_code':result.returncode})
+   result=subprocess.run(cmd,cwd=root,timeout=180);results.append({'suite':suite,'exit_code':result.returncode})
   finally:
    for proc in processes:
     proc.terminate()
     try:proc.wait(timeout=10)
     except subprocess.TimeoutExpired:proc.kill();proc.wait()
-(root/'testdata/reports/suites.json').write_text(json.dumps({'reference':'4.0.0-beta.40','suites':results},indent=2)+'\n')
+(output/'suites.json').write_text(json.dumps({'reference':'4.0.0-beta.40','candidate_language':a.candidate_language,'suites':results},indent=2)+'\n')
 print(json.dumps(results,indent=2));raise SystemExit(any(r['exit_code']for r in results))

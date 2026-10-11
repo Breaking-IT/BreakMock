@@ -1,5 +1,12 @@
 # BreakMock
 
+This branch also contains an experimental native Rust implementation in `rust/`.
+It uses the same pinned Java oracle and differential suites as Go. Build with
+`cargo build --release --locked --manifest-path rust/Cargo.toml`, then run
+`rust/target/release/breakmock-rust --port 8080 --root-dir ./stubs`. Rust 2024 edition
+and zlib development headers are required. The existing Dockerfile builds Go.
+See [the Rust comparison](RUST_COMPARISON.md) for measured results and limits.
+
 A Go implementation of WireMock-style HTTP mocking, WebSockets, Server-Sent Events,
 response templating, and administration. Built by Breaking-IT as a foundation for API simulation, test data,
 and controlled failures.

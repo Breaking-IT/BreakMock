@@ -1,0 +1,1823 @@
+{
+  "reference": "WireMock 4.0.0-beta.40",
+  "comparison": "exact near-miss response bytes",
+  "passed": 140,
+  "total": 140,
+  "results": [
+    {
+      "name": "0",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "1"
+      },
+      "actual": "2",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "1",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "1",
+        "ignoreArrayOrder": true
+      },
+      "actual": "2",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "2",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "1",
+        "ignoreExtraElements": true
+      },
+      "actual": "2",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "3",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "1",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "2",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "4",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}"
+      },
+      "actual": "{\"x\":2}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "5",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{\"x\":2}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "6",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":2}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "7",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":2}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "8",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1,\"y\":2}"
+      },
+      "actual": "{\"x\":2,\"y\":3}",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "9",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1,\"y\":2}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{\"x\":2,\"y\":3}",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "10",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1,\"y\":2}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":2,\"y\":3}",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "11",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1,\"y\":2}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":2,\"y\":3}",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "12",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}"
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "13",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "14",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "15",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"x\":1}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "16",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{}"
+      },
+      "actual": "{\"x\":1}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "17",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{\"x\":1}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "18",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":1}",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "19",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"x\":1}",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "20",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]"
+      },
+      "actual": "[1]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "21",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreArrayOrder": true
+      },
+      "actual": "[1]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "22",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreExtraElements": true
+      },
+      "actual": "[1]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "23",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "[1]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "24",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1]"
+      },
+      "actual": "[1,2]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "25",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1]",
+        "ignoreArrayOrder": true
+      },
+      "actual": "[1,2]",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "26",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1]",
+        "ignoreExtraElements": true
+      },
+      "actual": "[1,2]",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "27",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1]",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "[1,2]",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "28",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}"
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "29",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "30",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "31",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "32",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}"
+      },
+      "actual": "{\"a\":3}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "33",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreArrayOrder": true
+      },
+      "actual": "{\"a\":3}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "34",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"a\":3}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "35",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "{\"a\":{\"x\":1}}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "{\"a\":3}",
+      "distances": [
+        0.010869565217391304,
+        0.010869565217391304
+      ]
+    },
+    {
+      "name": "36",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]"
+      },
+      "actual": "[2,1]",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "37",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreArrayOrder": true
+      },
+      "actual": "[2,1]",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "38",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreExtraElements": true
+      },
+      "actual": "[2,1]",
+      "distances": [
+        0.014492753623188404,
+        0.014492753623188404
+      ]
+    },
+    {
+      "name": "39",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2]",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "[2,1]",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "40",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2,3]"
+      },
+      "actual": "[2,3,4]",
+      "distances": [
+        0.016304347826086956,
+        0.016304347826086956
+      ]
+    },
+    {
+      "name": "41",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2,3]",
+        "ignoreArrayOrder": true
+      },
+      "actual": "[2,3,4]",
+      "distances": [
+        0.005434782608695652,
+        0.005434782608695652
+      ]
+    },
+    {
+      "name": "42",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2,3]",
+        "ignoreExtraElements": true
+      },
+      "actual": "[2,3,4]",
+      "distances": [
+        0.016304347826086956,
+        0.016304347826086956
+      ]
+    },
+    {
+      "name": "43",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[1,2,3]",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "[2,3,4]",
+      "distances": [
+        0.005434782608695652,
+        0.005434782608695652
+      ]
+    },
+    {
+      "name": "44",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[{\"a\":1},{\"b\":2}]"
+      },
+      "actual": "[{\"b\":3},{\"a\":2}]",
+      "distances": [
+        0.012422360248447204,
+        0.012422360248447204
+      ]
+    },
+    {
+      "name": "45",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[{\"a\":1},{\"b\":2}]",
+        "ignoreArrayOrder": true
+      },
+      "actual": "[{\"b\":3},{\"a\":2}]",
+      "distances": [
+        0.024844720496894408,
+        0.024844720496894408
+      ]
+    },
+    {
+      "name": "46",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[{\"a\":1},{\"b\":2}]",
+        "ignoreExtraElements": true
+      },
+      "actual": "[{\"b\":3},{\"a\":2}]",
+      "distances": [
+        0.006211180124223602,
+        0.006211180124223602
+      ]
+    },
+    {
+      "name": "47",
+      "passed": true,
+      "pattern": {
+        "equalToJson": "[{\"a\":1},{\"b\":2}]",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      },
+      "actual": "[{\"b\":3},{\"a\":2}]",
+      "distances": [
+        0.012422360248447204,
+        0.012422360248447204
+      ]
+    },
+    {
+      "name": "48",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>"
+      },
+      "actual": "<b/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "49",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<b/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "50",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>",
+        "enablePlaceholders": true
+      },
+      "actual": "<b/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "51",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>1</a>"
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "52",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>1</a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "53",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>1</a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "54",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b>1</b></a>"
+      },
+      "actual": "<a><b>2</b></a>",
+      "distances": [
+        0.0016722408026755855,
+        0.0016722408026755855
+      ]
+    },
+    {
+      "name": "55",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b>1</b></a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a><b>2</b></a>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "56",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b>1</b></a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a><b>2</b></a>",
+      "distances": [
+        0.0016722408026755855,
+        0.0016722408026755855
+      ]
+    },
+    {
+      "name": "57",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>"
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "58",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "59",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "60",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>"
+      },
+      "actual": "<a/>",
+      "distances": [
+        0.006211180124223602,
+        0.006211180124223602
+      ]
+    },
+    {
+      "name": "61",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a/>",
+      "distances": [
+        0.006211180124223602,
+        0.006211180124223602
+      ]
+    },
+    {
+      "name": "62",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a x=\"1\"/>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a/>",
+      "distances": [
+        0.006211180124223602,
+        0.006211180124223602
+      ]
+    },
+    {
+      "name": "63",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>"
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "64",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "65",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a/>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a x=\"2\"/>",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "66",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>"
+      },
+      "actual": "<a><c/></a>",
+      "distances": [
+        0.005928853754940711,
+        0.005928853754940711
+      ]
+    },
+    {
+      "name": "67",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a><c/></a>",
+      "distances": [
+        0.005928853754940711,
+        0.005928853754940711
+      ]
+    },
+    {
+      "name": "68",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a><c/></a>",
+      "distances": [
+        0.005928853754940711,
+        0.005928853754940711
+      ]
+    },
+    {
+      "name": "69",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/></a>"
+      },
+      "actual": "<a><b/><c/></a>",
+      "distances": [
+        0.002173913043478261,
+        0.002173913043478261
+      ]
+    },
+    {
+      "name": "70",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/></a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a><b/><c/></a>",
+      "distances": [
+        0.002173913043478261,
+        0.002173913043478261
+      ]
+    },
+    {
+      "name": "71",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/></a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a><b/><c/></a>",
+      "distances": [
+        0.002173913043478261,
+        0.002173913043478261
+      ]
+    },
+    {
+      "name": "72",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>"
+      },
+      "actual": "<a><c/><b/></a>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "73",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a><c/><b/></a>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "74",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><b/><c/></a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a><c/><b/></a>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "75",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns=\"urn:a\"/>"
+      },
+      "actual": "<a xmlns=\"urn:b\"/>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "76",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns=\"urn:a\"/>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a xmlns=\"urn:b\"/>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "77",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns=\"urn:a\"/>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a xmlns=\"urn:b\"/>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "78",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>${xmlunit.ignore}</a>"
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "79",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>${xmlunit.ignore}</a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "80",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a>${xmlunit.ignore}</a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "81",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><!--hi-->1</a>"
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "82",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><!--hi-->1</a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "83",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><!--hi-->1</a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.0024154589371980675,
+        0.0024154589371980675
+      ]
+    },
+    {
+      "name": "84",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><![CDATA[1]]></a>"
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.004830917874396135,
+        0.004830917874396135
+      ]
+    },
+    {
+      "name": "85",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><![CDATA[1]]></a>",
+        "exemptedComparisons": [
+          "TEXT_VALUE"
+        ]
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.002717391304347826,
+        0.002717391304347826
+      ]
+    },
+    {
+      "name": "86",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><![CDATA[1]]></a>",
+        "enablePlaceholders": true
+      },
+      "actual": "<a>2</a>",
+      "distances": [
+        0.004830917874396135,
+        0.004830917874396135
+      ]
+    },
+    {
+      "name": "87",
+      "passed": true,
+      "pattern": {
+        "equalTo": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actual": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+      "distances": [
+        2.1717413021760848e-05,
+        2.1717413021760848e-05
+      ]
+    },
+    {
+      "name": "88",
+      "passed": true,
+      "pattern": {
+        "equalTo": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actual": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+      "distances": [
+        1.0864133150815895e-05,
+        1.0864133150815895e-05
+      ]
+    },
+    {
+      "name": "89",
+      "passed": true,
+      "pattern": {
+        "equalTo": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "actual": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+      "distances": [
+        5.4334242526324946e-06,
+        5.4334242526324946e-06
+      ]
+    },
+    {
+      "name": "90",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<?pi one?><a/>"
+      },
+      "actual": "<?pi two?><a/>",
+      "distances": [
+        0.002173913043478261,
+        0.002173913043478261
+      ]
+    },
+    {
+      "name": "91",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a><?pi one?></a>"
+      },
+      "actual": "<a><?pi two?></a>",
+      "distances": [
+        0.002173913043478261,
+        0.002173913043478261
+      ]
+    },
+    {
+      "name": "92",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"one.xsd\"/>"
+      },
+      "actual": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"two.xsd\"/>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "93",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"one.xsd\"/>",
+        "exemptedComparisons": [
+          "SCHEMA_LOCATION",
+          "NO_NAMESPACE_SCHEMA_LOCATION"
+        ]
+      },
+      "actual": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"two.xsd\"/>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "94",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"one.xsd\"/>"
+      },
+      "actual": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"two.xsd\"/>",
+      "distances": [
+        0.003105590062111801,
+        0.003105590062111801
+      ]
+    },
+    {
+      "name": "95",
+      "passed": true,
+      "pattern": {
+        "equalToXml": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"one.xsd\"/>",
+        "exemptedComparisons": [
+          "SCHEMA_LOCATION",
+          "NO_NAMESPACE_SCHEMA_LOCATION"
+        ]
+      },
+      "actual": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"two.xsd\"/>",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "96",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "0",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "97",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "1",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "98",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "2",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "99",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "-1",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "100",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "NaN",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "101",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "Infinity",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "102",
+      "passed": true,
+      "pattern": {
+        "equalToNumber": 1
+      },
+      "actual": "1000000000000000000000000000000000000000000",
+      "distances": [
+        0.011956521739130435,
+        0.011956521739130435
+      ]
+    },
+    {
+      "name": "103",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "0",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "104",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "1",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "105",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "2",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "106",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "-1",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "107",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "NaN",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "108",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "Infinity",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "109",
+      "passed": true,
+      "pattern": {
+        "greaterThanNumber": 1
+      },
+      "actual": "1000000000000000000000000000000000000000000",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "110",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "0",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "111",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "1",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "112",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "2",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "113",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "-1",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "114",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "NaN",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "115",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "Infinity",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "116",
+      "passed": true,
+      "pattern": {
+        "greaterThanEqualNumber": 1
+      },
+      "actual": "1000000000000000000000000000000000000000000",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "117",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "0",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "118",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "1",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "119",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "2",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "120",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "-1",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "121",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "NaN",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "122",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "Infinity",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "123",
+      "passed": true,
+      "pattern": {
+        "lessThanNumber": 1
+      },
+      "actual": "1000000000000000000000000000000000000000000",
+      "distances": [
+        0.011956521739130435,
+        0.011956521739130435
+      ]
+    },
+    {
+      "name": "124",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "0",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "125",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "1",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "126",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "2",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "127",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "-1",
+      "distances": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "128",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "NaN",
+      "distances": [
+        0.0002173913043478261,
+        0.0002173913043478261
+      ]
+    },
+    {
+      "name": "129",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "Infinity",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "130",
+      "passed": true,
+      "pattern": {
+        "lessThanEqualNumber": 1
+      },
+      "actual": "1000000000000000000000000000000000000000000",
+      "distances": [
+        0.011956521739130435,
+        0.011956521739130435
+      ]
+    },
+    {
+      "name": "131",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.a",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.004347826086956522,
+        0.004347826086956522
+      ]
+    },
+    {
+      "name": "132",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.a",
+          "equalTo": "world"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.017391304347826087,
+        0.017391304347826087
+      ]
+    },
+    {
+      "name": "133",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.values[*]",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.007246376811594202,
+        0.007246376811594202
+      ]
+    },
+    {
+      "name": "134",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.values[*]",
+          "equalTo": "world"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.003623188405797101,
+        0.003623188405797101
+      ]
+    },
+    {
+      "name": "135",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.absent",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "136",
+      "passed": true,
+      "pattern": {
+        "matchesJsonPath": {
+          "expression": "$.absent",
+          "equalTo": "world"
+        }
+      },
+      "actual": "{\"a\":\"jello\",\"values\":[\"worlds\",\"yellow\"]}",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    },
+    {
+      "name": "137",
+      "passed": true,
+      "pattern": {
+        "matchesXPath": {
+          "expression": "/a/b/text()",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "<a><b>jello</b><b>world</b></a>",
+      "distances": [
+        0.004347826086956522,
+        0.004347826086956522
+      ]
+    },
+    {
+      "name": "138",
+      "passed": true,
+      "pattern": {
+        "matchesXPath": {
+          "expression": "/a/b",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "<a><b>jello</b><b>world</b></a>",
+      "distances": [
+        0.015050167224080268,
+        0.015050167224080268
+      ]
+    },
+    {
+      "name": "139",
+      "passed": true,
+      "pattern": {
+        "matchesXPath": {
+          "expression": "/missing",
+          "equalTo": "hello"
+        }
+      },
+      "actual": "<a><b>jello</b><b>world</b></a>",
+      "distances": [
+        0.021739130434782608,
+        0.021739130434782608
+      ]
+    }
+  ]
+}

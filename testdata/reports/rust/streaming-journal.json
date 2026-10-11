@@ -1,0 +1,88 @@
+{
+  "reference": "WireMock4.0.0-beta.40",
+  "comparison": "strict response bytes with generated UUID and timestamp scalar replacements",
+  "passed": 20,
+  "total": 20,
+  "results": [
+    {
+      "name": "websocket HTTP mapping",
+      "pass": true
+    },
+    {
+      "name": "websocket message mapping",
+      "pass": true
+    },
+    {
+      "name": "websocket channel list",
+      "pass": true
+    },
+    {
+      "name": "websocket matched received and sent journal",
+      "pass": true
+    },
+    {
+      "name": "websocket count channel",
+      "pass": true
+    },
+    {
+      "name": "websocket count body",
+      "pass": true
+    },
+    {
+      "name": "websocket unmatched journal",
+      "pass": true
+    },
+    {
+      "name": "websocket binary journal",
+      "pass": true
+    },
+    {
+      "name": "websocket remove matched messages",
+      "pass": true
+    },
+    {
+      "name": "websocket channels after close",
+      "pass": true
+    },
+    {
+      "name": "websocket journal after close",
+      "pass": true
+    },
+    {
+      "name": "clear websocket messages",
+      "pass": true
+    },
+    {
+      "name": "clear websocket mappings",
+      "pass": true
+    },
+    {
+      "name": "sse HTTP mapping",
+      "pass": true
+    },
+    {
+      "name": "sse channel list",
+      "pass": true
+    },
+    {
+      "name": "sse admin push",
+      "pass": true
+    },
+    {
+      "name": "sse sent journal",
+      "pass": true
+    },
+    {
+      "name": "sse count channel",
+      "pass": true
+    },
+    {
+      "name": "sse channels after close",
+      "pass": true
+    },
+    {
+      "name": "sse journal after close",
+      "pass": true
+    }
+  ]
+}

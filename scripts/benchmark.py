@@ -2,9 +2,15 @@
 """Same-host comparison; reports server CPU, RSS and throughput, not a universal performance claim."""
 from oracle import identify
 import argparse,json,subprocess,time,urllib.request,pathlib,platform,hashlib,threading,os
-p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--output',default='testdata/reports/benchmark.json');p.add_argument('--duration',default='5s');p.add_argument('--rounds',type=int,default=3);p.add_argument('--journal-limit',type=int,default=0,help='0 disables journal; positive sets same bounded journal on both');p.add_argument('--rate',type=int,default=0,help='Fixed offered RPS; 0 is unlimited');p.add_argument('--warmup',default='3s');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--output',default='testdata/reports/benchmark.json');p.add_argument('--duration',default='5s');p.add_argument('--rounds',type=int,default=3);p.add_argument('--journal-limit',type=int,default=0,help='0 disables journal; positive sets same bounded journal on both');p.add_argument('--rate',type=int,default=0,help='Fixed offered RPS; 0 is unlimited');p.add_argument('--warmup',default='3s');p.add_argument('--servers',default='java,go');p.add_argument('--go-binary');p.add_argument('--rust-binary');a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parent.parent
-subprocess.run(['go','build','-o','bin/breakmock','./cmd/breakmock'],cwd=root,check=True);subprocess.run(['go','build','-o','bin/bmbench','./cmd/bmbench'],cwd=root,check=True)
+servers=a.servers.split(',')
+if not servers or any(k not in ('java','go','rust') for k in servers):p.error('servers must be java,go,rust')
+go_binary=pathlib.Path(a.go_binary).resolve() if a.go_binary else root/'bin/breakmock'
+rust_binary=pathlib.Path(a.rust_binary).resolve() if a.rust_binary else root/'rust/target/release/breakmock-rust'
+if 'rust' in servers and not a.rust_binary:subprocess.run(['cargo','build','--release','--manifest-path','rust/Cargo.toml'],cwd=root,check=True)
+if not a.go_binary:subprocess.run(['go','build','-o',str(go_binary),'./cmd/breakmock'],cwd=root,check=True)
+subprocess.run(['go','build','-o','bin/bmbench','./cmd/bmbench'],cwd=root,check=True)
 def req(port,path,data=None):
  b=None if data is None else json.dumps(data).encode()
  return urllib.request.urlopen(urllib.request.Request(f'http://127.0.0.1:{port}'+path,data=b,headers={'Content-Type':'application/json'}),timeout=10).read()
@@ -21,9 +27,9 @@ def cpu_seconds(pid):
  return days*86400+sum(v*60**i for i,v in enumerate(reversed(parts)))
 results=[]
 for round in range(a.rounds):
- for kind in (['java','go'] if round%2==0 else ['go','java']):
-  port=18101 if kind=='java' else 18102
-  cmd=['java','-jar',a.jar,'--port',str(port),'--no-request-journal','--disable-banner'] if kind=='java' else [str(root/'bin/breakmock'),'--port',str(port),'--no-request-journal','--bind-address','127.0.0.1']
+ for kind in servers[round%len(servers):]+servers[:round%len(servers)]:
+  port={'java':18101,'go':18102,'rust':18103}[kind]
+  cmd=['java','-jar',a.jar,'--port',str(port),'--no-request-journal','--disable-banner'] if kind=='java' else [str(go_binary if kind=='go' else rust_binary),'--port',str(port),'--no-request-journal','--bind-address','127.0.0.1']
   if a.journal_limit>0:
    cmd.remove('--no-request-journal');cmd+=['--max-request-journal-entries',str(a.journal_limit)]
   proc=subprocess.Popen(cmd,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,cwd=root)
@@ -62,5 +68,5 @@ for round in range(a.rounds):
    proc.terminate()
    try:proc.wait(timeout=10)
    except subprocess.TimeoutExpired:proc.kill();proc.wait()
-report={'platform':platform.platform(),'machine':platform.machine(),'logical_cpus':os.cpu_count(),'server_revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'java_version':subprocess.run(['java','-version'],capture_output=True,text=True).stderr,'go_version':subprocess.check_output(['go','version'],text=True).strip(),'reference_jar_sha256':hashlib.sha256(pathlib.Path(a.jar).read_bytes()).hexdigest(),'notes':['Same host and workload driver; CPU shared with client and any other host processes.',('Request journals disabled on both servers.' if a.journal_limit==0 else f'Request journals bounded to {a.journal_limit} entries on both servers.'),f'{a.warmup} warmup per workload; sequential alternating server order; 32 clients.',f'Target RPS {a.rate} (0 means unlimited); fixed-rate arrivals dispatched in 1ms batches; drops/errors fail the run.','CPU is cumulative process user+system time delta from ps, all server threads, excluding load generator; 100% means one fully occupied core. CPU window includes driver launch and report serialization.','Fixed-rate latency includes scheduling/queue delay from each intended arrival; up to one second of arrivals can queue. Achieved RPS must be within 2% of target.','RSS sampled every 100ms; not an allocation or production capacity guarantee.'],'results':results}
+report={'platform':platform.platform(),'machine':platform.machine(),'logical_cpus':os.cpu_count(),'server_revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'java_version':subprocess.run(['java','-version'],capture_output=True,text=True).stderr,'rust_version':subprocess.check_output(['rustc','--version'],text=True).strip() if 'rust' in servers else None,'servers':servers,'go_version':subprocess.check_output(['go','version'],text=True).strip(),'reference_jar_sha256':hashlib.sha256(pathlib.Path(a.jar).read_bytes()).hexdigest(),'notes':['Same host and workload driver; CPU shared with client and any other host processes.',('Request journals disabled on both servers.' if a.journal_limit==0 else f'Request journals bounded to {a.journal_limit} entries on both servers.'),f'{a.warmup} warmup per workload; sequential alternating server order; 32 clients.',f'Target RPS {a.rate} (0 means unlimited); fixed-rate arrivals dispatched in 1ms batches; drops/errors fail the run.','CPU is cumulative process user+system time delta from ps, all server threads, excluding load generator; 100% means one fully occupied core. CPU window includes driver launch and report serialization.','Fixed-rate latency includes scheduling/queue delay from each intended arrival; up to one second of arrivals can queue. Achieved RPS must be within 2% of target.','RSS sampled every 100ms; not an allocation or production capacity guarantee.'],'results':results}
 pathlib.Path(a.output).parent.mkdir(parents=True,exist_ok=True);pathlib.Path(a.output).write_text(json.dumps(report,indent=2))
