@@ -1,0 +1,63 @@
+{
+  "comparison": "Strict JSON bytes after generated id/timestamp scalar replacement, plus completion-time bounds",
+  "passed": 7,
+  "total": 7,
+  "results": [
+    {
+      "name": "single timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.10351280599999768,
+        0.06193498399997566
+      ]
+    },
+    {
+      "name": "single future filtered arrival",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0921072509999874,
+        0.061725539999997636
+      ]
+    },
+    {
+      "name": "multiple future arrivals",
+      "pass": true,
+      "elapsedSeconds": [
+        0.07159552200002395,
+        0.06158057600001143
+      ]
+    },
+    {
+      "name": "partial results at timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.10357874999999694,
+        0.10107290299998795
+      ]
+    },
+    {
+      "name": "existing count caps results",
+      "pass": true,
+      "elapsedSeconds": [
+        0.002500605000022915,
+        0.0005573729999923671
+      ]
+    },
+    {
+      "name": "single ignores count",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0032884499999852324,
+        0.0005450499999994918
+      ]
+    },
+    {
+      "name": "zero timeout returns current count",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0026008819999958632,
+        0.0005512920000114718
+      ]
+    }
+  ]
+}

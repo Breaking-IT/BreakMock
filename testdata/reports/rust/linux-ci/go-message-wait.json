@@ -1,0 +1,87 @@
+{
+  "comparison": "Strict JSON bytes after generated id/timestamp scalar replacement, plus completion-time bounds",
+  "passed": 4,
+  "total": 7,
+  "results": [
+    {
+      "name": "single timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.10323809599998413,
+        0.06110571700000378
+      ]
+    },
+    {
+      "name": "single future filtered arrival",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0932564169999921,
+        0.06210980800000243
+      ]
+    },
+    {
+      "name": "multiple future arrivals",
+      "pass": true,
+      "elapsedSeconds": [
+        0.07188193100000717,
+        0.062440170000002126
+      ]
+    },
+    {
+      "name": "partial results at timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.10456532899999615,
+        0.10129009199999928
+      ]
+    },
+    {
+      "name": "existing count caps results",
+      "pass": false,
+      "elapsedSeconds": [
+        0.0027625040000032186,
+        0.000715173000003233
+      ],
+      "reference": [
+        200,
+        "{\n  \"messageServeEvents\" : [ {\n    \"id\" : \"c2b8a313-49f4-4669-8561-7691983edf19\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"fec338d8-0e38-466c-9763-8c0d89443c58\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"second\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:54.274556Z\"\n  } ],\n  \"messageJournalDisabled\" : false\n}"
+      ],
+      "candidate": [
+        200,
+        "{\n  \"messageServeEvents\" : [ {\n    \"id\" : \"088253ea-e079-47c8-9641-808e0cbd57bd\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"36f4e1e5-44c5-4aef-b349-421625df841f\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"second\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:54.279281824Z\"\n  }, {\n    \"id\" : \"c12d5428-eb27-443e-a0be-ed4f7250e526\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"36f4e1e5-44c5-4aef-b349-421625df841f\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"first\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:54.278856937Z\"\n  } ],\n  \"messageJournalDisabled\" : false\n}"
+      ]
+    },
+    {
+      "name": "single ignores count",
+      "pass": false,
+      "elapsedSeconds": [
+        0.0030367100000034952,
+        1.001131029000021
+      ],
+      "reference": [
+        200,
+        "{\n  \"id\" : \"cc53f496-9db0-4d04-a661-80fbcfc51724\",\n  \"eventType\" : \"received\",\n  \"channel\" : {\n    \"type\" : \"fixed\",\n    \"id\" : \"fec338d8-0e38-466c-9763-8c0d89443c58\",\n    \"open\" : true,\n    \"providerName\" : \"wait-provider\",\n    \"channelName\" : \"wait-channel\"\n  },\n  \"message\" : {\n    \"body\" : \"existing\"\n  },\n  \"wasMatched\" : false,\n  \"timestamp\" : \"2026-10-11T19:13:54.284021087Z\"\n}"
+      ],
+      "candidate": [
+        200,
+        "{\n  \"id\" : \"d06e09c6-b89f-4b24-8985-f4ed541a6a92\",\n  \"eventType\" : \"received\",\n  \"channel\" : {\n    \"type\" : \"fixed\",\n    \"id\" : \"36f4e1e5-44c5-4aef-b349-421625df841f\",\n    \"open\" : true,\n    \"providerName\" : \"wait-provider\",\n    \"channelName\" : \"wait-channel\"\n  },\n  \"message\" : {\n    \"body\" : \"existing\"\n  },\n  \"wasMatched\" : false,\n  \"timestamp\" : \"2026-10-11T19:13:54.288351839Z\"\n}"
+      ]
+    },
+    {
+      "name": "zero timeout returns current count",
+      "pass": false,
+      "elapsedSeconds": [
+        0.003179157999994686,
+        0.0007226239999909012
+      ],
+      "reference": [
+        200,
+        "{\n  \"messageServeEvents\" : [ {\n    \"id\" : \"b65577e2-90cf-44a4-ba10-994829064f62\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"fec338d8-0e38-466c-9763-8c0d89443c58\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"second\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:55.298280476Z\"\n  } ],\n  \"messageJournalDisabled\" : false\n}"
+      ],
+      "candidate": [
+        200,
+        "{\n  \"messageServeEvents\" : [ {\n    \"id\" : \"7c22a3fd-f625-41af-9751-b7b5692362ba\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"36f4e1e5-44c5-4aef-b349-421625df841f\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"second\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:55.30374583Z\"\n  }, {\n    \"id\" : \"9ecd33f8-eae1-4e67-ad46-8becd6b92e79\",\n    \"eventType\" : \"received\",\n    \"channel\" : {\n      \"type\" : \"fixed\",\n      \"id\" : \"36f4e1e5-44c5-4aef-b349-421625df841f\",\n      \"open\" : true,\n      \"providerName\" : \"wait-provider\",\n      \"channelName\" : \"wait-channel\"\n    },\n    \"message\" : {\n      \"body\" : \"first\"\n    },\n    \"wasMatched\" : false,\n    \"timestamp\" : \"2026-10-11T19:13:55.303209838Z\"\n  } ],\n  \"messageJournalDisabled\" : false\n}"
+      ]
+    }
+  ]
+}

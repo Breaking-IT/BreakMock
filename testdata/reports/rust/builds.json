@@ -7,7 +7,8 @@
     "Fresh Go GOCACHE and Rust target directory. Downloaded module/crate sources and OS file cache already warm.",
     "Go default optimized build; Rust release thin LTO/codegen-units1 as configured. No-change rebuild includes dependency fingerprint checks.",
     "No Java source build measured: comparison uses published reference JAR.",
-    "Temporary caches removed after completion; no user caches cleared."
+    "Temporary caches removed after completion; no user caches cleared.",
+    "Build samples precede the locale-only Rust fix. Temporary build artifacts were removed; their binary hashes were not captured."
   ],
   "results": [
     {
@@ -34,5 +35,6 @@
       "wall_seconds": 0.23009666695725173,
       "binary_bytes": 22949792
     }
-  ]
+  ],
+  "source_checkpoint": "3cd7d7f"
 }

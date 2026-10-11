@@ -1,0 +1,9 @@
+{
+  "url": "https://github.com/Breaking-IT/BreakMock/actions/runs/38166939838",
+  "revision": "c6d8a64",
+  "reference": "4.0.0-beta.40",
+  "java": "Temurin21",
+  "platform": "ubuntu-latest",
+  "rust_conclusion": "failure: known identity diagnostic",
+  "go_conclusion": "failure: identity diagnostic and 3 additional message-wait cases"
+}

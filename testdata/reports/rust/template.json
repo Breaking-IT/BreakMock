@@ -1,6 +1,6 @@
 {
   "reference_version": "4.0.0-beta.40",
-  "timestamp_utc": "2026-10-11T18:57:14.882663+00:00",
+  "timestamp_utc": "2026-10-11T19:22:25.581061+00:00",
   "comparison": "Exact status and response body bytes for every case including JVM diagnostics",
   "cases": 429,
   "passed": 429,

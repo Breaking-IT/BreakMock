@@ -1,6 +1,6 @@
 {
   "start_utc": "2026-10-11T07:34:50.347Z",
-  "end_utc": "2026-10-11T10:10:00.000Z",
+  "end_utc": "2026-10-11T09:57:50.000Z",
   "scope": "Observed cumulative counters across root and three explicitly selected subagent logs.",
   "notes": [
     "Counters are local usage observations, not an invoice or compiler token consumption.",
@@ -24,7 +24,7 @@
       "uncached_input_tokens": 749054
     },
     {
-      "agent": "root",
+      "agent": "/root/matching",
       "observed_counter": true,
       "models_observed": [
         "gpt-6-astra"
@@ -37,7 +37,7 @@
       "uncached_input_tokens": 769365
     },
     {
-      "agent": "root",
+      "agent": "/root/admin",
       "observed_counter": true,
       "models_observed": [
         "gpt-6-astra"
@@ -50,7 +50,7 @@
       "uncached_input_tokens": 700667
     },
     {
-      "agent": "root",
+      "agent": "/root/templating",
       "observed_counter": true,
       "models_observed": [
         "gpt-6-astra"

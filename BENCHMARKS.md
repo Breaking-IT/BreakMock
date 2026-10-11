@@ -1,5 +1,10 @@
 # Benchmark measurements
 
+The Rust comparison branch also provides a [three-way Java/Go/Rust report](RUST_COMPARISON.md),
+with matched-rate CPU, throughput, memory, startup and development-effort measurements.
+The historical two-way results below are retained; compare languages using results
+from the same run set rather than mixing measurements from different sessions.
+
 Measured on 2026-10-11 against **WireMock 4.0.0-beta.40** using the current v4 port.
 Two alternating-order rounds per server, 32 persistent clients, a three-second
 warmup and five-second measurement per workload. Every run reported zero errors.

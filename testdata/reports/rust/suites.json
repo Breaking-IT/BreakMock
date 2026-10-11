@@ -65,6 +65,14 @@
     {
       "suite": "streaming_journal_differential.py",
       "exit_code": 0
+    },
+    {
+      "suite": "message_wait_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "message_wait_differential.py:disabled-journal",
+      "exit_code": 0
     }
   ]
 }

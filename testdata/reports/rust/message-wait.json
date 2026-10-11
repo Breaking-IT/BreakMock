@@ -7,56 +7,56 @@
       "name": "single timeout",
       "pass": true,
       "elapsedSeconds": [
-        0.06596320797689259,
-        0.06370854203123599
+        0.08737670793198049,
+        0.06343699991703033
       ]
     },
     {
       "name": "single future filtered arrival",
       "pass": true,
       "elapsedSeconds": [
-        0.08297325007151812,
-        0.07775504095479846
+        0.094717042054981,
+        0.07323062501382083
       ]
     },
     {
       "name": "multiple future arrivals",
       "pass": true,
       "elapsedSeconds": [
-        0.08457691699732095,
-        0.0770477500045672
+        0.08796024997718632,
+        0.06995708402246237
       ]
     },
     {
       "name": "partial results at timeout",
       "pass": true,
       "elapsedSeconds": [
-        0.11259679205249995,
-        0.10393733298406005
+        0.11315037508029491,
+        0.10354149993509054
       ]
     },
     {
       "name": "existing count caps results",
       "pass": true,
       "elapsedSeconds": [
-        0.0013456250308081508,
-        0.00036504107993096113
+        0.0014615829568356276,
+        0.00024408299941569567
       ]
     },
     {
       "name": "single ignores count",
       "pass": true,
       "elapsedSeconds": [
-        0.0010330000659450889,
-        0.00034020794555544853
+        0.001358084031380713,
+        0.0002416670322418213
       ]
     },
     {
       "name": "zero timeout returns current count",
       "pass": true,
       "elapsedSeconds": [
-        0.0010552499443292618,
-        0.0003172910073772073
+        0.0010759170399978757,
+        0.00022241694387048483
       ]
     }
   ]

@@ -9,7 +9,8 @@ for path in json.loads(pathlib.Path(a.logs).read_text()):
   for line in f:
    e=json.loads(line);v=e.get('payload',{});stamp=e.get('timestamp','')
    if e.get('type')=='session_meta':
-    source=v.get('source',{});role=source.get('subagent',{}).get('thread_spawn',{}).get('agent_path','root')if isinstance(source,dict)else'root'
+    source=v.get('source',{});observed_role=v.get('agent_path') or (source.get('subagent',{}).get('thread_spawn',{}).get('agent_path') if isinstance(source,dict) else None)
+    if observed_role:role=observed_role
    if e.get('type')=='turn_context'and a.start<=stamp<=a.end and v.get('model'):models.add(v['model'])
    if e.get('type')!='event_msg'or v.get('type')!='token_count':continue
    usage=v.get('info',{}).get('total_token_usage')

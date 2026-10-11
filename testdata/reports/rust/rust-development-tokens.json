@@ -1,0 +1,74 @@
+{
+  "start_utc": "2026-10-11T18:32:05.246Z",
+  "end_utc": "2026-10-11T19:04:20.000Z",
+  "scope": "Observed cumulative counters across root and three explicitly selected subagent logs.",
+  "notes": [
+    "Counters are local usage observations, not an invoice or compiler token consumption.",
+    "Reasoning output is a subset of output tokens; do not add it again.",
+    "Input includes repeated cached context. Uncached input = input minus cached input.",
+    "Different scope and reuse of earlier work prevent attributing differences to programming language alone.",
+    "Snapshot may precede final response; no conversation content or local log paths exported."
+  ],
+  "agents": [
+    {
+      "agent": "root",
+      "observed_counter": true,
+      "models_observed": [
+        "gpt-6-astra"
+      ],
+      "input_tokens": 14023075,
+      "cached_input_tokens": 13844992,
+      "output_tokens": 47080,
+      "reasoning_output_tokens": 8903,
+      "total_tokens": 14070155,
+      "uncached_input_tokens": 178083
+    },
+    {
+      "agent": "/root/matching",
+      "observed_counter": true,
+      "models_observed": [
+        "gpt-6-astra"
+      ],
+      "input_tokens": 17740111,
+      "cached_input_tokens": 17469824,
+      "output_tokens": 38334,
+      "reasoning_output_tokens": 3345,
+      "total_tokens": 17778445,
+      "uncached_input_tokens": 270287
+    },
+    {
+      "agent": "/root/admin",
+      "observed_counter": true,
+      "models_observed": [
+        "gpt-6-astra"
+      ],
+      "input_tokens": 19713004,
+      "cached_input_tokens": 19490560,
+      "output_tokens": 46569,
+      "reasoning_output_tokens": 3424,
+      "total_tokens": 19759573,
+      "uncached_input_tokens": 222444
+    },
+    {
+      "agent": "/root/templating",
+      "observed_counter": true,
+      "models_observed": [
+        "gpt-6-astra"
+      ],
+      "input_tokens": 10897227,
+      "cached_input_tokens": 10744960,
+      "output_tokens": 43345,
+      "reasoning_output_tokens": 6987,
+      "total_tokens": 10940572,
+      "uncached_input_tokens": 152267
+    }
+  ],
+  "totals": {
+    "input_tokens": 62373417,
+    "cached_input_tokens": 61550336,
+    "output_tokens": 175328,
+    "reasoning_output_tokens": 22659,
+    "total_tokens": 62548745,
+    "uncached_input_tokens": 823081
+  }
+}
