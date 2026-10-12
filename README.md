@@ -16,6 +16,22 @@ BreakMock exposes its implemented messaging features by default, without a beta 
 for tested coverage and known gaps. Performance and compatibility are separate
 claims; neither is inferred from the implementation language.
 
+## Why refactor WireMock to Go?
+
+The goal is to keep WireMock's familiar mappings and APIs while reducing the
+resources needed to run mock services in local development, CI and test
+environments. In our latest measured Java-versus-Go workloads, optimized
+BreakMock delivered **14–30% higher throughput**, used **32–45% less server CPU
+at the same 10,000 RPS**, and had a much smaller resident memory footprint.
+Median readiness was **10.7 ms for Go versus 600.7 ms for Java**.
+
+These results are the basis for the refactor: lower resource use and faster
+startup while retaining WireMock compatibility as the target. We chose Go as
+our maintained implementation because it meets our efficiency goals and lets us
+extend one executable with mocking, test-data and chaos capabilities, including
+native integration with the Go-based Toxiproxy. See the [measurements and their
+scope](#java-versus-go-benchmarks) below.
+
 ## Run
 
 Requires Go 1.25 or newer, a C compiler, and zlib development headers (`zlib1g-dev`
@@ -114,18 +130,64 @@ strict suites. Reference nondeterminism remains a reported strict failure; the
 harness does not turn failures into passes. This is a
 bounded differential corpus, not the entire upstream Java test suite.
 
-## Benchmark
+## Java versus Go benchmarks
+
+Latest measured comparison: **2026-10-12**, Apple M4 Pro (14 logical CPUs), macOS
+arm64, Go 1.27.1 and OpenJDK 27. Java is **WireMock 4.0.0-beta.40**; Go is optimized
+BreakMock at commit `7176b12`. Both servers use the same workload driver and
+32 persistent clients. The workloads are a static response and the template
+`Hello {{request.query.name}}: {{math 2 '+' 3}}`.
+
+Mean throughput at saturation (higher is better), two rounds per workload with
+3 seconds of warmup and 5 seconds of measurement:
+
+| Request journal | Workload | Java RPS | Go RPS | Go improvement |
+| --- | --- | ---: | ---: | ---: |
+| Disabled | Static | 86,580 | 112,381 | +29.8% |
+| Disabled | Template | 88,663 | 109,233 | +23.2% |
+| Capped at 1,000 entries | Static | 77,532 | 92,829 | +19.7% |
+| Capped at 1,000 entries | Template | 80,176 | 91,119 | +13.6% |
+
+Resource use at **the same 10,000 offered RPS** (lower is better), three rounds
+with 10 seconds of warmup and 15 seconds of measurement. CPU is mean process
+user+system time per completed request across all server threads, excluding the
+load generator. Memory is the range of peak sampled RSS across rounds.
+
+| Request journal | Workload | Java CPU µs/request | Go CPU µs/request | Java RSS MiB | Go RSS MiB |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Disabled | Static | 85.44 | 46.69 | 310.4–347.3 | 25.8–26.6 |
+| Disabled | Template | 88.31 | 50.16 | 320.2–361.6 | 25.3–26.0 |
+| Capped at 1,000 entries | Static | 113.33 | 74.64 | 334.6–364.6 | 37.7–39.9 |
+| Capped at 1,000 entries | Template | 114.89 | 78.47 | 396.8–691.0 | 37.9–38.4 |
+
+Startup measured 15 fresh processes per implementation with warm OS caches.
+Readiness requires loading a mapping from disk and returning the correct templated
+response. Median readiness was **600.7 ms for Java and 10.7 ms for Go**; median
+RSS at readiness was **206.0 MiB and 16.6 MiB**, respectively.
+
+All measured Java/Go load runs had zero errors or dropped arrivals, and matched-rate
+runs achieved within 2% of the target. These are short, same-host measurements of
+small workloads; the client shares the host, and Java's fixed warmup does not
+prove JIT steady state. Journals were disabled or capped equally on both servers;
+**the default unbounded journal was not benchmarked**. RSS is sampled every 100 ms.
+These results predate subsequent admin compatibility fixes and Toxiproxy
+integration, so they are not measurements of the current executable or active
+chaos scenarios. Compatibility coverage is tracked separately in
+[COMPATIBILITY.md](COMPATIBILITY.md).
+
+See the [full measurement protocol and optimization report](GO_JOURNAL_OPTIMIZATION.md),
+[raw results and executable hashes](testdata/reports/go-optimized), and
+[historical benchmarks](BENCHMARKS.md). Reproduce the Java/Go workloads with:
 
 ```sh
-python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rounds 3 --duration 5s
-```
+# Saturation throughput, without and with a bounded journal.
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rounds 2 --duration 5s --output /tmp/throughput.json
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rounds 2 --duration 5s --journal-limit 1000 --output /tmp/throughput-journal.json
 
-The same Go HTTP load generator drives both servers with 32 persistent clients,
-with request journals disabled on both by default. Add `--journal-limit 1000` to
-measure both servers with bounded journals. The script validates response bodies,
-warms up each workload, alternates server order, and records RPS, latency and
-sampled RSS. Current v4 measurements include both disabled and bounded journals. Results describe this workload and machine; they are not a universal
-throughput guarantee. See [BENCHMARKS.md](BENCHMARKS.md).
+# CPU and memory at the same offered request rate.
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10000 --warmup 10s --duration 15s --rounds 3 --output /tmp/cpu-10k.json
+python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10000 --warmup 10s --duration 15s --rounds 3 --journal-limit 1000 --output /tmp/cpu-10k-journal.json
+```
 
 ## License and provenance
 
