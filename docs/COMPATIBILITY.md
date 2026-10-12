@@ -10,14 +10,6 @@ This repository does **not** claim compatibility with every possible mapping,
 extension or transport configuration. Checked-in differential reports document a
 bounded corpus; a passing fixture is not proof of an entire feature's equivalence.
 
-## Intentional upstream bug corrections
-
-BreakMock now corrects five confirmed upstream bugs by default, covering XPath
-predicates, JSONPath empty-array absence, null JSON serialization, the trailing-slash
-docs route and the scenario-state OpenAPI operation. See [the corrections and
-migration notes](UPSTREAM_BUG_FIXES.md). Strict Java comparisons remain unchanged
-and report affected cases as failures; these differences are not byte parity.
-
 ## Implemented and exercised
 
 - HTTP mappings, priorities, insertion ordering, scenarios, text/JSON/binary/file

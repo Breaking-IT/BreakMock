@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"math/big"
 	"mime"
 	"mime/multipart"
@@ -518,11 +517,6 @@ func matchJSONPath(expected any, actual string) bool {
 			return matchValue(nested, string(raw), true)
 		}
 		if len(array) == 0 {
-			// A definite path can select a present empty array. An indefinite
-			// path with zero results instead means no nodes were selected.
-			if _, absent := nested["absent"].(bool); absent && matcherJSONPathDefinite(expression) {
-				return false
-			}
 			return matchValue(nested, "", false)
 		}
 		for _, v := range array {
@@ -551,17 +545,6 @@ func matcherJSONValueString(v any) string {
 	}
 	raw, _ := json.Marshal(v)
 	return string(raw)
-}
-
-// XPath object syntax may contain only expression/namespace metadata, without
-// a nested value matcher. It then has the same predicate semantics as a string.
-func xpathHasValueMatcher(pattern map[string]any) bool {
-	for key := range pattern {
-		if key != "expression" && key != "xPathNamespaces" {
-			return true
-		}
-	}
-	return false
 }
 
 func matchXPath(expected any, p map[string]any, actual string) bool {
@@ -601,18 +584,8 @@ func matchXPath(expected any, p map[string]any, actual string) bool {
 	}
 	evaluation := compiled.Evaluate(xmlquery.CreateXPathNavigator(doc))
 	if _, ok := evaluation.(*xpath.NodeIterator); !ok {
-		if !xpathHasValueMatcher(nested) {
-			// XPath 1.0 boolean conversion applies to scalar predicates too.
-			switch value := evaluation.(type) {
-			case bool:
-				return value
-			case float64:
-				return value != 0 && !math.IsNaN(value)
-			case string:
-				return value != ""
-			default:
-				return false
-			}
+		if nested == nil {
+			return true
 		}
 		return matchValue(nested, fmt.Sprint(evaluation), true)
 	}
@@ -622,7 +595,7 @@ func matchXPath(expected any, p map[string]any, actual string) bool {
 		if node.Type == xmlquery.ElementNode || node.Type == xmlquery.DocumentNode {
 			rendered = strings.TrimPrefix(node.OutputXMLWithOptions(xmlquery.WithOutputSelf(), xmlquery.WithIndentation("  "), xmlquery.WithEmptyTagSupport()), "\n") + "\n"
 		}
-		if !xpathHasValueMatcher(nested) || matchValue(nested, rendered, true) {
+		if nested == nil || matchValue(nested, rendered, true) {
 			return true
 		}
 	}

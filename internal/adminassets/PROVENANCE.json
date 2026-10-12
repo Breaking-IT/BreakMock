@@ -40,11 +40,5 @@
     "assets/swagger-ui/swagger-ui-dist/swagger-ui.js.map": "e94e33402dac546894ee2e2a13c76d9e0e2b1dc2e78d5c9fadd90bd2b3397159",
     "doc-index.html": "2109bc58585f8b73aa37dc419340ba3282eb6b3a6ac31a32a85e94cc3aff70a7",
     "swagger/wiremock-admin-api.json": "4306cf1dada9455ad6b41e1344552f0dd6980edb3cf2471395a14dd8fee64d97"
-  },
-  "localModifications": {
-    "swagger/wiremock-admin-api.json": {
-      "sha256": "e66006261d3dd75b25f33e9b2c92d7dced6020221492a6e151eecd35c7d74f0c",
-      "reason": "Document PUT /__admin/scenarios/{name}/state (WireMock issue #3319). Original upstream asset hash remains in files."
-    }
   }
 }

@@ -1157,9 +1157,7 @@
       ]
     },
     "body": "{\"values\":[\"a\",\"b\"],\"empty\":[],\"nothing\":null}",
-    "matches": true,
-    "breakmockMatches": false,
-    "breakmockCorrection": "WireMock #3159: an existing empty array is not absent"
+    "matches": true
   },
   {
     "name": "JSONPath array 99",
@@ -4351,9 +4349,7 @@
       ]
     },
     "body": "{\"empty\":[],\"obj\":{},\"values\":[null]}",
-    "matches": true,
-    "breakmockMatches": false,
-    "breakmockCorrection": "WireMock #3159: an existing empty array is not absent"
+    "matches": true
   },
   {
     "name": "v4 JSONPath empty/null $.objNone",
