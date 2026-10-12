@@ -1,0 +1,17 @@
+{
+  "optimization_commit": "acde9c9f025c631ced33639d0570f4a8ffc8f4fa",
+  "tests_commit": "7385bdf850ac1c92f792055488d5ca70c945e40b",
+  "baseline_rust_source": "08919c6",
+  "go_source_unchanged_since": "371ba5e",
+  "binary_sha256": {
+    "go": "ffb1ea6f491ee52d1e0088d2caf2e1ca02bf8fdbf7e0fa1890d0eed4d3ed12b1",
+    "rust": "5b3ae5c2b40ecdd0f05ca1b6f622e8598bbf9ea6167481d730bffbd670d13c57",
+    "driver": "e02264862eca6975cbc3ef53505b38604699dff8e93d1246342dc7754fcb1249"
+  },
+  "notes": [
+    "Go source and modules were verified unchanged from the previously optimized baseline.",
+    "Only test/harness commits changed after the Rust executable was built; runtime source remained frozen through every final benchmark.",
+    "source_dirty_at_start can reflect the test-only cross-reset identifier check, not a runtime implementation change.",
+    "Build artifact hashes were not retained by the temporary-cache build experiment."
+  ]
+}

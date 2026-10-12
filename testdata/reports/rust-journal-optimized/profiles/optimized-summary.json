@@ -1,0 +1,20 @@
+{
+  "binary_sha256": "5b3ae5c2b40ecdd0f05ca1b6f622e8598bbf9ea6167481d730bffbd670d13c57",
+  "worker_thread_samples": 31752,
+  "mutex_wait_top_samples": 14650,
+  "mutex_wait_fraction_of_worker_samples": 0.4613882590073066,
+  "notes": [
+    "Blocked/wall-stack observations, not CPU-time percentages.",
+    "Sampler overhead materially affects throughput; performance claims use separate unprofiled runs.",
+    "Raw sampled stacks preserved in compressed text; binary-image inventory and local executable path omitted."
+  ],
+  "profile_settings": {
+    "journal_limit": 1000,
+    "clients": 32,
+    "warmup_seconds": 3,
+    "load_seconds": 15,
+    "sample_seconds": 10,
+    "requested_sample_interval_ms": 1,
+    "workload": "static Hello, benchmark!"
+  }
+}

@@ -1,5 +1,10 @@
 # Java, Go and Rust comparison
 
+**Historical initial-port measurements (2026-10-11).** The Rust journal bottleneck
+has since been profiled and optimized. See the [updated fair comparison](RUST_JOURNAL_OPTIMIZATION.md)
+for the current results and revised language decision; the measurements below
+remain unchanged as historical evidence.
+
 The `codex/rust-port` branch adds a native Rust implementation alongside Go.
 Rust does not delegate requests to Java or Go. Both implementations target pinned
 WireMock **4.0.0-beta.40**, upstream commit

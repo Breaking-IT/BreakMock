@@ -1,5 +1,8 @@
 # Benchmark measurements
 
+The latest [optimized Java/Go/Rust comparison](RUST_JOURNAL_OPTIMIZATION.md) includes
+the profiled Rust journal fix and a fresh run of all the original benchmark settings.
+
 The Rust comparison branch also provides a [three-way Java/Go/Rust report](RUST_COMPARISON.md),
 with matched-rate CPU, throughput, memory, startup and development-effort measurements.
 The historical two-way results below are retained; compare languages using results

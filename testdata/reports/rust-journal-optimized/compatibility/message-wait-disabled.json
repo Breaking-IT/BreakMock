@@ -1,0 +1,15 @@
+{
+  "comparison": "Exact disabled-journal error bodies after server-origin replacement",
+  "passed": 2,
+  "total": 2,
+  "results": [
+    {
+      "name": "disabled journal wait",
+      "pass": true
+    },
+    {
+      "name": "disabled journal wait-for-count",
+      "pass": true
+    }
+  ]
+}

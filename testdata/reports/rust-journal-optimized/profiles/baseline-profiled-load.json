@@ -1,0 +1,1 @@
+{"concurrency":32,"dropped":0,"errors":0,"p50_ms":0.985,"p95_ms":5.005,"p99_ms":8.869,"requests":252555,"rps":16835.061863502964,"seconds":15.001726875,"target_rps":0,"url":"http://127.0.0.1:18521/bench?name=Ada"}

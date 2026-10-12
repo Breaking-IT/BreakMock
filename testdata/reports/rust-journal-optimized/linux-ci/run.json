@@ -1,0 +1,6 @@
+{
+  "url": "https://github.com/Breaking-IT/BreakMock/actions/runs/38208942222",
+  "revision": "7385bdf",
+  "rust_result": "All suites pass except existing JVM identity diagnostic",
+  "go_result": "Existing JVM identity and message-wait failures; new journal concurrency suite passes"
+}

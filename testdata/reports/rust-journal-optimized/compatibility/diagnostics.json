@@ -1,0 +1,185 @@
+{
+  "reference": "4.0.0-beta.40",
+  "comparison": "exact status and body bytes; no substitutions",
+  "passed": 40,
+  "total": 41,
+  "results": [
+    {
+      "name": "empty server",
+      "pass": true
+    },
+    {
+      "name": "URL mismatch",
+      "pass": true
+    },
+    {
+      "name": "method mismatch",
+      "pass": true
+    },
+    {
+      "name": "path mismatch",
+      "pass": true
+    },
+    {
+      "name": "regex mismatch",
+      "pass": true
+    },
+    {
+      "name": "path regex mismatch",
+      "pass": true
+    },
+    {
+      "name": "template mismatch",
+      "pass": true
+    },
+    {
+      "name": "regex question hint",
+      "pass": true
+    },
+    {
+      "name": "invalid URL prefix",
+      "pass": true
+    },
+    {
+      "name": "named mapping",
+      "pass": true
+    },
+    {
+      "name": "narrow console",
+      "pass": true
+    },
+    {
+      "name": "long URL wrap",
+      "pass": true
+    },
+    {
+      "name": "header absent",
+      "pass": true
+    },
+    {
+      "name": "header mismatch",
+      "pass": true
+    },
+    {
+      "name": "header contains",
+      "pass": true
+    },
+    {
+      "name": "query absent",
+      "pass": true
+    },
+    {
+      "name": "query mismatch",
+      "pass": true
+    },
+    {
+      "name": "query multivalue",
+      "pass": true
+    },
+    {
+      "name": "cookie mismatch",
+      "pass": true
+    },
+    {
+      "name": "form mismatch",
+      "pass": true
+    },
+    {
+      "name": "text body mismatch",
+      "pass": true
+    },
+    {
+      "name": "text body contains",
+      "pass": true
+    },
+    {
+      "name": "binary body mismatch",
+      "pass": false,
+      "reference_repeat": {
+        "status": 404,
+        "body": "\n                                               Request was not matched\n                                               =======================\n\n-----------------------------------------------------------------------------------------------------------------------\n| Closest stub                                             | Request                                                  |\n-----------------------------------------------------------------------------------------------------------------------\n                                                           |\nANY                                                        | POST\n(always)                                                   | /actual\n                                                           |\nYWJj                                                       | [B@1cd657db                                         <<<<< Body does not match\n                                                           |\n-----------------------------------------------------------------------------------------------------------------------\n"
+      },
+      "reference_is_nondeterministic": true,
+      "reference": {
+        "status": 404,
+        "body": "\n                                               Request was not matched\n                                               =======================\n\n-----------------------------------------------------------------------------------------------------------------------\n| Closest stub                                             | Request                                                  |\n-----------------------------------------------------------------------------------------------------------------------\n                                                           |\nANY                                                        | POST\n(always)                                                   | /actual\n                                                           |\nYWJj                                                       | [B@473ee129                                         <<<<< Body does not match\n                                                           |\n-----------------------------------------------------------------------------------------------------------------------\n"
+      },
+      "candidate": {
+        "status": 404,
+        "body": "\n                                               Request was not matched\n                                               =======================\n\n-----------------------------------------------------------------------------------------------------------------------\n| Closest stub                                             | Request                                                  |\n-----------------------------------------------------------------------------------------------------------------------\n                                                           |\nANY                                                        | POST\n(always)                                                   | /actual\n                                                           |\nYWJj                                                       | YWN0dWFs                                            <<<<< Body does not match\n                                                           |\n-----------------------------------------------------------------------------------------------------------------------\n"
+      }
+    },
+    {
+      "name": "scenario mismatch",
+      "pass": true
+    },
+    {
+      "name": "path parameter mismatch",
+      "pass": true
+    },
+    {
+      "name": "closest URL distance",
+      "pass": true
+    },
+    {
+      "name": "near API empty",
+      "pass": true
+    },
+    {
+      "name": "near API URL",
+      "pass": true
+    },
+    {
+      "name": "near API method",
+      "pass": true
+    },
+    {
+      "name": "near API header",
+      "pass": true
+    },
+    {
+      "name": "near API query",
+      "pass": true
+    },
+    {
+      "name": "near API ranked",
+      "pass": true
+    },
+    {
+      "name": "JSON body mismatch",
+      "pass": true
+    },
+    {
+      "name": "XML body mismatch",
+      "pass": true
+    },
+    {
+      "name": "JSONPath absent",
+      "pass": true
+    },
+    {
+      "name": "XPath absent",
+      "pass": true
+    },
+    {
+      "name": "JSONPath nested mismatch",
+      "pass": true
+    },
+    {
+      "name": "header absent condition",
+      "pass": true
+    },
+    {
+      "name": "body multiline wrap",
+      "pass": true
+    },
+    {
+      "name": "near API URLPattern",
+      "pass": true
+    },
+    {
+      "name": "near API full request",
+      "pass": true
+    }
+  ]
+}

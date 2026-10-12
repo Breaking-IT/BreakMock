@@ -1,0 +1,78 @@
+{
+  "reference": "4.0.0-beta.40",
+  "candidate_language": "rust",
+  "suites": [
+    {
+      "suite": "fixtures_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "matcher_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "template_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "admin_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "runtime_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "gzip_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "diagnostics_differential.py",
+      "exit_code": 1
+    },
+    {
+      "suite": "matcher_distance_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "webhook_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "fault_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "entity_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "messaging_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "streaming_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "status_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "streaming_journal_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "message_wait_differential.py",
+      "exit_code": 0
+    },
+    {
+      "suite": "message_wait_differential.py:disabled-journal",
+      "exit_code": 0
+    }
+  ]
+}
