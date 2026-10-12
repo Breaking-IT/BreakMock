@@ -1,0 +1,26 @@
+{
+  "implementation_commit": "16eb3575b40ffbb0892f634401fa98791a0500ab",
+  "reference_jar_sha256": "3a53dec6c814ff73da4abb0bc51624215ea2b913beec8d19aa6d54e4c62161d3",
+  "java_option_environment_present": {
+    "JAVA_TOOL_OPTIONS": false,
+    "JDK_JAVA_OPTIONS": false,
+    "_JAVA_OPTIONS": false
+  },
+  "diagnostics_and_workflows_unchanged": true,
+  "existing_message_wait_assertions_unchanged": true,
+  "new_message_wait_cases": {
+    "enabled": 8,
+    "disabled": 3
+  },
+  "local_remaining_failures": {
+    "go": [
+      "binary body mismatch diagnostic"
+    ],
+    "rust": [
+      "binary body mismatch diagnostic"
+    ]
+  },
+  "linux_ci_run": "https://github.com/Breaking-IT/BreakMock/actions/runs/38214730011",
+  "linux_ci_conclusion": "failure",
+  "linux_remaining_failure": "binary body mismatch diagnostic in Go and Rust"
+}

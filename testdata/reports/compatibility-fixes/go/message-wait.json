@@ -1,0 +1,115 @@
+{
+  "comparison": "Strict JSON bytes after generated id/timestamp scalar replacement, plus completion-time bounds",
+  "passed": 15,
+  "total": 15,
+  "results": [
+    {
+      "name": "single timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.08365479193162173,
+        0.06145558401476592
+      ]
+    },
+    {
+      "name": "single future filtered arrival",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0832663329783827,
+        0.06980137503705919
+      ]
+    },
+    {
+      "name": "multiple future arrivals",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0810998328961432,
+        0.07198758400045335
+      ]
+    },
+    {
+      "name": "partial results at timeout",
+      "pass": true,
+      "elapsedSeconds": [
+        0.10976654104888439,
+        0.10120141599327326
+      ]
+    },
+    {
+      "name": "existing count caps results",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0015361250843852758,
+        0.00030679197516292334
+      ]
+    },
+    {
+      "name": "single ignores count",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0012866250472143292,
+        0.0002591669326648116
+      ]
+    },
+    {
+      "name": "zero timeout returns current count",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0012508750660344958,
+        0.0002995409304276109
+      ]
+    },
+    {
+      "name": "zero count returns empty",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0011307080276310444,
+        0.00026650005020201206
+      ]
+    },
+    {
+      "name": "single ignores negative count",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0013930420391261578,
+        0.0004539169603958726
+      ]
+    },
+    {
+      "name": "single omitted timeout is immediate",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0015722080133855343,
+        0.00023341597989201546
+      ]
+    },
+    {
+      "name": "count omitted timeout is immediate",
+      "pass": true,
+      "elapsedSeconds": [
+        0.001249917084351182,
+        0.00028783397283405066
+      ]
+    },
+    {
+      "name": "omitted count defaults to one",
+      "pass": true,
+      "elapsedSeconds": [
+        0.0015330000314861536,
+        0.0003402500879019499
+      ]
+    },
+    {
+      "name": "negative count exact error timeout=-1",
+      "pass": true
+    },
+    {
+      "name": "negative count exact error timeout=0",
+      "pass": true
+    },
+    {
+      "name": "negative count exact error timeout=1000",
+      "pass": true
+    }
+  ]
+}

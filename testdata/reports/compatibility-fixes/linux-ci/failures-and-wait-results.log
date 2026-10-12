@@ -1,0 +1,34 @@
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5096179Z PASS text body contains
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5096725Z --- 
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5097216Z +++ 
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5097740Z @@ -9,6 +9,6 @@
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5098349Z  ANY                                                        | POST
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5099135Z  (always)                                                   | /actual
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5099897Z                                                             |
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5100828Z -YWJj                                                       | [B@154df30c                                         <<<<< Body does not match
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5102237Z +YWJj                                                       | YWN0dWFs                                            <<<<< Body does not match
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5103180Z                                                             |
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5104141Z  -----------------------------------------------------------------------------------------------------------------------
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5104951Z 
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5105301Z FAIL binary body mismatch
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5105895Z PASS scenario mismatch
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:11.5116567Z 40/41 strict passes
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:39.7125412Z 15/15 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:56:45.2246447Z 5/5 passed
+test	Compare against Java WireMock	2026-10-12T06:55:10.9307603Z PASS text body contains
+test	Compare against Java WireMock	2026-10-12T06:55:10.9308029Z --- 
+test	Compare against Java WireMock	2026-10-12T06:55:10.9308456Z +++ 
+test	Compare against Java WireMock	2026-10-12T06:55:10.9308846Z @@ -9,6 +9,6 @@
+test	Compare against Java WireMock	2026-10-12T06:55:10.9309365Z  ANY                                                        | POST
+test	Compare against Java WireMock	2026-10-12T06:55:10.9310382Z  (always)                                                   | /actual
+test	Compare against Java WireMock	2026-10-12T06:55:10.9311539Z                                                             |
+test	Compare against Java WireMock	2026-10-12T06:55:10.9312325Z -YWJj                                                       | [B@619bd701                                         <<<<< Body does not match
+test	Compare against Java WireMock	2026-10-12T06:55:10.9313441Z +YWJj                                                       | YWN0dWFs                                            <<<<< Body does not match
+test	Compare against Java WireMock	2026-10-12T06:55:10.9314766Z                                                             |
+test	Compare against Java WireMock	2026-10-12T06:55:10.9315623Z  -----------------------------------------------------------------------------------------------------------------------
+test	Compare against Java WireMock	2026-10-12T06:55:10.9316250Z 
+test	Compare against Java WireMock	2026-10-12T06:55:10.9316550Z FAIL binary body mismatch
+test	Compare against Java WireMock	2026-10-12T06:55:10.9317023Z PASS scenario mismatch
+test	Compare against Java WireMock	2026-10-12T06:55:10.9325540Z 40/41 strict passes
+test	Compare against Java WireMock	2026-10-12T06:55:36.0671931Z 15/15 passed
+test	Compare against Java WireMock	2026-10-12T06:55:40.6576336Z 5/5 passed

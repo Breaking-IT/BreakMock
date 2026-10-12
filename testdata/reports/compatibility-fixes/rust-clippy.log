@@ -1,0 +1,1033 @@
+    Checking breakmock-rust v0.1.0 (/Users/jvangaalen/git/jgaalen/wiremock-go/BreakMock-rust/rust)
+warning: this `if` statement can be collapsed
+  --> src/admin.rs:52:5
+   |
+52 | /     if !req.body.is_empty()
+53 | |         && !p.starts_with("/files/")
+54 | |         && (req.method == "POST" || req.method == "PUT" || req.method == "PATCH")
+...  |
+62 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+   = note: `#[warn(clippy::collapsible_if)]` on by default
+help: collapse nested if block
+   |
+54 ~         && (req.method == "POST" || req.method == "PUT" || req.method == "PATCH")
+55 ~         && let Err(error) = serde_json::from_slice::<Value>(&req.body) {
+56 |             return Some(answer(
+...
+59 |             ));
+60 ~         }
+   |
+
+warning: this `if` statement can be collapsed
+  --> src/admin.rs:77:5
+   |
+77 | /     if (method == "POST" || method == "PUT")
+78 | |         && (p == "/mappings"
+79 | |             || p == "/mappings/edit"
+80 | |             || p.starts_with("/mappings/") && uuid::Uuid::parse_str(&p[10..]).is_ok())
+...  |
+85 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+80 ~             || p.starts_with("/mappings/") && uuid::Uuid::parse_str(&p[10..]).is_ok())
+81 ~         && let Some(error) = validation(&v) {
+82 |             return Some(error);
+83 ~         }
+   |
+
+warning: this `if` statement can be collapsed
+   --> src/admin.rs:562:5
+    |
+562 | /     if let Ok(real) = path.canonicalize() {
+563 | |         if !real.starts_with(base.canonicalize().ok()?) {
+564 | |             return None;
+565 | |         }
+566 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+562 ~     if let Ok(real) = path.canonicalize()
+563 ~         && !real.starts_with(base.canonicalize().ok()?) {
+564 |             return None;
+565 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin.rs:607:5
+    |
+607 | /     if let Some(id) = v["id"].as_str() {
+608 | |         if uuid::Uuid::parse_str(id).is_err() {
+609 | |             return Some(answer(
+610 | |                 422,
+...   |
+614 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+607 ~     if let Some(id) = v["id"].as_str()
+608 ~         && uuid::Uuid::parse_str(id).is_err() {
+609 |             return Some(answer(
+...
+612 |             ));
+613 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin.rs:665:5
+    |
+665 | /     if let Some(raw) = params.get("matchingStub") {
+666 | |         if uuid::Uuid::parse_str(raw).is_err() {
+667 | |             return problem(
+668 | |                 400,
+...   |
+673 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+665 ~     if let Some(raw) = params.get("matchingStub")
+666 ~         && uuid::Uuid::parse_str(raw).is_err() {
+667 |             return problem(
+...
+671 |             );
+672 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/diagnostics.rs:368:21
+    |
+368 | /                     if let Ok(doc) = serde_json::from_slice(&req.body) {
+369 | |                         if let Ok(v) = matcher::json_path(&doc, expr) {
+370 | |                             if !v.is_null() {
+371 | |                                 right = text(&v)
+...   |
+374 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+368 ~                     if let Ok(doc) = serde_json::from_slice(&req.body)
+369 ~                         && let Ok(v) = matcher::json_path(&doc, expr) {
+370 |                             if !v.is_null() {
+371 |                                 right = text(&v)
+372 |                             }
+373 ~                         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/diagnostics.rs:369:25
+    |
+369 | /                         if let Ok(v) = matcher::json_path(&doc, expr) {
+370 | |                             if !v.is_null() {
+371 | |                                 right = text(&v)
+372 | |                             }
+373 | |                         }
+    | |_________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+369 ~                         if let Ok(v) = matcher::json_path(&doc, expr)
+370 ~                             && !v.is_null() {
+371 |                                 right = text(&v)
+372 ~                             }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher_regex.rs:155:21
+    |
+155 | /                     if bytes
+156 | |                         .get(i + 1)
+157 | |                         .map(|b| b.is_ascii_digit())
+158 | |                         .unwrap_or(false)
+...   |
+172 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+160 ~                         && bytes[end] == b'+'
+161 ~                         && let Some(&atom) = atoms.last() {
+162 |                             let content = out[atom..].to_owned();
+...
+169 |                             continue;
+170 ~                         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:105:5
+    |
+105 | /     if let Some(s) = p["scheme"].as_str() {
+106 | |         if s != r.scheme {
+107 | |             return false;
+108 | |         }
+109 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+105 ~     if let Some(s) = p["scheme"].as_str()
+106 ~         && s != r.scheme {
+107 |             return false;
+108 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:134:5
+    |
+134 | /     if let Some(port) = p.get("port") {
+135 | |         if abs
+136 | |             .as_ref()
+137 | |             .ok()
+...   |
+144 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+134 ~     if let Some(port) = p.get("port")
+135 ~         && abs
+136 |             .as_ref()
+...
+142 |             return false;
+143 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:222:5
+    |
+222 | /     if let Some(t) = p["urlPathTemplate"].as_str() {
+223 | |         if ["url", "urlPattern", "urlPath", "urlPathPattern"]
+224 | |             .iter()
+225 | |             .all(|k| p.get(k).is_none())
+...   |
+240 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+222 ~     if let Some(t) = p["urlPathTemplate"].as_str()
+223 ~         && ["url", "urlPattern", "urlPath", "urlPathPattern"]
+224 |             .iter()
+...
+238 |             }
+239 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:223:9
+    |
+223 | /         if ["url", "urlPattern", "urlPath", "urlPathPattern"]
+224 | |             .iter()
+225 | |             .all(|k| p.get(k).is_none())
+...   |
+239 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+225 ~             .all(|k| p.get(k).is_none())
+226 ~             && let Some(ps) = p["pathParameters"].as_object() {
+227 |                 let values = path_params(t, r.path()).unwrap_or_default();
+...
+236 |                 }
+237 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:252:5
+    |
+252 | /     if let Some(parts) = p["multipartPatterns"].as_array() {
+253 | |         if !multipart(parts, r) {
+254 | |             return false;
+255 | |         }
+256 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+252 ~     if let Some(parts) = p["multipartPatterns"].as_array()
+253 ~         && !multipart(parts, r) {
+254 |             return false;
+255 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+  --> src/matcher_date.rs:4:5
+   |
+ 4 | /     if let Some(i) = s.find('[') {
+ 5 | |         if let Some(j) = s[i..].find(']') {
+ 6 | |             let end = i + j;
+ 7 | |             let mut a = formats(&format!("{}{}{}", &s[..i], &s[i + 1..end], &s[end + 1..]));
+...  |
+11 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+ 4 ~     if let Some(i) = s.find('[')
+ 5 ~         && let Some(j) = s[i..].find(']') {
+ 6 |             let end = i + j;
+...
+ 9 |             return a;
+10 ~         }
+   |
+
+warning: this loop could be written as a `for` loop
+  --> src/matcher_date.rs:19:13
+   |
+19 |             while let Some(c) = chars.next() {
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `for c in chars.by_ref()`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#while_let_on_iterator
+   = note: `#[warn(clippy::while_let_on_iterator)]` on by default
+
+warning: this `if` statement can be collapsed
+   --> src/matcher_date.rs:177:5
+    |
+177 | /     if let Some(s) = p["truncateActual"].as_str() {
+178 | |         if g.to_rfc3339().contains('T') && g.to_rfc3339().ends_with("+00:00") {
+179 | |             g = truncate(g, s)
+180 | |         }
+181 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+177 ~     if let Some(s) = p["truncateActual"].as_str()
+178 ~         && g.to_rfc3339().contains('T') && g.to_rfc3339().ends_with("+00:00") {
+179 |             g = truncate(g, s)
+180 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/matcher.rs:597:5
+    |
+597 | /     if let Some(p) = pattern.get("channel") {
+598 | |         if !channel.map(|r| matches(p, r)).unwrap_or(false) {
+599 | |             return false;
+600 | |         }
+601 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+597 ~     if let Some(p) = pattern.get("channel")
+598 ~         && !channel.map(|r| matches(p, r)).unwrap_or(false) {
+599 |             return false;
+600 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+  --> src/matcher_locale.rs:17:17
+   |
+17 | /                 if let Ok(locale) = std::env::var(key) {
+18 | |                     if !locale.is_empty() {
+19 | |                         let locale = locale
+20 | |                             .split('.')
+...  |
+32 | |                 }
+   | |_________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+17 ~                 if let Ok(locale) = std::env::var(key)
+18 ~                     && !locale.is_empty() {
+19 |                         let locale = locale
+...
+30 |                         };
+31 ~                     }
+   |
+
+warning: this `if` statement can be collapsed
+  --> src/messaging_runtime.rs:62:9
+   |
+62 | /         if let Some(kind) = cp["type"].as_str() {
+63 | |             if kind != typ {
+64 | |                 continue;
+65 | |             }
+66 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+62 ~         if let Some(kind) = cp["type"].as_str()
+63 ~             && kind != typ {
+64 |                 continue;
+65 ~             }
+   |
+
+warning: this `if` statement can be collapsed
+   --> src/messaging_runtime.rs:257:13
+    |
+257 | /             if send(s, &id, msg).is_ok() {
+258 | |                 if let Some(c) = s.channels.iter().find(|c| c["id"] == id) {
+259 | |                     channels.push(c.clone())
+260 | |                 }
+261 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+257 ~             if send(s, &id, msg).is_ok()
+258 ~                 && let Some(c) = s.channels.iter().find(|c| c["id"] == id) {
+259 |                     channels.push(c.clone())
+260 ~                 }
+    |
+
+warning: this `if` statement can be collapsed
+  --> src/raw_json.rs:23:5
+   |
+23 | /     if response.status < 300 && matches!(req.method.as_str(), "POST" | "PUT") {
+24 | |         if let Some(body) = body {
+25 | |             let response_value: Value =
+26 | |                 serde_json::from_slice(&response.body).unwrap_or(Value::Null);
+...  |
+46 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+23 ~     if response.status < 300 && matches!(req.method.as_str(), "POST" | "PUT")
+24 ~         && let Some(body) = body {
+25 |             let response_value: Value =
+...
+44 |             }
+45 ~         }
+   |
+
+warning: this loop could be written as a `for` loop
+  --> src/template_date.rs:11:13
+   |
+11 |             while let Some(c) = chars.next() {
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `for c in chars.by_ref()`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#while_let_on_iterator
+
+warning: this `if` statement can be collapsed
+   --> src/template_json.rs:160:13
+    |
+160 | /             if s.contains('e') || s.contains('E') {
+161 | |                 if let Some(f) = n.as_f64() {
+162 | |                     *v = if f.fract() == 0. {
+163 | |                         json!(f as i64)
+...   |
+168 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+160 ~             if (s.contains('e') || s.contains('E')) {
+161 ~                 && let Some(f) = n.as_f64() {
+162 |                     *v = if f.fract() == 0. {
+...
+166 |                     }
+167 ~                 }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/template_json.rs:178:9
+    |
+178 | /         if i + 6 <= bytes.len() && &bytes[i..i + 2] == b"\\u" {
+179 | |             if let Some(code) = std::str::from_utf8(&bytes[i + 2..i + 6])
+180 | |                 .ok()
+181 | |                 .and_then(|s| u16::from_str_radix(s, 16).ok())
+...   |
+204 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+178 ~         if i + 6 <= bytes.len() && &bytes[i..i + 2] == b"\\u"
+179 ~             && let Some(code) = std::str::from_utf8(&bytes[i + 2..i + 6])
+180 |                 .ok()
+...
+202 |                 }
+203 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+    --> src/template.rs:1148:20
+     |
+1148 |               } else if let Some(a) = v.as_array_mut() {
+     |  ____________________^
+1149 | |                 if let Ok(i) = key.parse::<usize>() {
+1150 | |                     if i < a.len() {
+1151 | |                         a.remove(i);
+...    |
+1154 | |             }
+     | |_____________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+     |
+1148 ~             } else if let Some(a) = v.as_array_mut()
+1149 ~                 && let Ok(i) = key.parse::<usize>() {
+1150 |                     if i < a.len() {
+1151 |                         a.remove(i);
+1152 |                     }
+1153 ~                 }
+     |
+
+warning: this `if` statement can be collapsed
+    --> src/template.rs:1149:17
+     |
+1149 | /                 if let Ok(i) = key.parse::<usize>() {
+1150 | |                     if i < a.len() {
+1151 | |                         a.remove(i);
+1152 | |                     }
+1153 | |                 }
+     | |_________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+     |
+1149 ~                 if let Ok(i) = key.parse::<usize>()
+1150 ~                     && i < a.len() {
+1151 |                         a.remove(i);
+1152 ~                     }
+     |
+
+warning: this `if` statement can be collapsed
+    --> src/template.rs:1437:25
+     |
+1437 | /                         if let Some((_, q)) = req.url.split_once('?') {
+1438 | |                             if let Some((_, v)) =
+1439 | |                                 url::form_urlencoded::parse(q.as_bytes()).find(|(k, _)| k == key)
+...    |
+1443 | |                         }
+     | |_________________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+     |
+1437 ~                         if let Some((_, q)) = req.url.split_once('?')
+1438 ~                             && let Some((_, v)) =
+1439 |                                 url::form_urlencoded::parse(q.as_bytes()).find(|(k, _)| k == key)
+1440 |                             {
+1441 |                                 out.push_str(&v)
+1442 ~                             }
+     |
+
+warning: compiling a regex in a loop
+    --> src/template.rs:1478:34
+     |
+1478 | ...   if !RE.get_or_init(||regex::Regex::new(r#"^math\s+-?[0-9]+(?:\.[0-9]+)?\s+['"][+*/%\-]['"]\s+-?[0-9]+(?:\.[0-9]+)?$"#).unwra...
+     |                            ^^^^^^^^^^^^^^^^^
+     |
+help: move the regex construction outside this loop
+    --> src/template.rs:1456:5
+     |
+1456 |     while let Some(start) = rest.find("{{") {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#regex_creation_in_loops
+     = note: `#[warn(clippy::regex_creation_in_loops)]` on by default
+
+warning: this `if` statement can be collapsed
+    --> src/template.rs:1545:25
+     |
+1545 | /                         if let Some((k, v)) = attr.trim().split_once('=') {
+1546 | |                             if k == "name" {
+1547 | |                                 name = Some(v.trim_matches('"').to_string())
+1548 | |                             }
+1549 | |                         }
+     | |_________________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+     |
+1545 ~                         if let Some((k, v)) = attr.trim().split_once('=')
+1546 ~                             && k == "name" {
+1547 |                                 name = Some(v.trim_matches('"').to_string())
+1548 ~                             }
+     |
+
+warning: this `if` statement can be collapsed
+  --> src/admin_json.rs:64:9
+   |
+64 | /         if let Some((key, v)) = m.get_key_value(k) {
+65 | |             if !v.is_null() || k == "jsonBody" {
+66 | |                 keys.push(key.as_str())
+67 | |             }
+68 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+64 ~         if let Some((key, v)) = m.get_key_value(k)
+65 ~             && (!v.is_null() || k == "jsonBody") {
+66 |                 keys.push(key.as_str())
+67 ~             }
+   |
+
+warning: items after a test module
+   --> src/admin_json.rs:231:1
+    |
+231 | mod tests {
+    | ^^^^^^^^^
+...
+246 | fn java_double(f: f64) -> String {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#items_after_test_module
+    = note: `#[warn(clippy::items_after_test_module)]` on by default
+    = help: move the items to before the test module was defined
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:115:9
+    |
+115 | /         if p.starts_with("/message-mappings")
+116 | |             && p != "/message-mappings/find-by-metadata"
+117 | |             && p != "/message-mappings/remove-by-metadata"
+...   |
+122 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+117 ~             && p != "/message-mappings/remove-by-metadata"
+118 ~             && let Some(e) = validate(&v) {
+119 |                 return Some(e);
+120 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:281:21
+    |
+281 | /                     if let Some(m) = &chosen {
+282 | |                         if let Some(actions) = m["actions"].as_array() {
+283 | |                             for action in actions {
+284 | |                                 let t = &action["channelTarget"];
+...   |
+295 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+281 ~                     if let Some(m) = &chosen
+282 ~                         && let Some(actions) = m["actions"].as_array() {
+283 |                             for action in actions {
+...
+293 |                             }
+294 ~                         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:410:5
+    |
+410 | /     if v["trigger"]["type"] == "http-request" {
+411 | |         if let Some(e) = required(&v["trigger"], "requestPattern") {
+412 | |             return Some(e);
+413 | |         }
+414 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+410 ~     if v["trigger"]["type"] == "http-request"
+411 ~         && let Some(e) = required(&v["trigger"], "requestPattern") {
+412 |             return Some(e);
+413 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:415:5
+    |
+415 | /     if v["trigger"]["type"] == "http-stub" {
+416 | |         if let Some(e) = required(&v["trigger"], "stubId") {
+417 | |             return Some(e);
+418 | |         }
+419 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+415 ~     if v["trigger"]["type"] == "http-stub"
+416 ~         && let Some(e) = required(&v["trigger"], "stubId") {
+417 |             return Some(e);
+418 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:422:13
+    |
+422 | /             if action["type"] == "send" {
+423 | |                 if let Some(e) = required(action, "message") {
+424 | |                     return Some(e);
+425 | |                 }
+426 | |             }
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+422 ~             if action["type"] == "send"
+423 ~                 && let Some(e) = required(action, "message") {
+424 |                     return Some(e);
+425 ~                 }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:445:17
+    |
+445 | /                 if k == "requestPattern" || k == "initiatingRequestPattern" {
+446 | |                     if let Some(p) = v.as_object_mut() {
+447 | |                         p.entry("method").or_insert(json!("ANY"));
+448 | |                     }
+449 | |                 }
+    | |_________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+445 ~                 if (k == "requestPattern" || k == "initiatingRequestPattern") {
+446 ~                     && let Some(p) = v.as_object_mut() {
+447 |                         p.entry("method").or_insert(json!("ANY"));
+448 ~                     }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_messaging.rs:521:9
+    |
+521 | /         if multiple {
+522 | |             if let Some(count) = value["count"].as_i64().filter(|n| *n < 0) {
+...   |
+535 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+521 ~         if multiple
+522 ~             && let Some(count) = value["count"].as_i64().filter(|n| *n < 0) {
+523 |                 // Java uses subList while waiting and Stream.limit for an
+...
+533 |                 ));
+534 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+  --> src/admin_near.rs:24:13
+   |
+24 | /             if v.get("bodyAsBase64").is_none() {
+25 | |                 if let Some(p) = pattern.as_object_mut() {
+26 | |                     p.remove("bodyPatterns");
+27 | |                 }
+28 | |             }
+   | |_____________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+24 ~             if v.get("bodyAsBase64").is_none()
+25 ~                 && let Some(p) = pattern.as_object_mut() {
+26 |                     p.remove("bodyPatterns");
+27 ~                 }
+   |
+
+warning: this `if` statement can be collapsed
+  --> src/admin_near.rs:55:5
+   |
+55 | /     if let Some(base64) = v["bodyAsBase64"].as_str() {
+56 | |         if let Ok(bytes) = base64::engine::general_purpose::STANDARD.decode(base64) {
+57 | |             v["body"] = json!(String::from_utf8_lossy(&bytes));
+58 | |         }
+59 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+55 ~     if let Some(base64) = v["bodyAsBase64"].as_str()
+56 ~         && let Ok(bytes) = base64::engine::general_purpose::STANDARD.decode(base64) {
+57 |             v["body"] = json!(String::from_utf8_lossy(&bytes));
+58 ~         }
+   |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_webhook.rs:168:5
+    |
+168 | /     if let Ok(mut s) = state.lock() {
+169 | |         if let Some(e) = s.requests.iter_mut().find(|e| e["id"] == id) {
+170 | |             if let Some(a) = e["subEvents"].as_array_mut() {
+171 | |                 a.push(event)
+...   |
+174 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+168 ~     if let Ok(mut s) = state.lock()
+169 ~         && let Some(e) = s.requests.iter_mut().find(|e| e["id"] == id) {
+170 |             if let Some(a) = e["subEvents"].as_array_mut() {
+171 |                 a.push(event)
+172 |             }
+173 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/admin_webhook.rs:169:9
+    |
+169 | /         if let Some(e) = s.requests.iter_mut().find(|e| e["id"] == id) {
+170 | |             if let Some(a) = e["subEvents"].as_array_mut() {
+171 | |                 a.push(event)
+172 | |             }
+173 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+169 ~         if let Some(e) = s.requests.iter_mut().find(|e| e["id"] == id)
+170 ~             && let Some(a) = e["subEvents"].as_array_mut() {
+171 |                 a.push(event)
+172 ~             }
+    |
+
+warning: `breakmock-rust` (lib test) generated 42 warnings (31 duplicates) (run `cargo clippy --fix --lib -p breakmock-rust --tests -- ` to apply 11 suggestions)
+warning: `breakmock-rust` (lib) generated 41 warnings (10 duplicates) (run `cargo clippy --fix --lib -p breakmock-rust -- ` to apply 30 suggestions)
+warning: this looks like an `else if` but the `else` is missing
+   --> src/streaming.rs:139:71
+    |
+139 | ...   _=>{if op!=0{opcode=op;deflated=rsv;fragmented.clear()}if let Err(reason)=check_fragment_size(fragmented.len(),data.len(),opc...
+    |                                                              ^
+    |
+    = note: to remove this lint, add the missing `else` or add a new line before the second `if`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#possible_missing_else
+    = note: `#[warn(clippy::possible_missing_else)]` on by default
+
+warning: this looks like an `else if` but the `else` is missing
+   --> src/streaming.rs:140:626
+    |
+140 | ...&&decoded.len()as u64>limit)||decoded.len()>64*1024*1024{break}if count==0||result.is_err()||consumed>=body.len(){break}}body=de...
+    |                                                                   ^
+    |
+    = note: to remove this lint, add the missing `else` or add a new line before the second `if`
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#possible_missing_else
+
+warning: manual implementation of `.is_multiple_of()`
+   --> src/streaming.rs:175:21
+    |
+175 |         if i > 0 && (raw.len() - i) % 3 == 0 {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `(raw.len() - i).is_multiple_of(3)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#manual_is_multiple_of
+    = note: `#[warn(clippy::manual_is_multiple_of)]` on by default
+
+warning: calling `as_bytes` after slicing a string
+   --> src/streaming.rs:299:28
+    |
+299 |     data.extend_from_slice(reason[..end].as_bytes());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `&reason.as_bytes()[..end]`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#sliced_string_as_bytes
+    = note: `#[warn(clippy::sliced_string_as_bytes)]` on by default
+
+warning: this `if` statement can be collapsed
+  --> src/main.rs:71:24
+   |
+71 |                   } else if p.extension().and_then(|s| s.to_str()) == Some("json") {
+   |  ________________________^
+72 | |                     if let Ok(data) = std::fs::read(&p) {
+73 | |                         if let Ok(text) = std::str::from_utf8(&data) {
+74 | |                             if let Ok(v) = breakmock_rust::utf16_json::parse(text) {
+...  |
+85 | |                 }
+   | |_________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+   = note: `#[warn(clippy::collapsible_if)]` on by default
+help: collapse nested if block
+   |
+71 ~                 } else if p.extension().and_then(|s| s.to_str()) == Some("json")
+72 ~                     && let Ok(data) = std::fs::read(&p) {
+73 |                         if let Ok(text) = std::str::from_utf8(&data) {
+...
+83 |                         }
+84 ~                     }
+   |
+
+warning: this `if` statement can be collapsed
+  --> src/main.rs:72:21
+   |
+72 | /                     if let Ok(data) = std::fs::read(&p) {
+73 | |                         if let Ok(text) = std::str::from_utf8(&data) {
+74 | |                             if let Ok(v) = breakmock_rust::utf16_json::parse(text) {
+75 | |                                 if let Some(breakmock_rust::utf16_json::Node::Array(m)) =
+...  |
+84 | |                     }
+   | |_____________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+72 ~                     if let Ok(data) = std::fs::read(&p)
+73 ~                         && let Ok(text) = std::str::from_utf8(&data) {
+74 |                             if let Ok(v) = breakmock_rust::utf16_json::parse(text) {
+...
+82 |                             }
+83 ~                         }
+   |
+
+warning: this `if` statement can be collapsed
+  --> src/main.rs:73:25
+   |
+73 | /                         if let Ok(text) = std::str::from_utf8(&data) {
+74 | |                             if let Ok(v) = breakmock_rust::utf16_json::parse(text) {
+75 | |                                 if let Some(breakmock_rust::utf16_json::Node::Array(m)) =
+76 | |                                     v.get("mappings")
+...  |
+83 | |                         }
+   | |_________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+73 ~                         if let Ok(text) = std::str::from_utf8(&data)
+74 ~                             && let Ok(v) = breakmock_rust::utf16_json::parse(text) {
+75 |                                 if let Some(breakmock_rust::utf16_json::Node::Array(m)) =
+...
+81 |                                 }
+82 ~                             }
+   |
+
+warning: this `if` statement can be collapsed
+   --> src/main.rs:233:21
+    |
+233 | /                     if let Some(required) = m["requiredScenarioState"].as_str() {
+234 | |                         if current != required {
+235 | |                             return false;
+236 | |                         }
+237 | |                     }
+    | |_____________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+233 ~                     if let Some(required) = m["requiredScenarioState"].as_str()
+234 ~                         && current != required {
+235 |                             return false;
+236 ~                         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/main.rs:244:9
+    |
+244 | /         if let Some(m) = &selected {
+245 | |             if let (Some(n), Some(next)) =
+246 | |                 (m["scenarioName"].as_str(), m["newScenarioState"].as_str())
+...   |
+250 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+244 ~         if let Some(m) = &selected
+245 ~             && let (Some(n), Some(next)) =
+246 |                 (m["scenarioName"].as_str(), m["newScenarioState"].as_str())
+247 |             {
+248 |                 s.scenarios.insert(n.into(), next.into());
+249 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/main.rs:313:9
+    |
+313 | /         if encoder.write_all(&response.body).is_ok() {
+314 | |             if let Ok(bytes) = encoder.finish() {
+315 | |                 response.body = bytes;
+316 | |                 response
+...   |
+323 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+313 ~         if encoder.write_all(&response.body).is_ok()
+314 ~             && let Ok(bytes) = encoder.finish() {
+315 |                 response.body = bytes;
+...
+321 |                     .push(("Content-Encoding".into(), "gzip".into()));
+322 ~             }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/main.rs:338:5
+    |
+338 | /     if let Some(m) = mapping {
+339 | |         if m.get("postServeActions").is_some() || m.get("serveEventListeners").is_some() {
+340 | |             tokio::spawn(breakmock_rust::admin_webhook::dispatch(
+341 | |                 req.clone(),
+...   |
+347 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+338 ~     if let Some(m) = mapping
+339 ~         && (m.get("postServeActions").is_some() || m.get("serveEventListeners").is_some()) {
+340 |             tokio::spawn(breakmock_rust::admin_webhook::dispatch(
+...
+345 |             ));
+346 ~         }
+    |
+
+warning: this `if` statement can be collapsed
+   --> src/main.rs:551:9
+    |
+551 | /         if !Path::new(name).components().any(|p| {
+552 | |             matches!(
+553 | |                 p,
+554 | |                 std::path::Component::ParentDir | std::path::Component::RootDir
+...   |
+560 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+556 ~         })
+557 ~             && let Ok(b) = std::fs::read(path) {
+558 |                 return Ok(b);
+559 ~             }
+    |
+
+warning: `breakmock-rust` (bin "breakmock-rust" test) generated 12 warnings (12 duplicates)
+warning: `breakmock-rust` (bin "breakmock-rust") generated 12 warnings (run `cargo clippy --fix --bin "breakmock-rust" -p breakmock-rust -- ` to apply 9 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.16s

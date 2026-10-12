@@ -1,0 +1,22 @@
+{
+  "go": {
+    "failed_suites": [
+      {
+        "suite": "diagnostics_differential.py",
+        "exit_code": 1
+      }
+    ],
+    "suites_passed": 18,
+    "suites_total": 19
+  },
+  "rust": {
+    "failed_suites": [
+      {
+        "suite": "diagnostics_differential.py",
+        "exit_code": 1
+      }
+    ],
+    "suites_passed": 18,
+    "suites_total": 19
+  }
+}

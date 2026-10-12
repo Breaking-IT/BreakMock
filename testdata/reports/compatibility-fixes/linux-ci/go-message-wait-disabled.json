@@ -1,0 +1,27 @@
+{
+  "comparison": "Exact disabled-journal error bodies after server-origin replacement",
+  "passed": 5,
+  "total": 5,
+  "results": [
+    {
+      "name": "disabled journal wait",
+      "pass": true
+    },
+    {
+      "name": "disabled journal wait-for-count",
+      "pass": true
+    },
+    {
+      "name": "disabled journal precedes negative count timeout=-1",
+      "pass": true
+    },
+    {
+      "name": "disabled journal precedes negative count timeout=0",
+      "pass": true
+    },
+    {
+      "name": "disabled journal precedes negative count timeout=1000",
+      "pass": true
+    }
+  ]
+}

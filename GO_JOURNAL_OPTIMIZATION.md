@@ -119,6 +119,11 @@ Instrumented throughput is excluded from all performance tables above.
 
 ## Compatibility and limits
 
+The results below describe the benchmark-time code. Subsequent
+[message-wait fixes](COMPATIBILITY_FIXES.md) remove the five Go wait failures and
+add negative-count coverage for both languages. The strict JVM-identity diagnostic
+remains failing; the benchmark measurements here were not rerun for those admin fixes.
+
 The full Go differential run has **no new failures** against the baseline. Gzip
 passes 99/99, templates 429/429 and admin 130/130. Unit/race tests and `go vet` pass.
 New tests cover wrapped journal storage, resizing, removal, reset, disable,

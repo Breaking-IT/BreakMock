@@ -1,0 +1,76 @@
+{
+  "reference": "WireMock 4.0.0-beta.40",
+  "comparison": "exact status line and body bytes",
+  "passed": 17,
+  "total": 17,
+  "results": [
+    {
+      "name": "209 'Custom Reason'",
+      "passed": true
+    },
+    {
+      "name": "209 ''",
+      "passed": true
+    },
+    {
+      "name": "209 'caf\u00e9'",
+      "passed": true
+    },
+    {
+      "name": "209 'line\\r\\nbreak'",
+      "passed": true
+    },
+    {
+      "name": "209 '\u6f22\u5b57'",
+      "passed": true
+    },
+    {
+      "name": "209 '\ud83d\ude42'",
+      "passed": true
+    },
+    {
+      "name": "209 'tab\\there'",
+      "passed": true
+    },
+    {
+      "name": "209 'control\\x01\\x7f'",
+      "passed": true
+    },
+    {
+      "name": "200 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "203 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "413 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "418 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "425 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "451 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "500 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "506 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "599 'ignored'",
+      "passed": true
+    }
+  ]
+}

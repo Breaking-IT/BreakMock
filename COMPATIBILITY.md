@@ -55,6 +55,9 @@ A strict diagnostic case remains failing: WireMock prints a JVM byte-array objec
 identity (`[B@...`) for a binary matcher mismatch. Identical requests to the same
 Java server produce different identities. The report preserves the failing
 comparison and repeated-Java evidence; it does not normalize this into a pass.
+The [message-wait fixes and Java self-comparison](COMPATIBILITY_FIXES.md) document
+the latest verification: both native implementations retain only this one failing
+case in the tested corpus, and unmodified Java also fails the exact self-comparison.
 
 The harness does not claim universal TCP/HTTP header order, chunk boundaries,
 Date values, HTTP/2 frames, scheduling jitter or random-output equivalence.
@@ -86,16 +89,16 @@ locale data can change between JDK releases.
   listener wrapper (enabled by the CLI). Embedding without it loses those details.
 - WireMock Cloud proprietary code and extensions such as gRPC/GraphQL are not included.
   Future test-data and chaos features require independent implementation.
-- Current v4 benchmarks establish lower memory use and faster no-journal throughput
-  for two small workloads. Journaled throughput is near parity, including a slower
-  template result. See `BENCHMARKS.md`; broader workloads remain unmeasured.
+- Runtime comparisons cover two small workloads. See `BENCHMARKS.md` for the latest
+  optimized Go/Rust results and their limits; broader workloads remain unmeasured.
 
 ## Results
 
 See the individual JSON reports for case-level inputs, failures and comparison
 rules. Suite counts describe test cases, not a percentage of WireMock coverage.
 
-Consolidated local run (2026-10-11):
+Consolidated local Go and Rust runs (2026-10-12), retained under
+`testdata/reports/compatibility-fixes/`:
 
 | Suite | Passing / total | Comparison |
 | --- | ---: | --- |
@@ -115,6 +118,9 @@ Consolidated local run (2026-10-11):
 | WebSocket/SSE | 51/51 + 2/2 | Exact frame/event bytes + separate lifecycle checks |
 | Status lines | 17/17 | Status-line and body bytes |
 | Streaming journals | 20/20 | JSON bytes with explicit scalar substitutions |
+| Message waits, enabled journal | 15/15 | Existing scalar substitutions; new error cases use exact bytes |
+| Message waits, disabled journal | 5/5 | Existing origin substitution; new precedence cases use exact bytes |
+| Concurrent journal | 16 invariants + 3 byte comparisons | Two exact admin responses; one with generated scalar substitutions |
 
 `go test -race ./...` and `go vet ./...` pass. The strict differential runner
 returns nonzero because the JVM-identity diagnostic remains a failure.

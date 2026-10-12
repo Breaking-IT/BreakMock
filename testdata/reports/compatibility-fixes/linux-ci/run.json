@@ -1,0 +1,262 @@
+{
+  "conclusion": "failure",
+  "headSha": "16eb3575b40ffbb0892f634401fa98791a0500ab",
+  "jobs": [
+    {
+      "completedAt": "2026-10-12T06:56:49Z",
+      "conclusion": "failure",
+      "databaseId": 114696706405,
+      "name": "rust",
+      "startedAt": "2026-10-12T06:52:55Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-12T06:52:58Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-12T06:52:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:52:59Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-10-12T06:52:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:00Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "number": 3,
+          "startedAt": "2026-10-12T06:52:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:00Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-java@v4",
+          "number": 4,
+          "startedAt": "2026-10-12T06:53:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:05Z",
+          "conclusion": "success",
+          "name": "Install zlib",
+          "number": 5,
+          "startedAt": "2026-10-12T06:53:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:05Z",
+          "conclusion": "success",
+          "name": "Check Rust formatting",
+          "number": 6,
+          "startedAt": "2026-10-12T06:53:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:51Z",
+          "conclusion": "success",
+          "name": "Test native Rust implementation",
+          "number": 7,
+          "startedAt": "2026-10-12T06:53:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:54:11Z",
+          "conclusion": "success",
+          "name": "Run Clippy",
+          "number": 8,
+          "startedAt": "2026-10-12T06:53:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:54:11Z",
+          "conclusion": "success",
+          "name": "Download pinned Java reference",
+          "number": 9,
+          "startedAt": "2026-10-12T06:54:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:56:45Z",
+          "conclusion": "failure",
+          "name": "Compare native Rust against Java WireMock",
+          "number": 10,
+          "startedAt": "2026-10-12T06:54:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:56:47Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 11,
+          "startedAt": "2026-10-12T06:56:45Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:56:47Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-java@v4",
+          "number": 21,
+          "startedAt": "2026-10-12T06:56:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:56:47Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 22,
+          "startedAt": "2026-10-12T06:56:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:56:47Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-12T06:56:47Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Breaking-IT/BreakMock/actions/runs/38214730011/job/114696706405"
+    },
+    {
+      "completedAt": "2026-10-12T06:55:45Z",
+      "conclusion": "failure",
+      "databaseId": 114696706560,
+      "name": "test",
+      "startedAt": "2026-10-12T06:52:55Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-12T06:52:59Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-12T06:52:56Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:01Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-10-12T06:52:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:02Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-go@v5",
+          "number": 3,
+          "startedAt": "2026-10-12T06:53:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:02Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-java@v4",
+          "number": 4,
+          "startedAt": "2026-10-12T06:53:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:10Z",
+          "conclusion": "success",
+          "name": "Run sudo apt-get update && sudo apt-get install -y zlib1g-dev",
+          "number": 5,
+          "startedAt": "2026-10-12T06:53:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:50Z",
+          "conclusion": "success",
+          "name": "Run go test -race ./...",
+          "number": 6,
+          "startedAt": "2026-10-12T06:53:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:53:57Z",
+          "conclusion": "success",
+          "name": "Run go vet ./...",
+          "number": 7,
+          "startedAt": "2026-10-12T06:53:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:54:36Z",
+          "conclusion": "success",
+          "name": "Build container",
+          "number": 8,
+          "startedAt": "2026-10-12T06:53:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:54:36Z",
+          "conclusion": "success",
+          "name": "Download pinned Java reference",
+          "number": 9,
+          "startedAt": "2026-10-12T06:54:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:41Z",
+          "conclusion": "failure",
+          "name": "Compare against Java WireMock",
+          "number": 10,
+          "startedAt": "2026-10-12T06:54:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:42Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 11,
+          "startedAt": "2026-10-12T06:55:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:42Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-java@v4",
+          "number": 20,
+          "startedAt": "2026-10-12T06:55:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:42Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-go@v5",
+          "number": 21,
+          "startedAt": "2026-10-12T06:55:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:42Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 22,
+          "startedAt": "2026-10-12T06:55:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-12T06:55:42Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-12T06:55:42Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/Breaking-IT/BreakMock/actions/runs/38214730011/job/114696706560"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/Breaking-IT/BreakMock/actions/runs/38214730011"
+}

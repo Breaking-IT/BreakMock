@@ -1,0 +1,46 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running unittests src/lib.rs (rust/target/debug/deps/breakmock_rust-a7b297f4bfab104f)
+
+running 28 tests
+test admin_json::tests::arbitrary_metadata_preserves_nulls_order_and_reserved_names ... ok
+test admin::tests::malformed_mapping_never_becomes_catch_all ... ok
+test admin_messaging::async_tests::negative_wait_count_errors_follow_timeout_and_journal_precedence ... ok
+test matcher::date::tests::locale_sensitive_meridiem ... ok
+test admin::journal_commit_tests::commit_order_and_cap_keep_evictions_owned_by_caller ... ok
+test matcher::multipart_binary_tests::preserves_binary_part_bytes ... ok
+test admin::tests::persistent_mapping_reset_and_delete ... ok
+test admin::journal_commit_tests::reduced_cap_and_disabled_journal_retire_without_mutating_remaining_entries ... ok
+test admin_messaging::pattern_tests::message_verification_matches_binary_and_initiating_request ... ok
+test diagnostics::tests::url_golden ... ok
+test admin_messaging::async_tests::disk_message_mappings_single_bulk_and_atomic_failure ... ok
+test admin::journal_commit_tests::prepared_event_preserves_owned_body_bytes_headers_and_mapping_snapshot ... ok
+test admin::tests::bounded_journal_keeps_newest_and_filters ... ok
+test utf16_json::tests::preserves_surrogates_without_reserving_valid_strings ... ok
+test utf16_json::tests::ordered_objects_arrays_and_decimal_scale ... ok
+test utf16_json::tests::rejects_malformed_unicode_and_json_without_panicking ... ok
+test raw_json::tests::surrogate_mapping_admin_and_runtime_differ ... ok
+test matcher::message_tests::java_messages ... ok
+test template::regression_tests::optimized_and_general_renderers_agree ... ok
+test template::regression_tests::quoted_helper_text_and_malformed_unicode_are_data ... ok
+test matcher::distance::tests::java_distances ... ok
+test template::regression_tests::json_mutation_uses_selected_paths_and_bounds_array ... ok
+test template::tests::basic ... ok
+test template::regression_tests::assignment_and_compilation_cache_are_request_local ... ok
+test admin_messaging::async_tests::wait_observes_future_event_and_wakes_all_waiters ... ok
+test admin_messaging::async_tests::wait_count_partial_timeout_and_existing_limit ... ok
+test matcher::tests::java_fixtures ... ok
+test template::dates::locale_period_tests::java_day_period_depends_on_locale_not_platform ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running unittests src/main.rs (rust/target/debug/deps/breakmock_rust-02bff1f4d2d9a016)
+
+running 5 tests
+test streaming::streaming_limits_tests::accumulated_fragments_are_bounded_before_append ... ok
+test transport::parser_tests::trailers_preserve_pipeline_boundary ... ok
+test transport::parser_tests::rejects_invalid_chunk_delimiter ... ok
+test transport::parser_tests::oversized_lengths_are_errors ... ok
+test streaming::streaming_limits_tests::channel_cleanup_unregisters_even_without_handshake ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

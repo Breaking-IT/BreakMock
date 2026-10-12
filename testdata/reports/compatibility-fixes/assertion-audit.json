@@ -1,0 +1,19 @@
+{
+  "baseline_commit": "cf6092c",
+  "files": {
+    "scripts/diagnostics_differential.py": {
+      "unchanged": true,
+      "sha256": "a1a3ac9681d2aeea5a42729db30d6d9a6a432fc71451a39fe1c8f4b0e2d6f783"
+    },
+    ".github/workflows/ci.yml": {
+      "unchanged": true,
+      "sha256": "586a6a4e184d2e67348c79d5895d6c45a1be74c96bfb1d108abb019f83b9dfca"
+    }
+  },
+  "message_wait": {
+    "original_seven_scenarios_unchanged": true,
+    "original_normalization_unchanged": true,
+    "original_status_body_timing_assertion_unchanged": true,
+    "added_cases": 11
+  }
+}
