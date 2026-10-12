@@ -15,7 +15,7 @@ func serveAdminAsset(w http.ResponseWriter, r *http.Request) bool {
 	p := strings.TrimPrefix(r.URL.Path, "/__admin/")
 	name := ""
 	switch p {
-	case "docs":
+	case "docs", "docs/":
 		name = "doc-index.html"
 	case "docs/swagger":
 		name = "swagger/wiremock-admin-api.json"
