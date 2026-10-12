@@ -52,6 +52,21 @@ A multi-stage Dockerfile is included. Its runtime is a native executable and CA
 certificates; no Java runtime is required. Mount writable `/data` if using admin
 persistence or recording persistence. The image runs as UID 65532.
 
+## Embedded TCP fault injection
+
+The Go executable can also run Toxiproxy with shared configuration and a native
+management API under `/__admin/toxiproxy` on the same HTTP listener. TCP proxies
+have their own configured listen addresses. This feature is opt-in:
+
+```sh
+./bin/breakmock --config examples/toxiproxy/breakmock.json
+```
+
+The example proxies port 8081 to BreakMock on port 8080 with downstream latency.
+See [Toxiproxy configuration and usage](TOXIPROXY.md) for API examples, CLI
+precedence, reset isolation and lifecycle. Runtime proxy changes are not
+persisted. MIT notices are retained and available through `--licenses`.
+
 ## WebSockets and SSE
 
 Open a WebSocket channel with an HTTP mapping and attach message actions:
@@ -120,4 +135,5 @@ retains Raymond's MIT license and documents local changes.
 
 BreakMock is independent and is not affiliated with or endorsed by WireMock.
 WireMock Cloud's proprietary implementation is not included. Additional test data
-and chaos functionality will require independent implementation.
+functionality and HTTP chaos extensions require independent implementation;
+TCP fault injection is provided by the embedded MIT-licensed Toxiproxy.

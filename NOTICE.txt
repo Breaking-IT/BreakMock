@@ -13,3 +13,8 @@ BreakMock is an independent project and is not endorsed by WireMock.
 Historical fixtures retain their original version-specific provenance.
 Bundled admin assets retain upstream and third-party license files.
 The adapted WebSocket runtime retains the Gorilla WebSocket BSD license.
+
+BreakMock embeds Toxiproxy v2.12.0, Copyright (c) 2014 Shopify,
+under the MIT License. The original notice and full license are retained in
+third_party/toxiproxy/LICENSE and the standalone binary's --licenses output.
+Runtime dependency license texts are retained in third_party/NOTICES.txt.

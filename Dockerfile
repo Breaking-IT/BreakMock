@@ -8,6 +8,9 @@ RUN CGO_ENABLED=1 go build -tags netgo,osusergo -trimpath -ldflags="-s -w -linkm
 FROM scratch
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /breakmock /breakmock
+COPY --from=build /src/LICENSE /usr/share/licenses/breakmock/LICENSE
+COPY --from=build /src/NOTICE.txt /usr/share/licenses/breakmock/NOTICE.txt
+COPY --from=build /src/third_party /usr/share/licenses/breakmock/third_party
 COPY --from=build --chown=65532:65532 /data /data
 USER 65532:65532
 WORKDIR /data

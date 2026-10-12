@@ -6,56 +6,89 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	bm "github.com/Breaking-IT/BreakMock"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
+	"sync"
+	"syscall"
 	"time"
+
+	bm "github.com/Breaking-IT/BreakMock"
 )
 
 func main() {
-	port := flag.Int("port", 8080, "HTTP listen port")
-	host := flag.String("bind-address", "0.0.0.0", "Listen address")
-	root := flag.String("root-dir", ".", "Directory containing mappings and __files")
-	global := flag.Bool("global-response-templating", false, "Apply response templates to every stub")
-	local := flag.Bool("local-response-templating", true, "Enable opt-in response-template transformer")
-	disableLogging := flag.Bool("disable-request-logging", false, "Disable request logging")
-	disableTemplates := flag.Bool("disable-response-templating", false, "Disable response templating")
-	noJournal := flag.Bool("no-request-journal", false, "Disable request journal")
-	maxJournal := flag.Int("max-request-journal-entries", 0, "Maximum request journal entries (0 means unlimited)")
-	wsIdle := flag.Int64("websocket-idle-timeout", 300000, "WebSocket idle timeout in milliseconds")
-	wsText := flag.Int64("websocket-max-text-message-size", 10485760, "Maximum WebSocket text message bytes")
-	wsBinary := flag.Int64("websocket-max-binary-message-size", 10485760, "Maximum WebSocket binary message bytes")
-	version := flag.Bool("version", false, "Print version")
-	flag.Parse()
-	if *version {
+	c, version, err := parseConfig(os.Args[1:], os.Stderr)
+	if errors.Is(err, flag.ErrHelp) {
+		return
+	}
+	if err != nil {
+		log.Print(err)
+		os.Exit(1)
+	}
+	if c.Licenses {
+		fmt.Print(bm.LicenseNotices())
+		return
+	}
+	if version {
 		fmt.Println("BreakMock 0.1.0-dev (WireMock 4.0.0-beta.40 compatibility target)")
 		return
 	}
-	s, e := bm.NewServer(bm.Options{WebSocketOptionsConfigured: true, WebSocketIdleTimeout: *wsIdle, WebSocketMaxTextMessageSize: *wsText, WebSocketMaxBinaryMessageSize: *wsBinary, RootDir: *root, GlobalTemplating: *global, DisableTemplating: *disableTemplates || (!*local && !*global), DisableRequestLogging: *disableLogging, DisableJournal: *noJournal, MaxJournalEntries: *maxJournal})
-	if e != nil {
-		log.Print(e)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	if err := run(ctx, c); err != nil {
+		log.Print(err)
 		os.Exit(1)
 	}
-	addr := net.JoinHostPort(*host, strconv.Itoa(*port))
-	log.Printf("BreakMock listening on %s", addr)
+}
+
+func run(ctx context.Context, c configuration) (err error) {
+	s, err := bm.NewServer(c.options())
+	if err != nil {
+		return err
+	}
+	defer func() { err = errors.Join(err, s.Close()) }()
+	addr := net.JoinHostPort(c.Server.BindAddress, strconv.Itoa(c.Server.Port))
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	httpServer := &http.Server{Handler: s}
-	s.Store.SetShutdownHandler(func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := httpServer.Shutdown(ctx); err != nil {
-			log.Print(err)
+	log.Printf("BreakMock listening on %s", listener.Addr())
+	return serve(ctx, s, listener, !c.Server.NoJournal)
+}
+
+// serve waits for graceful HTTP shutdown to finish before returning, so run can
+// close embedded proxies only after in-flight management requests have finished.
+func serve(ctx context.Context, s *bm.Server, listener net.Listener, journal bool) error {
+	defer listener.Close()
+	httpServer := &http.Server{Handler: s, ConnContext: bm.HeaderOrderConnContext}
+	requested := make(chan struct{})
+	finished := make(chan struct{})
+	var once sync.Once
+	requestShutdown := func() { once.Do(func() { close(requested) }) }
+	s.Store.SetShutdownHandler(requestShutdown)
+	defer s.Store.SetShutdownHandler(nil)
+	var shutdownErr error
+	go func() {
+		defer close(finished)
+		select {
+		case <-ctx.Done():
+		case <-requested:
 		}
-	})
-	listener = bm.WrapWireListener(listener, !*noJournal)
-	httpServer.ConnContext = bm.HeaderOrderConnContext
-	if err := httpServer.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatal(err)
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		shutdownErr = httpServer.Shutdown(shutdownCtx)
+		if shutdownErr != nil {
+			shutdownErr = errors.Join(shutdownErr, httpServer.Close())
+		}
+	}()
+	serveErr := httpServer.Serve(bm.WrapWireListener(listener, journal))
+	requestShutdown()
+	<-finished
+	if errors.Is(serveErr, http.ErrServerClosed) {
+		serveErr = nil
 	}
+	return errors.Join(serveErr, shutdownErr)
 }

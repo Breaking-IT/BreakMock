@@ -2,7 +2,7 @@
 """Build and run isolated differential suites against pinned Java WireMock."""
 from oracle import identify
 import argparse,hashlib,json,pathlib,subprocess,tempfile,time,urllib.request,shutil,sys,os
-p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--candidate-language',choices=['go','rust'],default='go');p.add_argument('--output-dir');p.add_argument('--suite',action='append');a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
+p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--candidate-language',choices=['go','rust'],default='go');p.add_argument('--output-dir');p.add_argument('--suite',action='append');p.add_argument('--candidate-arg',action='append',default=[],help='Extra candidate startup argument, repeatable; use --candidate-arg=--flag for flags');a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
 pin=json.loads((root/'testdata/reference.json').read_text())
 if hashlib.sha256(pathlib.Path(a.jar).read_bytes()).hexdigest()!=pin['jar_sha256']:raise SystemExit('Reference JAR does not match testdata/reference.json SHA-256')
 if a.candidate_language=='rust':
@@ -26,6 +26,7 @@ for suite,disabled_journal in [(suite,False) for suite in suites]+[('message_wai
     if suite=='fixtures_differential.py':shutil.copytree(root/'testdata/upstream/remoteloader',files)
     else:files.mkdir()
     cmd=['java','-jar',str(pathlib.Path(a.jar).resolve()),'--port',str(port),'--root-dir',str(files),'--disable-banner'] if kind=='java' else [str(binary),'--port',str(port),'--root-dir',str(files),'--bind-address','127.0.0.1']
+    if kind!='java':cmd+=a.candidate_arg
     if disabled_journal:cmd+=['--no-request-journal']
     if suite=='journal_concurrency_differential.py':cmd+=['--max-request-journal-entries','64']
     if port in (18113,18114):cmd+=['--websocket-idle-timeout','200','--websocket-max-text-message-size','8','--websocket-max-binary-message-size','12']
@@ -50,5 +51,5 @@ for suite,disabled_journal in [(suite,False) for suite in suites]+[('message_wai
     proc.terminate()
     try:proc.wait(timeout=10)
     except subprocess.TimeoutExpired:proc.kill();proc.wait()
-(output/'suites.json').write_text(json.dumps({'reference':'4.0.0-beta.40','candidate_language':a.candidate_language,'suites':results},indent=2)+'\n')
+(output/'suites.json').write_text(json.dumps({'reference':'4.0.0-beta.40','candidate_language':a.candidate_language,'candidate_args':a.candidate_arg,'suites':results},indent=2)+'\n')
 print(json.dumps(results,indent=2));raise SystemExit(any(r['exit_code']for r in results))

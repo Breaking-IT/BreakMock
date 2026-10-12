@@ -34,6 +34,7 @@ type Options struct {
 	DisableTemplating             bool
 	DisableJournal                bool
 	MaxJournalEntries             int
+	Toxiproxy                     ToxiproxyOptions
 }
 type Server struct {
 	Store      *Store
@@ -41,6 +42,7 @@ type Server struct {
 	admin      http.Handler
 	client     *http.Client
 	scenarioMu sync.Mutex
+	toxiproxy  *embeddedToxiproxy
 }
 
 func NewServer(options Options) (*Server, error) {
@@ -54,6 +56,13 @@ func NewServer(options Options) (*Server, error) {
 	s.admin = NewAdminHandler(store, options.RootDir)
 	if err := s.LoadMappings(); err != nil {
 		return nil, err
+	}
+	if options.Toxiproxy.Enabled {
+		var err error
+		s.toxiproxy, err = newEmbeddedToxiproxy(options.Toxiproxy)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return s, nil
 }
@@ -102,6 +111,10 @@ func (s *Server) LoadMappings() error {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	headerOrder := RequestHeaderOrder(r)
+	if s.toxiproxy != nil && (r.URL.Path == toxiproxyAPIPrefix || strings.HasPrefix(r.URL.Path, toxiproxyAPIPrefix+"/")) {
+		s.toxiproxy.handler.ServeHTTP(w, r)
+		return
+	}
 	if r.URL.Path == "/__admin" || strings.HasPrefix(r.URL.Path, "/__admin/") {
 		s.admin.ServeHTTP(w, r)
 		return

@@ -1,0 +1,27 @@
+{
+  "server": {
+    "bindAddress": "127.0.0.1",
+    "port": 8080,
+    "rootDir": ".",
+    "maxRequestJournalEntries": 1000
+  },
+  "toxiproxy": {
+    "enabled": true,
+    "proxies": [
+      {
+        "name": "mock-api",
+        "listen": "127.0.0.1:8081",
+        "upstream": "127.0.0.1:8080",
+        "toxics": [
+          {
+            "name": "response-latency",
+            "type": "latency",
+            "stream": "downstream",
+            "toxicity": 1.0,
+            "attributes": { "latency": 100, "jitter": 0 }
+          }
+        ]
+      }
+    ]
+  }
+}
