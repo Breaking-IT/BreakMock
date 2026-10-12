@@ -217,7 +217,7 @@ async fn handle(req: &Request, state: &Arc<Mutex<State>>) -> Response {
             .push(("X-BreakMock-Language".into(), "rust".into()));
         return r;
     }
-    let (mapping, root, global, delay, raw_body) = {
+    let (mapping, root, global, delay, raw_body, journal_enabled) = {
         let mut s = state.lock().unwrap();
         let mut candidates: Vec<_> = s
             .mappings
@@ -260,6 +260,7 @@ async fn handle(req: &Request, state: &Arc<Mutex<State>>) -> Response {
                 s.global_templating,
                 s.settings["fixedDelay"].as_u64().unwrap_or(0),
                 raw,
+                !s.no_journal,
             )
         }
     };
@@ -321,9 +322,18 @@ async fn handle(req: &Request, state: &Arc<Mutex<State>>) -> Response {
             }
         }
     }
-    let event_id = {
-        let mut s = state.lock().unwrap();
-        admin::record(req, &response, mapping.as_ref(), &mut s)
+    let event_id = if journal_enabled {
+        // JSON construction and recursive eviction drops must not serialize all
+        // serving tasks behind the shared state mutex. Commit remains synchronous
+        // so admin reads and webhooks see the event before this request completes.
+        let prepared = admin::prepare_event(req, &response, mapping.as_ref());
+        let committed = {
+            let mut s = state.lock().unwrap();
+            admin::commit_event(prepared, &mut s)
+        };
+        committed.into_event_id()
+    } else {
+        String::new()
     };
     if let Some(m) = mapping {
         if m.get("postServeActions").is_some() || m.get("serveEventListeners").is_some() {

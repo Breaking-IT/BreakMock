@@ -380,15 +380,36 @@ pub fn handle(req: &Request, state: &mut State) -> Option<Response> {
     };
     Some(out)
 }
-pub fn record(
-    req: &Request,
-    response: &Response,
-    mapping: Option<&Value>,
-    state: &mut State,
-) -> String {
-    if state.no_journal {
-        return String::new();
+/// A fully owned journal entry, constructed without accessing shared server state.
+/// Prepare outside the state mutex; commit order determines journal order.
+pub struct PreparedEvent {
+    event_id: String,
+    event: Value,
+}
+
+/// Owns values removed from the journal so their recursive destruction can happen
+/// after the caller releases the state mutex. A normal bounded insertion evicts
+/// at most one value and does not allocate an eviction collection.
+pub struct JournalCommit {
+    event_id: String,
+    retired: Option<Value>,
+    excess: Vec<Value>,
+}
+impl JournalCommit {
+    /// Call after releasing the state guard, including when no event was inserted.
+    pub fn into_event_id(self) -> String {
+        let Self {
+            event_id,
+            retired,
+            excess,
+        } = self;
+        drop(retired);
+        drop(excess);
+        event_id
     }
+}
+
+pub fn prepare_event(req: &Request, response: &Response, mapping: Option<&Value>) -> PreparedEvent {
     let now = chrono::Utc::now();
     let mut headers = serde_json::Map::new();
     for (k, v) in &req.headers {
@@ -432,11 +453,52 @@ pub fn record(
         event["subEvents"] = json!([{"type":"REQUEST_NOT_MATCHED","timeOffsetNanos":0,"data":{"status":404,"contentType":"text/plain","report":String::from_utf8_lossy(&response.body)}}]);
     }
     let event_id = event["id"].as_str().unwrap().to_string();
-    state.requests.push_front(event);
-    if state.journal_limit > 0 {
-        state.requests.truncate(state.journal_limit);
+    PreparedEvent { event_id, event }
+}
+
+/// Insert an already prepared entry under the state mutex. The returned owner must
+/// be consumed outside that mutex so evicted bodies and mappings are freed there.
+pub fn commit_event(prepared: PreparedEvent, state: &mut State) -> JournalCommit {
+    let PreparedEvent { event_id, event } = prepared;
+    if state.no_journal {
+        return JournalCommit {
+            event_id: String::new(),
+            retired: Some(event),
+            excess: Vec::new(),
+        };
     }
-    event_id
+    state.requests.push_front(event);
+    let mut retired = None;
+    let mut excess = Vec::new();
+    if state.journal_limit > 0 && state.requests.len() > state.journal_limit {
+        retired = state.requests.pop_back();
+        // Normally the invariant requires just one pop. Also handle a limit that
+        // was reduced after entries were recorded, without dropping under lock.
+        while state.requests.len() > state.journal_limit {
+            if let Some(entry) = state.requests.pop_back() {
+                excess.push(entry);
+            }
+        }
+    }
+    JournalCommit {
+        event_id,
+        retired,
+        excess,
+    }
+}
+
+/// Convenience wrapper for callers that already exclusively own their State.
+/// Shared-state request handling should prepare, commit, and dispose separately.
+pub fn record(
+    req: &Request,
+    response: &Response,
+    mapping: Option<&Value>,
+    state: &mut State,
+) -> String {
+    if state.no_journal {
+        return String::new();
+    }
+    commit_event(prepare_event(req, response, mapping), state).into_event_id()
 }
 
 pub(crate) fn logged_request(v: &Value) -> Request {
@@ -734,5 +796,124 @@ mod tests {
             serde_json::from_slice::<Value>(&response.body).unwrap()["count"],
             1
         );
+    }
+}
+
+#[cfg(test)]
+mod journal_commit_tests {
+    use super::*;
+
+    fn prepared(url: &str) -> PreparedEvent {
+        prepare_event(
+            &Request {
+                method: "GET".into(),
+                url: url.into(),
+                ..Default::default()
+            },
+            &Response::new(200, b"response".to_vec()),
+            Some(&json!({"response":{"status":200}})),
+        )
+    }
+
+    #[test]
+    fn commit_order_and_cap_keep_evictions_owned_by_caller() {
+        let mut state = State {
+            journal_limit: 2,
+            ..Default::default()
+        };
+        let first = prepared("/first-prepared");
+        let second = prepared("/second-prepared");
+        let third = prepared("/third-prepared");
+        // Preparation order need not match completion/commit order.
+        commit_event(second, &mut state).into_event_id();
+        commit_event(first, &mut state).into_event_id();
+        let commit = commit_event(third, &mut state);
+        assert_eq!(state.requests.len(), 2);
+        assert_eq!(state.requests[0]["request"]["url"], "/third-prepared");
+        assert_eq!(state.requests[1]["request"]["url"], "/first-prepared");
+        assert_eq!(
+            commit.retired.as_ref().unwrap()["request"]["url"],
+            "/second-prepared"
+        );
+        assert_eq!(
+            commit.excess.capacity(),
+            0,
+            "ordinary eviction allocates no overflow collection"
+        );
+        assert_eq!(
+            commit.into_event_id(),
+            state.requests[0]["id"].as_str().unwrap()
+        );
+    }
+
+    #[test]
+    fn reduced_cap_and_disabled_journal_retire_without_mutating_remaining_entries() {
+        let mut state = State::default();
+        for path in ["/one", "/two", "/three", "/four"] {
+            commit_event(prepared(path), &mut state).into_event_id();
+        }
+        state.journal_limit = 1;
+        let commit = commit_event(prepared("/five"), &mut state);
+        assert_eq!(state.requests.len(), 1);
+        assert_eq!(commit.retired.as_ref().unwrap()["request"]["url"], "/one");
+        assert_eq!(commit.excess.len(), 3);
+        commit.into_event_id();
+        state.no_journal = true;
+        let commit = commit_event(prepared("/discarded"), &mut state);
+        assert!(commit.event_id.is_empty());
+        assert_eq!(
+            commit.retired.as_ref().unwrap()["request"]["url"],
+            "/discarded"
+        );
+        assert_eq!(state.requests[0]["request"]["url"], "/five");
+        assert!(commit.into_event_id().is_empty());
+    }
+
+    #[test]
+    fn prepared_event_preserves_owned_body_bytes_headers_and_mapping_snapshot() {
+        let mut req = Request {
+            method: "POST".into(),
+            url: "/journal?q=one&q=two".into(),
+            headers: vec![
+                ("Z-First".into(), "z".into()),
+                ("A-Second".into(), "a".into()),
+                ("Cookie".into(), "session=abc".into()),
+                (
+                    "Content-Type".into(),
+                    "application/x-www-form-urlencoded".into(),
+                ),
+            ],
+            body: b"field=a&field=b".to_vec(),
+            ..Default::default()
+        };
+        let mut response = Response::new(201, vec![0, 255, 128, 65]);
+        response.headers = vec![
+            ("Z-Response".into(), "z".into()),
+            ("A-Response".into(), "a".into()),
+        ];
+        let mut mapping = json!({"id":"11111111-1111-4111-8111-111111111111","request":{"urlPath":"/journal"},"response":{"status":201},"metadata":{"z":1,"a":null}});
+        let prepared = prepare_event(&req, &response, Some(&mapping));
+        let wire = crate::java_json(&prepared.event);
+        req.body.fill(b'x');
+        response.body.fill(42);
+        mapping["metadata"]["z"] = json!(99);
+        let mut state = State::default();
+        commit_event(prepared, &mut state).into_event_id();
+        let event = &state.requests[0];
+        assert_eq!(crate::java_json(event).as_bytes(), wire.as_bytes());
+        assert_eq!(event["request"]["body"], "field=a&field=b");
+        assert_eq!(event["response"]["bodyAsBase64"], "AP+AQQ==");
+        assert_eq!(event["request"]["cookies"]["session"], "abc");
+        assert_eq!(
+            event["request"]["queryParams"]["q"]["values"],
+            json!(["one", "two"])
+        );
+        assert_eq!(
+            event["request"]["formParams"]["field"]["values"],
+            json!(["a", "b"])
+        );
+        assert_eq!(event["stubMapping"]["metadata"]["z"], 1);
+        assert!(wire.find("\"Z-First\"").unwrap() < wire.find("\"A-Second\"").unwrap());
+        assert!(wire.find("\"Z-Response\"").unwrap() < wire.find("\"A-Response\"").unwrap());
     }
 }
