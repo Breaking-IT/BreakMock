@@ -30,6 +30,9 @@ func TestConfigDefaultsAndExplicitOverrides(t *testing.T) {
 	if err != nil || version {
 		t.Fatalf("parse: %v %v", version, err)
 	}
+	if !c.Toxiproxy.Enabled || len(c.Toxiproxy.Proxies) != 0 {
+		t.Fatalf("default API must be available with no proxy listeners: %+v", c.Toxiproxy)
+	}
 	if !reflect.DeepEqual(c, defaults()) {
 		t.Fatalf("defaults changed: %+v", c)
 	}

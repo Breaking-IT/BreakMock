@@ -34,9 +34,9 @@ jobs:
       - name: Compare against Java WireMock
         id: go_compatibility
         run: python3 scripts/verify.py --jar /tmp/wiremock.jar
-      - name: Compare against Java with embedded Toxiproxy enabled
+      - name: Compare against Java with embedded Toxiproxy disabled
         if: ${{ !cancelled() && steps.go_compatibility.outcome != 'skipped' }}
-        run: python3 scripts/verify.py --jar /tmp/wiremock.jar --candidate-arg=--enable-toxiproxy --output-dir testdata/reports/toxiproxy/compatibility-enabled
+        run: python3 scripts/verify.py --jar /tmp/wiremock.jar --candidate-arg=--enable-toxiproxy=false --output-dir testdata/reports/toxiproxy/compatibility-disabled
       - uses: actions/upload-artifact@v4
         if: always()
         with:

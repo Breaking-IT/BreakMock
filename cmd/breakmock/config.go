@@ -35,7 +35,7 @@ type configuration struct {
 }
 
 func defaults() configuration {
-	return configuration{Server: serverConfig{Port: 8080, BindAddress: "0.0.0.0", RootDir: ".", LocalTemplating: true, WSIdle: 300000, WSText: 10485760, WSBinary: 10485760}}
+	return configuration{Toxiproxy: bm.ToxiproxyOptions{Enabled: true}, Server: serverConfig{Port: 8080, BindAddress: "0.0.0.0", RootDir: ".", LocalTemplating: true, WSIdle: 300000, WSText: 10485760, WSBinary: 10485760}}
 }
 
 func configFlags(c *configuration, output io.Writer) (*flag.FlagSet, *string, *bool) {

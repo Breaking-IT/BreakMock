@@ -5,10 +5,16 @@ for TCP fault injection. One process owns the WireMock-compatible HTTP server,
 its administration API, the Toxiproxy management API, and configured TCP proxies.
 There is no second executable or separate Toxiproxy management port.
 
-Toxiproxy is opt-in. Existing invocations keep their current behavior; enable it
-with `--enable-toxiproxy` or `"toxiproxy": {"enabled": true}` in a configuration
-file. WireMock mappings, response templates, request journals and administration
-remain separate from proxy management.
+The CLI exposes the management API by default, with an empty proxy collection.
+It creates no TCP proxy listeners and applies no bandwidth, delay or connection
+faults until proxies and toxics are configured. Requests sent directly to
+BreakMock's HTTP port do not pass through Toxiproxy. To inject network faults,
+point your application at a configured proxy's listen port.
+
+Set `--enable-toxiproxy=false` or `"toxiproxy": {"enabled": false}` to disable
+the extension entirely, including its additional admin namespace. WireMock
+mappings, response templates, journals and other admin routes retain their
+existing behavior.
 
 ## Run the example
 
@@ -54,6 +60,67 @@ its `toxicity` probability is not an HTTP request error percentage, especially
 when clients reuse connections. HTTP response statuses and bodies belong in
 BreakMock mappings.
 
+## Chaos testing recipes
+
+Start BreakMock normally and create a proxy when you need network faults:
+
+```sh
+./bin/breakmock --port 8080 --bind-address 127.0.0.1
+```
+
+In another terminal, create an initially fault-free proxy to the mock server:
+
+```sh
+curl -X POST http://127.0.0.1:8080/__admin/toxiproxy/proxies \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"chaos","listen":"127.0.0.1:8666","upstream":"127.0.0.1:8080","enabled":true}'
+```
+
+Load your usual WireMock mappings on port 8080 and configure the application
+under test to call port 8666. Direct traffic to port 8080 remains unaffected.
+Creating a proxy adds TCP forwarding; it imposes no artificial bandwidth limit
+or delay until a toxic is added. The proxy can also target an external TCP
+service, such as a database, rather than BreakMock.
+
+Add one scenario at a time by POSTing its JSON body to
+`/__admin/toxiproxy/proxies/chaos/toxics`:
+
+| Scenario | Toxic JSON | What to check |
+| --- | --- | --- |
+| Latency and jitter | `{"name":"fault","type":"latency","stream":"downstream","attributes":{"latency":200,"jitter":50}}` | Deadlines and retries under variable delay (milliseconds) |
+| Slow download | `{"name":"fault","type":"bandwidth","stream":"downstream","attributes":{"rate":64}}` | Streaming and backpressure at 64 KB/s |
+| Slow upload | `{"name":"fault","type":"bandwidth","stream":"upstream","attributes":{"rate":32}}` | Upload handling at 32 KB/s |
+| Stalled response | `{"name":"fault","type":"timeout","stream":"downstream","attributes":{"timeout":1000}}` | Dropped response data followed by connection closure after 1000 ms |
+| Connection reset | `{"name":"fault","type":"reset_peer","stream":"downstream","attributes":{"timeout":0}}` | Immediate TCP reset and recovery |
+| Interrupted response | `{"name":"fault","type":"limit_data","stream":"downstream","attributes":{"bytes":1024}}` | Connection closure after 1024 bytes in that direction |
+
+For example:
+
+```sh
+curl -X POST http://127.0.0.1:8080/__admin/toxiproxy/proxies/chaos/toxics \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"fault","type":"bandwidth","stream":"downstream","toxicity":1,"attributes":{"rate":64}}'
+
+# Remove this fault while keeping the proxy available.
+curl -X DELETE http://127.0.0.1:8080/__admin/toxiproxy/proxies/chaos/toxics/fault
+
+# Stop proxy forwarding and close its connections/listener.
+curl -X POST http://127.0.0.1:8080/__admin/toxiproxy/proxies/chaos \
+  -H 'Content-Type: application/json' -d '{"enabled":false}'
+
+# Remove the proxy when the scenario is finished.
+curl -X DELETE http://127.0.0.1:8080/__admin/toxiproxy/proxies/chaos
+```
+
+`upstream` means client to target; `downstream` means target to client. Multiple
+toxics can be combined, but remove the previous `fault` before using the next
+recipe with the same name. `toxicity` defaults to 1; a value such as 0.1 selects
+connections/stream links probabilistically, not exactly 10% of HTTP requests.
+Connection pooling therefore affects observed fault frequency. Network faults
+operate on TCP bytes, including HTTP headers or TLS records; a 1024-byte limit
+is not a 1024-byte application response-body limit. Use WireMock mappings for
+application-level error statuses such as HTTP 500.
+
 ## Shared configuration
 
 `--config FILE` reads one JSON object with `server` and `toxiproxy` sections.
@@ -86,7 +153,7 @@ The omitted default `.` resolves there too. An explicit `--root-dir` resolves
 relative to the process working directory, as it did before configuration files
 were supported.
 
-`toxiproxy.enabled` defaults to `false`. `toxiproxy.proxies` is an optional array;
+`toxiproxy.enabled` defaults to `true` in the CLI. `toxiproxy.proxies` is an optional array;
 each element requires `name`, `listen` and `upstream`, accepts `enabled` (default
 `true`), and optionally contains a `toxics` array using native Toxiproxy toxic
 objects. A disabled component starts no proxies, even when its array is present.
@@ -128,7 +195,8 @@ The API is unauthenticated, like the existing WireMock admin API; the example
 binds management and proxy listeners to loopback. Bind addresses are configured
 separately for the HTTP server and each proxy.
 
-Go applications embedding `breakmock.NewServer` pass `Options.Toxiproxy` and must
+Go applications embedding `breakmock.NewServer` explicitly pass
+`Options.Toxiproxy` with `Enabled: true` (the library zero value is disabled) and must
 call `Server.Close()` after stopping their HTTP server to release proxy resources.
 The CLI handles that lifecycle automatically.
 

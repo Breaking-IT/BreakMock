@@ -127,14 +127,24 @@ def main():
     with EchoServer(('127.0.0.1', 0), Echo) as echo:
         threading.Thread(target=echo.serve_forever, daemon=True).start()
         upstream = '127.0.0.1:' + str(echo.server_address[1])
-        with tempfile.TemporaryDirectory(prefix='breakmock-toxi-disabled-') as directory:
+        with tempfile.TemporaryDirectory(prefix='breakmock-toxi-default-') as directory:
             config = {'server': {'port': port(), 'bindAddress': '127.0.0.1', 'rootDir': directory}}
+            with running(binary, directory, config) as (_, base):
+                assert api(base, '/proxies') == {}, 'default must create no proxy listeners'
+                call(base, '/__admin/mappings', 'POST', {'request': {'method': 'GET', 'url': '/direct'},
+                     'response': {'status': 200, 'body': 'ordinary mock response'}})
+                assert call(base, '/direct') == (200, b'ordinary mock response')
+                assert api(base, '/proxies') == {}, 'ordinary requests must not create proxies'
+                passed('default management API available; no proxies or toxics active')
+
+        with tempfile.TemporaryDirectory(prefix='breakmock-toxi-disabled-') as directory:
+            config = {'server': {'port': port(), 'bindAddress': '127.0.0.1', 'rootDir': directory}, 'toxiproxy': {'enabled': False}}
             with running(binary, directory, config) as (_, base):
                 legacy = call(base, '/__admin/toxiproxy/proxies')
                 assert legacy[0] == 404, legacy
                 if args.reference:
                     assert legacy == call(args.reference, '/__admin/toxiproxy/proxies'), 'disabled route differs from Java bytes'
-                passed('extension disabled by default; legacy admin route preserved')
+                passed('explicitly disabled extension preserves legacy admin route')
 
         with tempfile.TemporaryDirectory(prefix='breakmock-toxi-enabled-') as directory:
             http_port, echo_port, http_proxy_port = port(), port(), port()

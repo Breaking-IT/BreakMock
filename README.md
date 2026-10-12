@@ -4,7 +4,8 @@ A Go implementation of WireMock-style HTTP mocking, WebSockets, Server-Sent Even
 response templating, and administration. Built by Breaking-IT as a foundation for API simulation, test data,
 and controlled failures.
 
-**Implementation choice: Go.** Go is the maintained implementation for all new
+**Implementation choice: Go.** Development continues on `main`. Go is the
+maintained implementation for all new
 features, optimizations and releases, including embedded Toxiproxy. The Rust
 prototype is retired and excluded from CI. Its source and comparison reports
 remain as historical reference; see [the measured comparison](GO_JOURNAL_OPTIMIZATION.md).
@@ -50,15 +51,20 @@ persistence or recording persistence. The image runs as UID 65532.
 
 ## Embedded TCP fault injection
 
-The Go executable can also run Toxiproxy with shared configuration and a native
-management API under `/__admin/toxiproxy` on the same HTTP listener. TCP proxies
-have their own configured listen addresses. This feature is opt-in:
+The Go executable includes Toxiproxy with shared configuration and a management
+API available by default under `/__admin/toxiproxy` on the same HTTP listener.
+No proxies or faults are created by default. Bandwidth and connection faults
+affect only traffic routed through a proxy you configure; direct mock requests
+keep their normal behavior. To start a configured chaos scenario:
 
 ```sh
 ./bin/breakmock --config examples/toxiproxy/breakmock.json
 ```
 
 The example proxies port 8081 to BreakMock on port 8080 with downstream latency.
+Use latency/jitter, bandwidth limits, timeouts, connection resets and byte limits
+to test retries, deadlines, slow downloads and interrupted responses. See the
+[chaos testing recipes](TOXIPROXY.md#chaos-testing-recipes).
 See [Toxiproxy configuration and usage](TOXIPROXY.md) for API examples, CLI
 precedence, reset isolation and lifecycle. Runtime proxy changes are not
 persisted. MIT notices are retained and available through `--licenses`.
