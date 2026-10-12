@@ -102,6 +102,14 @@ func adminJSONValue(b *bytes.Buffer, v any, depth int, context string, order *ad
 		b.WriteByte('}')
 		return nil
 	}
+	switch x := v.(type) {
+	case journalText:
+		adminJSONString(b, x.String())
+		return nil
+	case journalBase64:
+		adminJSONString(b, x.String())
+		return nil
+	}
 	rv := reflect.ValueOf(v)
 	if rv.IsValid() && (rv.Kind() == reflect.Slice || rv.Kind() == reflect.Array) {
 		if data, ok := v.([]byte); ok {

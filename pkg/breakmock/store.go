@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -247,6 +248,25 @@ func (s *Store) ResetRequests() {
 }
 func (s *Store) Record(r Request, m Mapping, status int) { s.RecordServed(r, m, status, nil, nil) }
 func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders http.Header, responseBody []byte, responseHeaderOrder ...[]string) string {
+	return s.recordServed(r, m, status, responseHeaders, append([]byte(nil), responseBody...), responseHeaderOrder...)
+}
+
+// journalText and journalBase64 are logged response body views, encoded when
+// the journal is read rather than copied twice on every served request.
+type journalText []byte
+type journalBase64 []byte
+
+func (b journalText) String() string   { return string(b) }
+func (b journalBase64) String() string { return base64.StdEncoding.EncodeToString(b) }
+func (b journalText) MarshalJSON() ([]byte, error) {
+	return json.Marshal(b.String())
+}
+func (b journalBase64) MarshalJSON() ([]byte, error) {
+	return json.Marshal(b.String())
+}
+
+// recordServed takes ownership of responseBody, which must not be modified afterwards.
+func (s *Store) recordServed(r Request, m Mapping, status int, responseHeaders http.Header, responseBody []byte, responseHeaderOrder ...[]string) string {
 	s.mu.RLock()
 	disabled := s.journalDisabled
 	s.mu.RUnlock()
@@ -322,7 +342,7 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 		event["stubMapping"] = m
 		event["responseDefinition"] = m["response"]
 	}
-	response := map[string]any{"status": status, "body": string(responseBody), "bodyAsBase64": base64.StdEncoding.EncodeToString(responseBody), "fromProxy": false}
+	response := map[string]any{"status": status, "body": journalText(responseBody), "bodyAsBase64": journalBase64(responseBody), "fromProxy": false}
 	if len(responseHeaders) > 0 {
 		h := make(map[string]any, len(responseHeaders))
 		for k, v := range responseHeaders {

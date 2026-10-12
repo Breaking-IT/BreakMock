@@ -89,6 +89,19 @@ locale data can change between JDK releases.
   listener wrapper (enabled by the CLI). Embedding without it loses those details.
 - WireMock Cloud proprietary code and extensions such as gRPC/GraphQL are not included.
   Future test-data and chaos features require independent implementation.
+- HTTP request header values are decoded as ISO-8859-1, one character per byte, as
+  Jetty does. Matching, templates, cookies and the journal therefore see a UTF-8
+  `é` sent in a header as `Ã©`, exactly like WireMock.
+- Template syntax errors are not yet Java-compatible. Handlebars.java renders some
+  malformed input as literal text (for example an unclosed `{{foo` or a single `}`),
+  where BreakMock returns an error, and its error messages use a different format
+  (`[ERROR] line:col: found: …, expected: …`). Well-formed templates are unaffected.
+- Intentional divergence: after a templated body file is edited, WireMock keeps
+  serving its cached compiled template until the mapping changes. BreakMock serves
+  the edited file immediately.
+- Request journals differ for templated responses (WireMock logs the rendered body
+  in `responseDefinition`) and for gzip responses (WireMock logs the uncompressed
+  body). Served bytes are identical.
 - Runtime comparisons cover two small workloads. See `BENCHMARKS.md` for the latest
   optimized Go/Rust results and their limits; broader workloads remain unmeasured.
 
@@ -121,6 +134,14 @@ Consolidated local Go and Rust runs (2026-10-12), retained under
 | Message waits, enabled journal | 15/15 | Existing scalar substitutions; new error cases use exact bytes |
 | Message waits, disabled journal | 5/5 | Existing origin substitution; new precedence cases use exact bytes |
 | Concurrent journal | 16 invariants + 3 byte comparisons | Two exact admin responses; one with generated scalar substitutions |
+| Templates inside 80 KB bodies, 3 requests each | 429/429 | Status and response bytes, including errors |
+| Dynamic templates, edits and journal integrity | 238/238 | Exact bytes per request, at 2 sizes; random/time helpers by property |
+
+The last two rows were run on 2026-10-12 against Java with `template_differential.py --pad 80000 --repeat 3`
+and `dynamic_template_differential.py`. That suite checks values that vary by request,
+random and time helpers, mapping/file/jsonBody edits with gzip, raw non-ASCII header
+bytes, and that journal entries hold the body served to each of 120 concurrent requests.
+Its `--discover` mode adds the known template syntax-error cases.
 
 `go test -race ./...` and `go vet ./...` pass. The strict differential runner
 returns nonzero because the JVM-identity diagnostic remains a failure.
