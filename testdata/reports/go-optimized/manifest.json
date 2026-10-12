@@ -1,0 +1,20 @@
+{
+  "optimization_commit": "7176b1281f315ce328d0303922f5acf38002b8b8",
+  "baseline_go_source": "ab2cd8e137c302788282bba47d27bb7d066e78c6",
+  "baseline_go_binary_sha256": "001f7fd537b70931f0c84b84dca55057aedc89623cf19e943cdff954058d506e",
+  "optimized_binary_sha256": {
+    "go": "94087e250008159c5a157c7562353c3f290715501286ad1d66939c0523e2779e",
+    "rust": "5b3ae5c2b40ecdd0f05ca1b6f622e8598bbf9ea6167481d730bffbd670d13c57",
+    "driver": "a7a8055e982459eb3852de7c74538b5a30101c3abc336524c1596249fa6b06f6"
+  },
+  "rust_unchanged_from_previous_report": true,
+  "main_load_measurements": 60,
+  "additional_baseline_load_measurements": 10,
+  "notes": [
+    "All runtime code frozen before profiles and benchmarks.",
+    "Profiles use temporary instrumented wrappers, not benchmark executables.",
+    "No source changes were made to Rust or the benchmark/startup drivers.",
+    "Baseline benchmark checkout metadata names the new commit because the unchanged harness ran there; the explicit old-Go executable was built from the archived baseline source and is identified by its separate hash."
+  ],
+  "linux_ci_run": "https://github.com/Breaking-IT/BreakMock/actions/runs/38213035151"
+}

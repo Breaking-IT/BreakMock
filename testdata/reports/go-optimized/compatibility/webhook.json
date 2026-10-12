@@ -1,0 +1,381 @@
+{
+  "comparison": "Exact generated method, target, configured header values/order and base64 body; transport defaults reported separately",
+  "passed": 7,
+  "total": 7,
+  "results": [
+    {
+      "name": "listener text",
+      "pass": true
+    },
+    {
+      "name": "legacy text",
+      "pass": true
+    },
+    {
+      "name": "binary",
+      "pass": true
+    },
+    {
+      "name": "GET ignores body",
+      "pass": true
+    },
+    {
+      "name": "DELETE ignores body",
+      "pass": true
+    },
+    {
+      "name": "missing method rejects callback",
+      "pass": true
+    },
+    {
+      "name": "fixed delay",
+      "pass": true
+    }
+  ],
+  "transportHeaders": [
+    {
+      "case": "listener text",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Content-Length",
+          "18"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "listener text",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Content-Length",
+          "18"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    },
+    {
+      "case": "legacy text",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Content-Length",
+          "14"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "legacy text",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Content-Length",
+          "14"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    },
+    {
+      "case": "binary",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Content-Length",
+          "4"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "binary",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Content-Length",
+          "4"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    },
+    {
+      "case": "GET ignores body",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "GET ignores body",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    },
+    {
+      "case": "DELETE ignores body",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "DELETE ignores body",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    },
+    {
+      "case": "fixed delay",
+      "server": "http://127.0.0.1:18111",
+      "headers": [
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ],
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "Content-Length",
+          "5"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "User-Agent",
+          "WireMock 4.0.0-beta.40"
+        ]
+      ]
+    },
+    {
+      "case": "fixed delay",
+      "server": "http://127.0.0.1:18112",
+      "headers": [
+        [
+          "Host",
+          "127.0.0.1:54639"
+        ],
+        [
+          "User-Agent",
+          "Go-http-client/1.1"
+        ],
+        [
+          "Content-Length",
+          "5"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "X-Original",
+          "/trigger"
+        ],
+        [
+          "X-Original",
+          "two"
+        ]
+      ]
+    }
+  ]
+}

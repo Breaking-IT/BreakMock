@@ -1,0 +1,12 @@
+Go 1.27.1 darwin/arm64 Apple M4 Pro, 14 logical CPUs
+Command: go test -run '^$' -bench '^BenchmarkJournalRecordServed$' -benchtime=2s -count=3 .
+Workload: parallel Store.RecordServed, cap 1000, static Hello, benchmark! response, request query name=Ada, 2 request headers, 1 response header.
+Baseline (original store.go):
+BenchmarkJournalRecordServed-14 645258 3452 ns/op 8504 B/op 85 allocs/op
+BenchmarkJournalRecordServed-14 686779 3371 ns/op 8503 B/op 85 allocs/op
+BenchmarkJournalRecordServed-14 757806 3402 ns/op 8504 B/op 85 allocs/op
+Optimized store.go:
+BenchmarkJournalRecordServed-14 729513 3081 ns/op 7008 B/op 74 allocs/op
+BenchmarkJournalRecordServed-14 796330 3160 ns/op 7008 B/op 74 allocs/op
+BenchmarkJournalRecordServed-14 900310 2849 ns/op 7008 B/op 74 allocs/op
+These isolate journal insertion, exclude network/admin serialization, and are not the fair application throughput comparison.

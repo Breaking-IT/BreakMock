@@ -1,0 +1,29 @@
+test	Compare against Java WireMock	2026-10-12T06:34:34.8447959Z 30/30 passed
+test	Compare against Java WireMock	2026-10-12T06:34:41.3868748Z 434/434 matched reference
+test	Compare against Java WireMock	2026-10-12T06:34:51.7656681Z 130/130 passed
+test	Compare against Java WireMock	2026-10-12T06:34:55.7839506Z 46/46 passed
+test	Compare against Java WireMock	2026-10-12T06:35:02.5899666Z FAIL binary body mismatch
+test	Compare against Java WireMock	2026-10-12T06:35:02.5912534Z 40/41 strict passes
+test	Compare against Java WireMock	2026-10-12T06:35:09.8749354Z 7/7 passed
+test	Compare against Java WireMock	2026-10-12T06:35:12.2674909Z 32/32 strict passes
+test	Compare against Java WireMock	2026-10-12T06:35:17.3594351Z 79/79 passed
+test	Compare against Java WireMock	2026-10-12T06:35:28.6983407Z 20/20 passed
+test	Compare against Java WireMock	2026-10-12T06:35:32.3649204Z FAIL existing count caps results
+test	Compare against Java WireMock	2026-10-12T06:35:32.3649610Z FAIL single ignores count
+test	Compare against Java WireMock	2026-10-12T06:35:32.3650003Z FAIL zero timeout returns current count
+test	Compare against Java WireMock	2026-10-12T06:35:32.3650417Z 4/7 passed
+test	Compare against Java WireMock	2026-10-12T06:35:35.8148996Z {"invariants_passed": 16, "invariants_failed": 0, "exact_admin_byte_comparisons_passed": 2, "normalized_admin_byte_comparisons_passed": 1, "byte_comparisons_failed": 0, "passed": true}
+test	Compare against Java WireMock	2026-10-12T06:35:37.7673242Z 0/2 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:35:47.3176913Z 30/30 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:35:53.6665191Z 434/434 matched reference
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:03.4246543Z 130/130 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:06.8585951Z 46/46 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:13.3711697Z FAIL binary body mismatch
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:13.3722146Z 40/41 strict passes
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:20.2436702Z 7/7 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:22.4436547Z 32/32 strict passes
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:27.3272557Z 79/79 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:38.3217593Z 20/20 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:40.9367849Z 7/7 passed
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:44.3533709Z {"invariants_passed": 16, "invariants_failed": 0, "exact_admin_byte_comparisons_passed": 2, "normalized_admin_byte_comparisons_passed": 1, "byte_comparisons_failed": 0, "passed": true}
+rust	Compare native Rust against Java WireMock	2026-10-12T06:36:46.3050984Z 2/2 passed

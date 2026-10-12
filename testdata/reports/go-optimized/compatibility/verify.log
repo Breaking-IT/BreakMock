@@ -1,0 +1,1650 @@
+PASS GET /remote-load/1
+PASS GET /remote-load/2
+PASS GET /image-file
+PASS GET /binary-file-from-header
+PASS GET /text-file
+PASS GET /text-file-from-header
+PASS GET /todo/items
+PASS POST /todo/items
+PASS GET /todo/items
+PASS exact URL
+PASS URL path ignores query
+PASS URL regular expression
+PASS path regular expression
+PASS query matching
+PASS header case insensitive names
+PASS case insensitive values
+PASS cookie matching
+PASS basic authentication
+PASS JSON equality
+PASS JSON extra elements
+PASS JSON unordered arrays
+PASS JSONPath
+PASS XML equality
+PASS XPath
+PASS binary response
+PASS JSON response serialization
+PASS template request
+PASS template escaping
+PASS template JSONPath
+PASS template math
+PASS template each
+PASS template response header
+PASS absent header
+PASS negative contains
+PASS logical OR
+PASS mapping list
+PASS mapping get
+PASS request count
+PASS scenario list
+30/30 passed
+PASS equalTo0
+PASS equalTo1
+PASS contains2
+PASS doesNotContain3
+PASS matches4
+PASS matches5
+PASS matches6
+PASS doesNotMatch7
+PASS before8
+PASS after9
+PASS includes/test?q=1&q=2
+PASS hasExactly/test?q=1&q=2
+PASS includes/test?q=1
+PASS hasExactly/test?q=1
+PASS includes/test?q=2&q=1&q=3
+PASS hasExactly/test?q=2&q=1&q=3
+PASS body 16
+PASS body 17
+PASS body 18
+PASS body 19
+PASS body 20
+PASS body 21
+PASS body 22
+PASS body 23
+PASS body 24
+PASS body 25
+PASS body 26
+PASS body 27
+PASS body 28
+PASS body 29
+PASS missing doesNotMatch
+PASS missing doesNotContain
+PASS template
+PASS encoded path
+PASS XML order 34
+PASS XML order 35
+PASS XML order 36
+PASS XML same-name order 37
+PASS XML same-name order 38
+PASS XML same-name order 39
+PASS XML same-name order 40
+PASS XML feature 41
+PASS XML feature 42
+PASS XML feature 43
+PASS XML feature 44
+PASS XML feature 45
+PASS XML feature 46
+PASS XML feature 47
+PASS XML feature 48
+PASS XML feature 49
+PASS date 50
+PASS date 51
+PASS date 52
+PASS date 53
+PASS date 54
+PASS date 55
+PASS date 56
+PASS date 57
+PASS date 58
+PASS date 59
+PASS date 60
+PASS date 61
+PASS date 62
+PASS date 63
+PASS date 64
+PASS date 65
+PASS date 66
+PASS date 67
+PASS date 68
+PASS date 69
+PASS date 70
+PASS date 71
+PASS date 72
+PASS date 73
+PASS date 74
+PASS date 75
+PASS date 76
+PASS root JSONPath 77
+PASS root JSONPath 78
+PASS edge 79
+PASS edge 80
+PASS edge 81
+PASS schema 82
+PASS schema 83
+PASS schema 84
+PASS schema 85
+PASS schema 86
+PASS schema 87
+PASS schema 88
+PASS schema 89
+PASS schema 90
+PASS schema 91
+PASS schema 92
+PASS schema 93
+PASS schema 94
+PASS schema 95
+PASS schema 96
+PASS JSONPath array 97
+PASS JSONPath array 98
+PASS JSONPath array 99
+PASS JSONPath array 100
+PASS JSONPath array 101
+PASS JSONPath array 102
+PASS JSONPath array 103
+PASS multipart 104
+PASS multipart 105
+PASS multipart 106
+PASS multipart 107
+PASS multipart 108
+PASS multipart 109
+PASS multipart file 110
+PASS multipart file 111
+PASS multipart file 112
+PASS multipart binary 113
+PASS multipart binary 114
+PASS multipart headers 115
+PASS multipart headers 116
+PASS multipart headers 117
+PASS XPath serialization 118
+PASS XPath serialization 119
+PASS XPath serialization 120
+PASS XPath serialization 121
+PASS empty body 122
+PASS empty body 123
+PASS empty body 124
+PASS empty body 125
+PASS empty body 126
+PASS empty body 127
+PASS form 128
+PASS form 129
+PASS form 130
+PASS form 131
+PASS header logical 132
+PASS header logical 133
+PASS header logical 134
+PASS XPath primitive 135
+PASS XPath primitive 136
+PASS XPath primitive 137
+PASS upstream JSONPath decimal 0
+PASS upstream JSONPath decimal 1
+PASS upstream JSONPath decimal 2
+PASS upstream JSONPath numeric regex 0
+PASS upstream JSONPath numeric regex 1
+PASS upstream JSONPath size 0
+PASS upstream JSONPath size 1
+PASS upstream JSONPath nested object 0
+PASS upstream JSONPath nested object 1
+PASS JSONPath function $.numbers.length() 0
+PASS JSONPath function $.numbers.min() 0
+PASS JSONPath function $.numbers.max() 0
+PASS JSONPath function $.numbers.sum() 0
+PASS JSONPath function $.numbers.avg() 0
+PASS JSONPath function $.object.keys() 0
+PASS JSONPath operator $.items[?(@.n in [1,2])] 0
+PASS JSONPath operator $.items[?(@.n in [1,2])] 1
+PASS JSONPath operator $.items[?(@.n nin [1,2])] 0
+PASS JSONPath operator $.items[?(@.n nin [1,2])] 1
+PASS JSONPath operator $.items[?(@.n >= 2 && @.n < 4)] 0
+PASS JSONPath operator $.items[?(@.n >= 2 && @.n < 4)] 1
+PASS JSONPath operator $.items[?(@.s =~ /hello/i)] 0
+PASS JSONPath operator $.items[?(@.s =~ /hello/i)] 1
+PASS JSON numeric precision 9007199254740993 0
+PASS JSON numeric precision 9007199254740993 1
+PASS JSON numeric precision 9007199254740993 2
+PASS JSON numeric precision 1.00 0
+PASS JSON numeric precision 1.00 1
+PASS JSON numeric precision 1.00 2
+PASS JSON numeric precision 0.000000000000000001 0
+PASS JSON numeric precision 0.000000000000000001 1
+PASS JSON numeric precision 0.000000000000000001 2
+PASS JSON numeric precision 1e100 0
+PASS JSON numeric precision 1e100 1
+PASS JSON numeric precision 1e100 2
+PASS JSON extras [1,0,2] 0
+PASS JSON extras [0,1,2] 0
+PASS JSON extras [1,2,0] 0
+PASS JSON extras [1,2] 0
+PASS Java regex possessive 0
+PASS Java regex possessive 1
+PASS Java regex possessive no backtrack 0
+PASS Java regex possessive no backtrack 1
+PASS Java regex intersection 0
+PASS Java regex intersection 1
+PASS Java regex linebreak 0
+PASS Java regex linebreak 1
+PASS Java regex unicode case 0
+PASS Java regex unicode case 1
+PASS Java regex unicode flags 0
+PASS Java regex unicode flags 1
+PASS Java regex ASCII digits 0
+PASS Java regex ASCII digits 1
+PASS matchesPathTemplate body 0
+PASS matchesPathTemplate body 1
+PASS Java equalTo ignoreCase i
+PASS Java equalTo ignoreCase I
+PASS Java equalTo ignoreCase ı
+PASS Java equalTo ignoreCase İ
+PASS host matcher {'equalTo': '127.0.0.1'}
+PASS host matcher {'equalTo': 'wrong.test'}
+PASS host matcher {'matches': '127.*'}
+PASS URL precedence
+PASS unused pathParameters
+PASS path encoding hello%20world hello world
+PASS path encoding hello%20world hello%20world
+PASS path encoding hello+world hello world
+PASS path encoding hello+world hello+world
+PASS path encoding hello%2Fworld hello world
+PASS path encoding hello%2Fworld hello%2Fworld
+PASS repeated cookies best match
+PASS basic auth overrides authorization matcher
+PASS empty multivalue includes
+PASS empty multivalue hasExactly
+PASS form no content type a=1
+PASS form no content type a=2
+PASS form no content type a=1&a=2
+PASS XML attribute placeholders 0
+PASS XML attribute placeholders 0
+PASS Jayway edge $.items[?(@.x == null)] 0
+PASS Jayway edge $.items[?(@.x == null)] 1
+PASS Jayway edge $.items[?(@.x == null)] 2
+PASS Jayway edge $.items[?(@.x == null)] 3
+PASS Jayway edge $.items[?(@.x != null)] 0
+PASS Jayway edge $.items[?(@.x != null)] 1
+PASS Jayway edge $.items[?(@.x != null)] 2
+PASS Jayway edge $.items[?(@.x != null)] 3
+PASS Jayway edge $.items[?(@.x)] 0
+PASS Jayway edge $.items[?(@.x)] 1
+PASS Jayway edge $.items[?(@.x)] 2
+PASS Jayway edge $.items[?(@.x)] 3
+PASS Jayway edge $.items[?(!@.x)] 0
+PASS Jayway edge $.items[?(!@.x)] 1
+PASS Jayway edge $.items[?(!@.x)] 2
+PASS Jayway edge $.items[?(!@.x)] 3
+PASS Jayway edge $.items[?(@.x subsetof [1,2])] 0
+PASS Jayway edge $.items[?(@.x subsetof [1,2])] 1
+PASS Jayway edge $.items[?(@.x subsetof [1,2])] 2
+PASS Jayway edge $.items[?(@.x subsetof [1,2])] 3
+PASS Jayway edge $.items[?(@.x anyof [1,2])] 0
+PASS Jayway edge $.items[?(@.x anyof [1,2])] 1
+PASS Jayway edge $.items[?(@.x anyof [1,2])] 2
+PASS Jayway edge $.items[?(@.x anyof [1,2])] 3
+PASS Jayway edge $.items[?(@.x noneof [1,2])] 0
+PASS Jayway edge $.items[?(@.x noneof [1,2])] 1
+PASS Jayway edge $.items[?(@.x noneof [1,2])] 2
+PASS Jayway edge $.items[?(@.x noneof [1,2])] 3
+PASS Jayway edge $.items[?(@.x empty true)] 0
+PASS Jayway edge $.items[?(@.x empty true)] 1
+PASS Jayway edge $.items[?(@.x empty true)] 2
+PASS Jayway edge $.items[?(@.x empty true)] 3
+PASS Java regex extra (?i)[a-z]+ 0
+PASS Java regex extra (?i)[a-z]+ 1
+PASS Java regex extra (?i)[a-z]+ 2
+PASS Java regex extra (?i)[^a-z]+ 0
+PASS Java regex extra (?i)[^a-z]+ 1
+PASS Java regex extra (?i:a) 0
+PASS Java regex extra (?i:a) 1
+PASS Java regex extra (?i)\w+ 0
+PASS Java regex extra (?i)\w+ 1
+PASS Java regex extra (?i)hello 0
+PASS Java regex extra (?i)hello 1
+PASS Java regex extra a{2,3}+a 0
+PASS Java regex extra a{2,3}+a 1
+PASS Java regex extra (ab)++ab 0
+PASS Java regex extra (ab)++ab 1
+PASS Java possessive group (ab)++ 0
+PASS Java possessive group (ab)++ 1
+PASS Java possessive group (ab)++ 2
+PASS Java possessive group (?:ab){2,3}+ 0
+PASS Java possessive group (?:ab){2,3}+ 1
+PASS Java possessive group (?:ab){2,3}+ 2
+PASS Java possessive group ((a)b)++ 0
+PASS Java possessive group ((a)b)++ 1
+PASS Java possessive group (?i)[a-z]+ 0
+PASS Java possessive group (?i)[a-z]+ 1
+PASS Java possessive group (?i)[a-z]+ 2
+PASS Java regex scopes (?i:a)k 0
+PASS Java regex scopes (?i:a)k 1
+PASS Java regex scopes (?i:a)k 2
+PASS Java regex scopes (?iu:k)k 0
+PASS Java regex scopes (?iu:k)k 1
+PASS Java regex scopes (?U)\d+ 0
+PASS Java regex scopes (?U)\d+ 1
+PASS Java regex scopes [a-z&&[def]]+ 0
+PASS Java regex scopes [a-z&&[def]]+ 1
+PASS Java regex scopes [a-z&&[^m-p]]+ 0
+PASS Java regex scopes [a-z&&[^m-p]]+ 1
+PASS Java regex scopes [a-d[m-p]]+ 0
+PASS Java regex scopes [a-d[m-p]]+ 1
+PASS Java regex scopes [^a-z&&[def]]+ 0
+PASS Java regex scopes [^a-z&&[def]]+ 1
+PASS Java regex scopes [^a-z&&[def]]+ 2
+PASS Java regex scopes (?i)\Qhello.world\E 0
+PASS Java regex scopes (?i)\Qhello.world\E 1
+PASS XML PI []<?pi one?><a/> 0
+PASS XML PI ['PROCESSING_INSTRUCTION_DATA']<?pi one?><a/> 0
+PASS XML PI []<?pi one?><a/> 0
+PASS XML PI ['PROCESSING_INSTRUCTION_DATA']<?pi one?><a/> 0
+PASS XML PI []<a><?pi one?></a> 0
+PASS XML PI ['PROCESSING_INSTRUCTION_DATA']<a><?pi one?></a> 0
+PASS Java date pattern uuuu-MM-ddbefore 0
+PASS Java date pattern uuuu-MM-ddafter 0
+PASS Java date pattern yyyy-M-dbefore 0
+PASS Java date pattern yyyy-M-dafter 0
+PASS Java date pattern dd MMMM yyyy 'at' hh:mm abefore 0
+PASS Java date pattern dd MMMM yyyy 'at' hh:mm aafter 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]before 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]after 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]before 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]after 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXbefore 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXafter 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ssXXXbefore 0
+PASS Java date pattern yyyy-MM-dd'T'HH:mm:ssXXXafter 0
+PASS Java Unicode flag edge (?iu)i 0
+PASS Java Unicode flag edge (?iu)i 1
+PASS Java Unicode flag edge (?iu)i 2
+PASS Java Unicode flag edge (?iu)i 3
+PASS Java Unicode flag edge (?iu)é 0
+PASS Java Unicode flag edge (?iu)é 1
+PASS Java Unicode flag edge (?i-m:a)B 0
+PASS Java Unicode flag edge (?i-m:a)B 1
+PASS Java Unicode flag edge (?i-m:a)B 2
+PASS Java Unicode flag edge (?i)(?-i:a)B 0
+PASS Java Unicode flag edge (?i)(?-i:a)B 1
+PASS Java Unicode flag edge (?i)(?-i:a)B 2
+PASS Java Unicode flag edge (?U)\p{L}+ 0
+PASS Java Unicode flag edge (?U)\p{L}+ 1
+PASS Java Unicode flag edge (?U)\p{L}+ 2
+PASS XML schema schemaLocation[] 0
+PASS XML schema schemaLocation['SCHEMA_LOCATION', 'NO_NAMESPACE_SCHEMA_LOCATION'] 0
+PASS XML schema noNamespaceSchemaLocation[] 0
+PASS XML schema noNamespaceSchemaLocation['SCHEMA_LOCATION', 'NO_NAMESPACE_SCHEMA_LOCATION'] 0
+PASS v4 method oneOf[]GET
+PASS v4 method oneOf[]POST
+PASS v4 method oneOf[]QUERY
+PASS v4 method oneOf['GET']GET
+PASS v4 method oneOf['GET']POST
+PASS v4 method oneOf['GET']QUERY
+PASS v4 method oneOf['GET', 'POST']GET
+PASS v4 method oneOf['GET', 'POST']POST
+PASS v4 method oneOf['GET', 'POST']QUERY
+PASS v4 method oneOf['ANY']GET
+PASS v4 method oneOf['ANY']POST
+PASS v4 method oneOf['ANY']QUERY
+PASS v4 method oneOf['QUERY']GET
+PASS v4 method oneOf['QUERY']POST
+PASS v4 method oneOf['QUERY']QUERY
+PASS v4 method noneOf[]GET
+PASS v4 method noneOf[]POST
+PASS v4 method noneOf[]QUERY
+PASS v4 method noneOf['GET']GET
+PASS v4 method noneOf['GET']POST
+PASS v4 method noneOf['GET']QUERY
+PASS v4 method noneOf['GET', 'POST']GET
+PASS v4 method noneOf['GET', 'POST']POST
+PASS v4 method noneOf['GET', 'POST']QUERY
+PASS v4 method noneOf['ANY']GET
+PASS v4 method noneOf['ANY']POST
+PASS v4 method noneOf['ANY']QUERY
+PASS v4 method noneOf['QUERY']GET
+PASS v4 method noneOf['QUERY']POST
+PASS v4 method noneOf['QUERY']QUERY
+PASS v4 number equalToNumber1
+PASS v4 number equalToNumber1.0
+PASS v4 number equalToNumber0
+PASS v4 number equalToNumber2
+PASS v4 number equalToNumber-1
+PASS v4 number equalToNumber1e0
+PASS v4 number equalToNumber1.0f
+PASS v4 number equalToNumber 1 
+PASS v4 number equalToNumberNaN
+PASS v4 number equalToNumberInfinity
+PASS v4 number equalToNumber0x1.0p0
+PASS v4 number equalToNumbernonsense
+PASS v4 number greaterThanNumber1
+PASS v4 number greaterThanNumber1.0
+PASS v4 number greaterThanNumber0
+PASS v4 number greaterThanNumber2
+PASS v4 number greaterThanNumber-1
+PASS v4 number greaterThanNumber1e0
+PASS v4 number greaterThanNumber1.0f
+PASS v4 number greaterThanNumber 1 
+PASS v4 number greaterThanNumberNaN
+PASS v4 number greaterThanNumberInfinity
+PASS v4 number greaterThanNumber0x1.0p0
+PASS v4 number greaterThanNumbernonsense
+PASS v4 number greaterThanEqualNumber1
+PASS v4 number greaterThanEqualNumber1.0
+PASS v4 number greaterThanEqualNumber0
+PASS v4 number greaterThanEqualNumber2
+PASS v4 number greaterThanEqualNumber-1
+PASS v4 number greaterThanEqualNumber1e0
+PASS v4 number greaterThanEqualNumber1.0f
+PASS v4 number greaterThanEqualNumber 1 
+PASS v4 number greaterThanEqualNumberNaN
+PASS v4 number greaterThanEqualNumberInfinity
+PASS v4 number greaterThanEqualNumber0x1.0p0
+PASS v4 number greaterThanEqualNumbernonsense
+PASS v4 number lessThanNumber1
+PASS v4 number lessThanNumber1.0
+PASS v4 number lessThanNumber0
+PASS v4 number lessThanNumber2
+PASS v4 number lessThanNumber-1
+PASS v4 number lessThanNumber1e0
+PASS v4 number lessThanNumber1.0f
+PASS v4 number lessThanNumber 1 
+PASS v4 number lessThanNumberNaN
+PASS v4 number lessThanNumberInfinity
+PASS v4 number lessThanNumber0x1.0p0
+PASS v4 number lessThanNumbernonsense
+PASS v4 number lessThanEqualNumber1
+PASS v4 number lessThanEqualNumber1.0
+PASS v4 number lessThanEqualNumber0
+PASS v4 number lessThanEqualNumber2
+PASS v4 number lessThanEqualNumber-1
+PASS v4 number lessThanEqualNumber1e0
+PASS v4 number lessThanEqualNumber1.0f
+PASS v4 number lessThanEqualNumber 1 
+PASS v4 number lessThanEqualNumberNaN
+PASS v4 number lessThanEqualNumberInfinity
+PASS v4 number lessThanEqualNumber0x1.0p0
+PASS v4 number lessThanEqualNumbernonsense
+PASS v4 JSONPath empty/null $.emptyNone
+PASS v4 JSONPath empty/null $.empty{'equalTo': 'null'}
+PASS v4 JSONPath empty/null $.empty{'absent': True}
+PASS v4 JSONPath empty/null $.objNone
+PASS v4 JSONPath empty/null $.obj{'equalTo': 'null'}
+PASS v4 JSONPath empty/null $.obj{'absent': True}
+PASS v4 JSONPath empty/null $.missingNone
+PASS v4 JSONPath empty/null $.missing{'equalTo': 'null'}
+PASS v4 JSONPath empty/null $.missing{'absent': True}
+PASS v4 JSONPath empty/null $.values[*]None
+PASS v4 JSONPath empty/null $.values[*]{'equalTo': 'null'}
+PASS v4 JSONPath empty/null $.values[*]{'absent': True}
+434/434 matched reference
+PASS method
+PASS path
+PASS path index
+PASS pathSegments
+PASS query first
+PASS query index
+PASS query first last
+PASS query absent
+PASS assign
+PASS val default
+PASS val or
+PASS val assignment
+PASS array
+PASS array each
+PASS range
+PASS range each
+PASS random integer fixed
+PASS random string empty
+PASS pick one
+PASS math addition
+PASS math subtraction
+PASS math multiply
+PASS math divide
+PASS math modulus
+PASS trim
+PASS base64
+PASS base64 decode
+PASS url encode
+PASS url decode
+PASS upper
+PASS lower
+PASS capitalize
+PASS capitalizeFirst
+PASS replace
+PASS cut
+PASS substring
+PASS size
+PASS contains
+PASS matches
+PASS regex extract
+PASS regex multi
+PASS arrayJoin
+PASS date parsed
+PASS date offset
+PASS date epoch
+PASS form data
+PASS unknown helper '{{unknown 1}}'
+PASS unknown helper 'prefix {{unknown foo=1}}'
+PASS unknown helper '{{unknown}}'
+PASS unknown helper '{{#unknown}}x{{/unknown}}'
+PASS unknown helper '{{#unknown 1}}x{{/unknown}}'
+PASS unknown helper '{{val (unknown 1)}}'
+PASS unknown helper '{{#if false}}{{unknown 1}}{{/if}}'
+PASS unknown helper '{{#if true}}\n  {{unknown 1}}\n{{/if}}'
+PASS escaping
+PASS headers
+PASS headers arbitrary case
+PASS cookies
+PASS json string
+PASS json array
+PASS json filter
+PASS json object
+PASS json default
+PASS parseJson property
+PASS toJson
+PASS formatJson compact
+PASS formatJson pretty
+PASS xpath element
+PASS xpath text
+PASS xpath each
+PASS arrayAdd
+PASS arrayRemove
+PASS jsonMerge
+PASS jsonRemove
+PASS formatXml
+PASS truncateDate
+PASS json order
+PASS json invalid
+PASS arrayAdd start
+PASS arrayAdd middle
+PASS arrayRemove start
+PASS json merge deep
+PASS json merge block
+PASS json remove array
+PASS json remove missing
+PASS json array add root
+PASS json array add path
+PASS json array add block
+PASS json object iteration
+PASS json path nested order
+PASS json path wildcard order
+PASS jsonPath parsed input
+PASS parseJson display
+PASS xml compact
+PASS xml empty
+PASS soap XPath
+PASS parseDate standalone
+PASS date truncate last
+PASS date timezone
+PASS jsonBody template quotes
+PASS jsonBody template html
+PASS jsonBody template backslash
+PASS jsonBody template newline
+PASS helper center 0
+PASS helper ljust 0
+PASS helper rjust 0
+PASS helper slugify 0
+PASS helper slugify 1
+PASS helper stringFormat 0
+PASS helper stripTags 0
+PASS helper abbreviate 0
+PASS helper wordWrap 0
+PASS helper yesno 0
+PASS helper yesno 1
+PASS helper yesno 2
+PASS helper numberFormat 0
+PASS helper dateFormat 0
+PASS helper isEven 0
+PASS helper isEven 1
+PASS helper isOdd 0
+PASS helper isOdd 1
+PASS helper stripes 0
+PASS helper stripes 1
+PASS helper stripes 2
+PASS helper hostname 0
+PASS helper systemValue 0
+PASS helper systemValue 1
+PASS helper systemValue 2
+PASS helper systemValue 3
+PASS conditional eq 2 3
+PASS conditional eq 3 3
+PASS conditional eq 'a' 'b'
+PASS conditional eq 2 '2'
+PASS conditional neq 2 3
+PASS conditional neq 3 3
+PASS conditional neq 'a' 'b'
+PASS conditional neq 2 '2'
+PASS conditional gt 2 3
+PASS conditional gt 3 3
+PASS conditional gt 'a' 'b'
+PASS conditional gt 2 '2'
+PASS conditional gte 2 3
+PASS conditional gte 3 3
+PASS conditional gte 'a' 'b'
+PASS conditional gte 2 '2'
+PASS conditional lt 2 3
+PASS conditional lt 3 3
+PASS conditional lt 'a' 'b'
+PASS conditional lt 2 '2'
+PASS conditional lte 2 3
+PASS conditional lte 3 3
+PASS conditional lte 'a' 'b'
+PASS conditional lte 2 '2'
+PASS conditional andtrue true
+PASS conditional andtrue false
+PASS conditional orfalse true
+PASS conditional notfalse
+PASS contains array true
+PASS contains array partial
+PASS contains inverse
+PASS matches inverse
+PASS matches lookahead
+PASS regex backreference
+PASS arrayJoin variadic
+PASS arrayJoin block
+PASS arrayJoin empty
+PASS array nested display
+PASS array remove negative
+PASS array add missing
+PASS range reverse
+PASS size emoji
+PASS substring emoji
+PASS base64 block
+PASS urlEncode block
+PASS urlEncode star
+PASS trim block
+PASS formdata duplicate
+PASS formdata equals
+PASS formdata missing
+PASS parseJson array each
+PASS parseJson escaped
+PASS parseJson surrogate
+PASS parseJson low surrogate
+PASS parseJson pair
+PASS jsonPath scalar null
+PASS jsonPath array objects
+PASS jsonPath large integer
+PASS jsonPath sum
+PASS jsonPath length
+PASS toJson missing
+PASS toJson string
+PASS formatJson order
+PASS formatJson block
+PASS jsonRemove root
+PASS jsonRemove wildcard
+PASS jsonArrayAdd maxzero
+PASS jsonArrayAdd nested
+PASS xpath attributes
+PASS xpath count
+PASS xpath local name
+PASS xpath nested format
+PASS formatXml attributes
+PASS formatXml mixed
+PASS formatXml declaration
+PASS nested parent
+PASS block params
+PASS assign nested
+PASS lookup typed
+PASS date format yyyy-MM-dd HH:mm:ss.SSS XXX
+PASS date format EEE, dd MMM yyyy HH:mm:ss Z
+PASS date format yyyyMMdd
+PASS date format yy-M-d h:mm a
+PASS date format epoch
+PASS date format unix
+PASS date offset 1 seconds
+PASS date offset -2 minutes
+PASS date offset 3 hours
+PASS date offset -1 weeks
+PASS date offset 2 months
+PASS date offset 1 years
+PASS date truncate first second of minute
+PASS date truncate first minute of hour
+PASS date truncate first hour of day
+PASS date truncate first day of month
+PASS date truncate first day of next month
+PASS date truncate last day of month
+PASS date truncate first day of year
+PASS date truncate first day of next year
+PASS date truncate last day of year
+PASS parseDate epoch
+PASS parseDate unix
+PASS parseDate yyyy-MM
+PASS parseDate yyyy
+PASS randomValue ALPHANUMERIC
+PASS randomValue ALPHABETIC
+PASS randomValue NUMERIC
+PASS randomValue ALPHANUMERIC_AND_SYMBOLS
+PASS randomValue UUID
+PASS randomValue HEXADECIMAL
+PASS randomDecimal observable
+PASS pickRandom count observable
+PASS now fixed literal
+PASS parameters model
+PASS parameters root nested
+PASS center size=8
+PASS center size=7 pad='ab'
+PASS center size=1
+PASS ljust size=8
+PASS ljust size=7 pad='ab'
+PASS ljust size=1
+PASS rjust size=8
+PASS rjust size=7 pad='ab'
+PASS rjust size=1
+PASS numberFormat '###,###.00' 'en_US'
+PASS numberFormat '###,###.00' 'de_DE'
+PASS numberFormat 'integer' 'en_US'
+PASS numberFormat 'percent' 'en_US'
+PASS numberFormat 'default' 'en_US' groupingUsed=false maximumFractionDigits=1
+PASS conditional block eq
+PASS conditional block neq
+PASS conditional block gt
+PASS conditional block and
+PASS conditional block or
+PASS conditional block not
+PASS invalid arrayAddmissing 'a'
+PASS invalid arrayRemove(array 1 2) position='bad'
+PASS invalid arrayAdd(array 1 2) 'a' position='bad'
+PASS invalid arrayRemove(array)
+PASS invalid range1
+PASS invalid math1 '+'
+PASS invalid math1 '/' 0
+PASS invalid math'abc' '+' 2
+PASS invalid contains'abc'
+PASS invalid matches'abc'
+PASS invalid regexExtract'abc' '('
+PASS invalid regexExtract'abc' 'z' default='none'
+PASS toJson value {}
+PASS formatJson value {}
+PASS toJson value []
+PASS formatJson value []
+PASS toJson value null
+PASS formatJson value null
+PASS toJson value 1
+PASS formatJson value 1
+PASS toJson value true
+PASS formatJson value true
+PASS toJson value "abc"
+PASS formatJson value "abc"
+PASS toJson value {"x":null}
+PASS formatJson value {"x":null}
+PASS toJson value {"x":1.0}
+PASS formatJson value {"x":1.0}
+PASS toJson value {"x":1e3}
+PASS formatJson value {"x":1e3}
+PASS toJson value {"x":"\u0001\u001f"}
+PASS formatJson value {"x":"\u0001\u001f"}
+PASS toJson value {"x":"\\u2028"}
+PASS formatJson value {"x":"\\u2028"}
+PASS jsonMerge invalid notjson{}
+PASS jsonMerge invalid []{}
+PASS jsonMerge invalid {}notjson
+PASS jsonMerge invalid {}[]
+PASS jsonMerge invalid null{}
+PASS jsonRemove expression 
+PASS jsonRemove expression bad[
+PASS jsonRemove expression $..a
+PASS jsonRemove expression $.*
+PASS invalid {{jsonMerge 1 '{}'}}
+PASS invalid {{jsonRemove 1 '$.a'}}
+PASS invalid {{jsonArrayAdd '{}' '1'}}
+PASS invalid {{jsonArrayAdd '[]' 'bad'}}
+PASS invalid {{jsonArrayAdd '[1,2]' '3' maxItems=-1}}
+PASS invalid {{jsonArrayAdd '[1,2]' '3' flatten='yes'}}
+PASS xpath variant /a/b/@id
+PASS xpath variant string(/a/b)
+PASS xpath variant boolean(/a/b)
+PASS xpath variant /a/b[2]/text()
+PASS XML variant <a z="1" a="2"/>
+PASS XML variant <a><!-- hi --><b><![CDATA[hello & world]]></b></a>
+PASS XML variant <a xmlns:x="urn:x"><x:b x:id="1">v</x:b></a>
+PASS each else
+PASS with parent
+PASS unless
+PASS null equality
+PASS lookup number
+PASS val boolean
+PASS val empty
+PASS defaultIfEmpty nil
+PASS defaultIfEmpty empty
+PASS defaultIfEmpty false
+PASS join array
+PASS join hash
+PASS log builtin
+PASS regex backreference actual
+PASS regex lookahead
+PASS nested helper error
+PASS request model extra fields
+PASS request binary body
+PASS request multipart fields
+PASS jsonMerge invalid base missing
+PASS jsonMerge invalid base true
+PASS jsonMerge invalid base 3
+PASS jsonMerge invalid base 'invalid'
+PASS jsonMerge invalid second missing
+PASS jsonMerge invalid second true
+PASS jsonMerge invalid second 3
+PASS jsonArrayAdd invalid base missing
+PASS jsonArrayAdd invalid base true
+PASS jsonArrayAdd invalid base 3
+PASS jsonArrayAdd invalid base 'invalid'
+PASS jsonArrayAdd invalid second missing
+PASS jsonArrayAdd invalid second true
+PASS jsonArrayAdd invalid second 3
+PASS jsonRemove invalid base missing
+PASS jsonRemove invalid base true
+PASS jsonRemove invalid base 3
+PASS jsonRemove invalid base 'invalid'
+PASS jsonRemove invalid second missing
+PASS jsonRemove invalid second true
+PASS jsonRemove invalid second 3
+PASS jsonArrayAdd option maxItems='3'
+PASS jsonArrayAdd option maxItems=3.1
+PASS jsonArrayAdd option maxItems=true
+PASS jsonArrayAdd option maxItems=0
+PASS jsonArrayAdd option jsonPath=''
+PASS jsonArrayAdd option jsonPath=3
+PASS jsonArrayAdd option jsonPath='$.missing'
+PASS jsonArrayAdd option jsonPath='$.x'
+PASS jsonArrayAdd option jsonPath='$['
+PASS json helper signature {{jsonRemove '{}' }}
+PASS json helper signature {{jsonRemove '{}' '$.a' '$.b'}}
+PASS json helper signature {{#jsonMerge '{}' '{}' }}{"x":1}{{/jsonMerge}}
+PASS json helper signature {{#jsonArrayAdd '[]' '[]'}}1{{/jsonArrayAdd}}
+PASS dateFormat valid 'yyyy-MM-dd'
+PASS dateFormat valid format='dd/MM/yyyy'
+PASS dateFormat valid 'short' 'en_US'
+PASS dateFormat valid 'medium' 'en_US'
+PASS dateFormat valid 'yyyy-MM-dd HH:mm' tz='America/New_York'
+PASS dateFormat input '2020-02-03'
+PASS dateFormat input 3
+PASS dateFormat input missing
+PASS request model variant {{request.absoluteUrl}}
+PASS request model variant {{request.pathSegments}}
+PASS request model variant {{request.requestLine.pathSegments}}
+PASS request model variant {{request.cookies.a}}|{{request.cookies.a.[0]}}|{{request.cookies.a.[1]}}|{{request.cookies.a.size}}
+PASS request model variant {{#each request.pathSegments}}{{@index}}={{this}};{{/each}}
+PASS dateFormat locale variant 'short' 'en_GB'
+PASS dateFormat locale variant 'full' 'en_US'
+PASS dateFormat locale variant 'medium' 'en_US' time='short'
+PASS dateFormat locale variant 'medium' 'en_US' time='long'
+PASS dateFormat locale variant 'medium' 'de_DE'
+PASS dateFormat locale variant 'medium' 'fr_FR'
+PASS dateFormat locale variant 'short' 'de_DE'
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[0]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[1]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[2]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[3]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[4]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[5]
+PASS upstream JsonArrayAddHelperTest.addsAnItemToAnArrayAndReturnsString[6]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[0]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[1]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[2]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[3]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[4]
+PASS upstream JsonArrayAddHelperTest.addsMultipleItemsToAnArrayAndReturnsString[5]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[0]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[1]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[2]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[3]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[4]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[5]
+PASS upstream JsonArrayAddHelperTest.theNumberOfItemsInTheOutputArrayCanBeLimited[6]
+PASS upstream JsonMergeHelperTest.mergesJsonObjects[0]
+PASS upstream JsonMergeHelperTest.mergesJsonObjects[1]
+PASS upstream JsonMergeHelperTest.mergesJsonObjects[2]
+PASS upstream JsonMergeHelperTest.mergesJsonObjects[3]
+PASS upstream JsonMergeHelperTest.mergesJsonObjects[4]
+PASS upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[0]
+PASS upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[1]
+PASS upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[2]
+PASS upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[3]
+PASS upstream JsonRemoveHelperTest.removesElementsFromStringInputAndReturnsString[4]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[0]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[1]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[2]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[3]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[4]
+PASS upstream JsonRemoveHelperTest.noOpIfJsonpathResultIsNotFoundForInputJson[5]
+{"reference_version": "4.0.0-beta.40", "timestamp_utc": "2026-10-12T06:14:04.978263+00:00", "comparison": "Exact status and response body bytes for every case including JVM diagnostics", "cases": 429, "passed": 429, "exact_body_pass": 429, "diagnostic_status_pass": 0, "failed": [], "strict_passed": 429, "strict_failed": 0, "strict_unsupported": []}
+PASS version JSON
+PASS version text
+PASS health
+PASS default missing certificate
+PASS asset docs
+PASS asset docs/swagger
+PASS asset recorder
+PASS asset recorder/
+PASS asset swagger-ui/
+PASS asset swagger-ui/swagger-ui-dist/swagger-ui.css
+PASS asset recorder/lib/jquery-4.0.0.min.js
+PASS reset
+PASS empty mappings
+PASS empty unmatched response
+PASS empty unmatched journal
+PASS empty unmatched list
+PASS empty unmatched clear
+PASS settings initialize
+PASS settings
+PASS settings update
+PASS settings read updated
+PASS default mapping omitted objects
+PASS default mapping get
+PASS default mapping duplicate error
+PASS default mapping legacy edit
+PASS default mapping legacy get
+PASS default mapping delete
+PASS invalid UUID error
+PASS unknown mapping property error
+PASS legacy missing mapping
+PASS response string status
+PASS response string status get
+PASS response string status delete
+PASS response body precedence
+PASS response body precedence delete
+PASS unknown request property
+PASS unknown response property
+PASS HTTP entity typedtext
+PASS HTTP entity delete typedtext
+PASS HTTP entity typedjson
+PASS HTTP entity delete typedjson
+PASS HTTP entity typedbinary
+PASS HTTP entity delete typedbinary
+PASS HTTP entity base64
+PASS HTTP entity delete base64
+PASS HTTP entity file
+PASS HTTP entity delete file
+PASS HTTP entity charset
+PASS HTTP entity delete charset
+PASS HTTP entity compression
+PASS HTTP entity delete compression
+PASS v4 ignored schema and uuid
+PASS v4 ignored schema cleanup
+PASS persistent create
+PASS persistent reset
+PASS persistent survives reset
+PASS persistent delete
+PASS extended settings initialize
+PASS extended settings initial read
+PASS extended settings patch
+PASS extended settings patched read
+PASS settings restore
+PASS unknown scenario error
+PASS admin root mappings
+PASS unknown admin path
+PASS ordered user maps create
+PASS ordered user maps get
+PASS ordered user maps update
+PASS ordered user maps delete
+PASS create mapping
+PASS get mapping
+PASS list mapping
+PASS metadata find
+PASS unmatched mappings
+PASS serve matched
+PASS journal count
+PASS journal find
+PASS journal list
+PASS near misses request pattern
+PASS unmatched near misses empty
+PASS journal unmatched filter
+PASS journal future filter
+PASS journal past filter
+PASS journal invalid date
+PASS journal invalid stub UUID
+PASS no unmatched mappings
+PASS recording start
+PASS recording active status
+PASS recording empty stop
+PASS recording stopped status
+PASS recording double stop
+PASS snapshot local stub
+PASS snapshot extract text body
+PASS remove requests by metadata
+PASS clear journal
+PASS file put
+PASS file get
+PASS file list
+PASS file delete
+PASS delete mapping
+PASS clear mappings
+PASS import
+PASS save
+PASS delete saved mapping
+PASS reset persisted
+PASS get persisted
+PASS metadata remove
+PASS scenario create
+PASS scenario list
+PASS scenario state
+PASS scenario invalid state
+PASS scenario null state
+PASS scenario empty body reset
+PASS scenario reset
+PASS record proxy start
+PASS record proxy serve first
+PASS record proxy serve repeated
+PASS record proxy stop
+PASS record replay first
+PASS record replay second
+PASS webhook clear mappings
+PASS webhook clear journal
+PASS webhook mapping
+PASS webhook trigger
+PASS webhook journal
+PASS closest unmatched response
+PASS closest unmatched journal
+PASS closest unmatched near misses
+PASS final reset
+130/130 passed
+PASS lower priority wins
+PASS latest equal priority wins
+PASS priority fallback
+PASS scenario transitions and reset
+PASS multiple response headers
+PASS binary all octets
+PASS JSON nested order
+PASS JSON unicode
+PASS JSON numeric
+PASS JSON escaped unicode
+PASS JSON number spelling
+PASS JSON duplicate keys
+PASS JSON escaped slash
+PASS JSON precise integers
+PASS JSON edge tiny
+PASS JSON edge large exponent
+PASS JSON edge negative zero decimals
+PASS JSON edge scaled exponent
+PASS JSON edge unpaired high surrogate
+PASS JSON edge unpaired low surrogate
+PASS JSON edge paired surrogate
+PASS JSON edge separators
+PASS JSON template
+PASS template header array
+PASS HEAD request
+PASS 204 ignores body
+PASS global fixed delay
+PASS local delay overrides global
+PASS chunked dribble response bytes
+PASS proxy raw path and query
+PASS proxy base path
+PASS proxy removes URL prefix
+PASS proxy binary request
+PASS proxy additional request headers
+PASS proxy removes request headers
+PASS proxy response header override
+PASS proxy additional multivalue headers
+PASS proxy remove then add header
+PASS proxy additional host header
+PASS proxy hop-by-hop request header
+PASS gzip request matching
+PASS inline negotiated gzip
+PASS proxy gzip bytes
+PASS unknown transformer ignored
+PASS unknown transformer alongside template
+PASS templated proxy additional header
+46/46 passed
+PASS repeat 32
+PASS repeat 64
+PASS repeat 511
+PASS repeat 8191
+PASS repeat 8192
+PASS repeat 8193
+PASS repeat 65535
+PASS repeat 65536
+PASS repeat 65537
+PASS repeat 262144
+PASS repeat 1048576
+PASS counter 32
+PASS counter 64
+PASS counter 511
+PASS counter 8191
+PASS counter 8192
+PASS counter 8193
+PASS counter 65535
+PASS counter 65536
+PASS counter 65537
+PASS counter 262144
+PASS counter 1048576
+PASS random 32
+PASS random 64
+PASS random 511
+PASS random 8191
+PASS random 8192
+PASS random 8193
+PASS random 65535
+PASS random 65536
+PASS random 65537
+PASS random 262144
+PASS random 1048576
+PASS encoding gzip
+PASS encoding GZIP
+PASS encoding gzip;q=0
+PASS encoding gzip;q=0.00
+PASS encoding gzip;q=0.001
+PASS encoding gzip;q=0.5
+PASS encoding *
+PASS encoding *;q=1
+PASS encoding br, gzip
+PASS encoding gzip;q=0, *;q=1
+PASS encoding identity
+PASS encoding gzip;q=0.000
+PASS encoding gzip;q=0.5, gzip;q=0
+PASS encoding deflate, gzip;q=0.0
+PASS encoding gzip; q=0
+PASS type application/octet-stream
+PASS type application/pdf
+PASS type application/zip
+PASS type image/png
+PASS type image/svg+xml
+PASS type application/problem+json
+PASS type text/event-stream
+PASS type application/x-protobuf
+PASS type application/gzip
+PASS type application/x-gzip
+PASS type application/x-bzip2
+PASS type application/vnd.api+json
+PASS type audio/mpeg
+PASS type video/mp4
+PASS type font/woff2
+PASS type text/html; charset=utf-8
+PASS type image/custom
+PASS type audio/custom
+PASS type TEXT/PLAIN
+PASS threshold 0
+PASS threshold 1
+PASS threshold 30
+PASS threshold 31
+PASS threshold 32
+PASS threshold 33
+PASS inline threshold 0
+PASS inline threshold 1
+PASS inline threshold 30
+PASS inline threshold 31
+PASS inline threshold 32
+PASS inline threshold 33
+PASS explicit length 0
+PASS explicit length 1
+PASS explicit length 31
+PASS explicit length 32
+PASS explicit length 100
+PASS method GET
+PASS method POST
+PASS method PUT
+PASS method PATCH
+PASS method DELETE
+PASS method HEAD
+PASS method OPTIONS
+PASS excluded path svgz
+PASS excluded path png
+PASS excluded path PNG
+PASS excluded path zip
+PASS excluded path mp3
+PASS excluded path pdf
+PASS excluded path txt
+PASS chunked gzip
+99/99 strict gzip cases pass
+PASS empty server
+PASS URL mismatch
+PASS method mismatch
+PASS path mismatch
+PASS regex mismatch
+PASS path regex mismatch
+PASS template mismatch
+PASS regex question hint
+PASS invalid URL prefix
+PASS named mapping
+PASS narrow console
+PASS long URL wrap
+PASS header absent
+PASS header mismatch
+PASS header contains
+PASS query absent
+PASS query mismatch
+PASS query multivalue
+PASS cookie mismatch
+PASS form mismatch
+PASS text body mismatch
+PASS text body contains
+--- 
++++ 
+@@ -9,6 +9,6 @@
+ ANY                                                        | POST
+ (always)                                                   | /actual
+                                                            |
+-YWJj                                                       | [B@33a1fa28                                         <<<<< Body does not match
++YWJj                                                       | YWN0dWFs                                            <<<<< Body does not match
+                                                            |
+ -----------------------------------------------------------------------------------------------------------------------
+
+FAIL binary body mismatch
+PASS scenario mismatch
+PASS path parameter mismatch
+PASS closest URL distance
+PASS near API empty
+PASS near API URL
+PASS near API method
+PASS near API header
+PASS near API query
+PASS near API ranked
+PASS JSON body mismatch
+PASS XML body mismatch
+PASS JSONPath absent
+PASS XPath absent
+PASS JSONPath nested mismatch
+PASS header absent condition
+PASS body multiline wrap
+PASS near API URLPattern
+PASS near API full request
+40/41 strict passes
+140/140
+PASS listener text
+PASS legacy text
+PASS binary
+PASS GET ignores body
+PASS DELETE ignores body
+PASS missing method rejects callback
+PASS fixed delay
+7/7 passed
+PASS EMPTY_RESPONSE HTTP/1.1  GET
+PASS EMPTY_RESPONSE HTTP/1.1  HEAD
+PASS EMPTY_RESPONSE HTTP/1.1 Connection: close GET
+PASS EMPTY_RESPONSE HTTP/1.1 Connection: close HEAD
+PASS EMPTY_RESPONSE HTTP/1.1 Connection: keep-alive GET
+PASS EMPTY_RESPONSE HTTP/1.1 Connection: keep-alive HEAD
+PASS EMPTY_RESPONSE HTTP/1.0  GET
+PASS EMPTY_RESPONSE HTTP/1.0  HEAD
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1  GET
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1  HEAD
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1 Connection: close GET
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1 Connection: close HEAD
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1 Connection: keep-alive GET
+PASS CONNECTION_RESET_BY_PEER HTTP/1.1 Connection: keep-alive HEAD
+PASS CONNECTION_RESET_BY_PEER HTTP/1.0  GET
+PASS CONNECTION_RESET_BY_PEER HTTP/1.0  HEAD
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1  GET
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1  HEAD
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1 Connection: close GET
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1 Connection: close HEAD
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1 Connection: keep-alive GET
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.1 Connection: keep-alive HEAD
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.0  GET
+PASS RANDOM_DATA_THEN_CLOSE HTTP/1.0  HEAD
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1  GET
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1  HEAD
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1 Connection: close GET
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1 Connection: close HEAD
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1 Connection: keep-alive GET
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.1 Connection: keep-alive HEAD
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.0  GET
+PASS MALFORMED_RESPONSE_CHUNK HTTP/1.0  HEAD
+32/32 strict passes
+PASS missing {'filePath': 'absent.txt'}
+PASS missing {'dataStore': 'unknown', 'dataRef': 'unknown'}
+PASS missing {'dataStore': '__files', 'dataRef': 'absent.txt'}
+PASS 'hello'
+PASS {'data': 'hello'}
+PASS {'data': 'hello', 'format': 'text'}
+PASS {'data': 'hi', 'format': 'binary'}
+PASS {'base64Data': 'AP9BQkM='}
+PASS {'base64Data': 'w6k=', 'format': 'text'}
+PASS {'data': {'z': 1, 'a': [True, None, 'x']}}
+PASS {'data': 'hello', 'compression': 'gzip'}
+PASS {'data': 'x', 'compression': 'none'}
+PASS UTF-8 text
+PASS UTF-8 binary
+PASS ISO-8859-1 text
+PASS ISO-8859-1 binary
+PASS UTF-16 text
+PASS UTF-16 binary
+PASS UTF-16BE text
+PASS UTF-16BE binary
+PASS UTF-16LE text
+PASS UTF-16LE binary
+PASS US-ASCII text
+PASS US-ASCII binary
+PASS windows-1252 text
+PASS windows-1252 binary
+PASS Shift_JIS text
+PASS Shift_JIS binary
+PASS precedence/template {'jsonBody': {'z': 1, 'a': 2}, 'body': 'ignored', 'base64Body': 'eA=='}
+PASS precedence/template {'base64Body': 'eA==', 'body': 'ignored'}
+PASS precedence/template {'body': {'data': '{{request.method}}', 'format': 'binary'}, 'transformers': ['response-template']}
+PASS precedence/template {'base64Body': 'e3tyZXF1ZXN0Lm1ldGhvZH19', 'transformers': ['response-template']}
+PASS precedence/template {'body': {'data': 'café {{request.path}}', 'charset': 'ISO-8859-1'}, 'transformers': ['response-template']}
+PASS precedence/template {'jsonBody': {'x': '{{request.headers.X-Missing}}'}, 'transformers': ['response-template']}
+34/34
+PASS reset
+PASS clear initial message mappings
+PASS empty mappings
+PASS empty messages
+PASS empty journal
+PASS empty count
+PASS empty find
+PASS empty wait
+PASS empty wait count
+PASS missing event
+PASS missing event delete
+PASS empty channel send
+PASS missing provider name
+PASS missing provider driver
+PASS missing channel provider
+PASS missing channel name
+PASS missing send message
+PASS missing action message
+PASS missing action target provider
+PASS missing http request pattern
+PASS missing http stub ID
+PASS mapping defaults
+PASS mapping get
+PASS mapping list
+PASS mapping action entity plain
+PASS mapping action entity typedtext
+PASS mapping action entity typedjson
+PASS mapping action entity typedbinary
+PASS mapping action entity base64
+PASS mapping action entity file
+PASS mapping action entity charset
+PASS mapping action entity compression
+PASS mapping nested channel patterns
+PASS mapping edit
+PASS metadata find
+PASS provider register
+PASS provider register z-provider
+PASS provider register a-provider
+PASS provider register middle-provider
+PASS providers hash iteration order
+PASS provider remove z-provider
+PASS provider remove a-provider
+PASS provider remove middle-provider
+PASS provider get
+PASS provider list
+PASS provider update
+PASS fixed channel create
+PASS fixed channel duplicate conflict
+PASS fixed channel list
+PASS fixed channel get
+PASS fixed channel send
+PASS message journal
+PASS message count body
+PASS message find body
+PASS message get
+PASS message wait
+PASS message wait count
+PASS message remove
+PASS message empty after removal
+PASS missing target mapping
+PASS missing action target returns404
+PASS failed action is not journalled
+PASS missing target mapping delete
+PASS fixed channel delete
+PASS fixed channel missing
+PASS provider delete
+PASS provider missing
+PASS metadata remove
+PASS mapping missing
+PASS duplicate mapping first
+PASS duplicate mapping second
+PASS duplicate mapping list
+PASS duplicate mapping get
+PASS duplicate mapping edit
+PASS duplicate mapping list after edit
+PASS duplicate mapping delete all
+PASS duplicate mapping empty
+PASS mapping reset
+PASS reset final
+79/79 passed
+PASS websocket send length 5
+PASS websocket send length 0
+PASS websocket send length 7
+PASS websocket send length 11
+PASS websocket send length 130
+PASS websocket send length 66000
+PASS websocket fragmented input
+PASS websocket message/request/parameters template
+PASS websocket binary send
+PASS websocket binary receive
+PASS websocket ping pong
+PASS sse body 'hello'
+PASS sse body ''
+PASS sse body 'a\nb\n'
+PASS sse body 'a\rb\r\nc'
+PASS sse body '😀'
+PASS sse all event headers
+PASS sse repeated header first
+PASS sse binary data
+PASS sse HTTP trigger all headers
+PASS sse HTTP trigger repeated headers
+PASS sse HTTP template body+headers
+PASS websocket client close echo
+PASS websocket admin close
+PASS websocket receive 65537 byte text
+PASS websocket protocol unmasked
+PASS websocket protocol reserved-bit
+PASS websocket protocol unknown-opcode
+PASS websocket protocol fragmented-ping
+PASS websocket protocol invalid-utf8
+PASS websocket protocol one-byte-close
+PASS websocket ordinary HTTP no upgrade
+PASS websocket unsupported version
+PASS websocket highest priority mapping
+PASS websocket newest mapping same priority
+PASS websocket initiating request and message patterns
+PASS websocket HTTP-stub trigger
+PASS websocket unmatched HTTP trigger
+PASS websocket broadcast two channels
+PASS websocket typed entity {'data': 'café', 'charset': 'ISO-8859-1'}
+PASS websocket typed entity {'data': 'hello {{message.body}}', 'format': 'binary'}
+PASS websocket typed entity {'data': 'AAEC/w==', 'encoding': 'base64', 'format': 'binary'}
+PASS websocket and SSE broadcast type filtering
+PASS SSE retains peer-disconnected channel until write or close
+PASS HTTP trigger precedes new channel registration
+PASS websocket action missing file error
+PASS websocket action missing fixed channel error
+PASS websocket action unknown helper error
+PASS configured WebSocket text message limit 8
+PASS configured WebSocket binary message limit 12
+PASS configured WebSocket idle timeout
+PASS compressed WebSocket decoded text limit 100
+PASS compressed WebSocket decoded text limit 10000
+{"reference_version": "4.0.0-beta.40", "timestamp_utc": "2026-10-12T06:14:26.220486+00:00", "cases": 53, "strict_passed": 51, "strict_failed": 0, "lifecycle_passed": 2}
+{
+  "reference": "WireMock 4.0.0-beta.40",
+  "comparison": "exact status line and body bytes",
+  "passed": 17,
+  "total": 17,
+  "results": [
+    {
+      "name": "209 'Custom Reason'",
+      "passed": true
+    },
+    {
+      "name": "209 ''",
+      "passed": true
+    },
+    {
+      "name": "209 'caf\u00e9'",
+      "passed": true
+    },
+    {
+      "name": "209 'line\\r\\nbreak'",
+      "passed": true
+    },
+    {
+      "name": "209 '\u6f22\u5b57'",
+      "passed": true
+    },
+    {
+      "name": "209 '\ud83d\ude42'",
+      "passed": true
+    },
+    {
+      "name": "209 'tab\\there'",
+      "passed": true
+    },
+    {
+      "name": "209 'control\\x01\\x7f'",
+      "passed": true
+    },
+    {
+      "name": "200 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "203 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "413 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "418 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "425 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "451 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "500 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "506 'ignored'",
+      "passed": true
+    },
+    {
+      "name": "599 'ignored'",
+      "passed": true
+    }
+  ]
+}
+PASS websocket HTTP mapping
+PASS websocket message mapping
+PASS websocket channel list
+PASS websocket matched received and sent journal
+PASS websocket count channel
+PASS websocket count body
+PASS websocket unmatched journal
+PASS websocket binary journal
+PASS websocket remove matched messages
+PASS websocket channels after close
+PASS websocket journal after close
+PASS clear websocket messages
+PASS clear websocket mappings
+PASS sse HTTP mapping
+PASS sse channel list
+PASS sse admin push
+PASS sse sent journal
+PASS sse count channel
+PASS sse channels after close
+PASS sse journal after close
+20/20 passed
+PASS single timeout
+PASS single future filtered arrival
+PASS multiple future arrivals
+PASS partial results at timeout
+FAIL existing count caps results
+FAIL single ignores count
+FAIL zero timeout returns current count
+4/7 passed
+PASS java iteration 0 under-cap
+PASS java iteration 0 over-cap
+PASS java iteration 1 under-cap
+PASS java iteration 1 over-cap
+PASS java iteration 2 under-cap
+PASS java iteration 2 over-cap
+PASS java sequential retention order
+PASS java scenario completed-transition visibility
+PASS go iteration 0 under-cap
+PASS go iteration 0 over-cap
+PASS go iteration 1 under-cap
+PASS go iteration 1 over-cap
+PASS go iteration 2 under-cap
+PASS go iteration 2 over-cap
+PASS go sequential retention order
+PASS go scenario completed-transition visibility
+PASS go deterministic journal
+PASS go deterministic count
+PASS go deterministic unmatched count
+{"invariants_passed": 16, "invariants_failed": 0, "exact_admin_byte_comparisons_passed": 2, "normalized_admin_byte_comparisons_passed": 1, "byte_comparisons_failed": 0, "passed": true}
+0/2 passed
+[
+  {
+    "suite": "fixtures_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "matcher_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "template_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "admin_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "runtime_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "gzip_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "diagnostics_differential.py",
+    "exit_code": 1
+  },
+  {
+    "suite": "matcher_distance_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "webhook_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "fault_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "entity_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "messaging_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "streaming_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "status_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "streaming_journal_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "message_wait_differential.py",
+    "exit_code": 1
+  },
+  {
+    "suite": "journal_concurrency_differential.py",
+    "exit_code": 0
+  },
+  {
+    "suite": "message_wait_differential.py:disabled-journal",
+    "exit_code": 1
+  }
+]

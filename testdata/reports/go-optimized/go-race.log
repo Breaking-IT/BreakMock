@@ -1,0 +1,7 @@
+ok  	github.com/Breaking-IT/BreakMock	1.894s
+ok  	github.com/Breaking-IT/BreakMock/cmd/bmbench	1.935s
+?   	github.com/Breaking-IT/BreakMock/cmd/breakmock	[no test files]
+?   	github.com/Breaking-IT/BreakMock/internal/adminassets	[no test files]
+?   	github.com/Breaking-IT/BreakMock/internal/handlebars	[no test files]
+?   	github.com/Breaking-IT/BreakMock/internal/localeassets	[no test files]
+?   	github.com/Breaking-IT/BreakMock/internal/websocket	[no test files]

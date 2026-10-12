@@ -1,0 +1,27 @@
+File: server
+Type: delay
+Time: 2026-10-12 08:16:35 CEST
+Showing nodes accounting for 191.91s, 100% of 192s total
+Dropped 310 nodes (cum <= 0.96s)
+Showing top 20 nodes out of 32
+      flat  flat%   sum%        cum   cum%
+   156.65s 81.59% 81.59%    156.95s 81.74%  sync.(*Mutex).Unlock (inline)
+    17.52s  9.12% 90.71%     17.52s  9.12%  runtime.unlock (partial-inline)
+    16.02s  8.35% 99.05%    173.40s 90.31%  sync.(*RWMutex).Unlock
+     1.72s   0.9%   100%      1.90s  0.99%  sync.(*RWMutex).RUnlock (partial-inline)
+         0     0%   100%    176.08s 91.71%  github.com/Breaking-IT/BreakMock.(*Server).ServeHTTP
+         0     0%   100%    174.63s 90.95%  github.com/Breaking-IT/BreakMock.(*Server).ServeHTTP.func1
+         0     0%   100%    174.63s 90.95%  github.com/Breaking-IT/BreakMock.(*Store).RecordServed
+         0     0%   100%    172.49s 89.84%  github.com/Breaking-IT/BreakMock.(*Store).RecordServed.deferwrap1
+         0     0%   100%    174.35s 90.80%  net/http.(*Server).Serve.gowrap3
+         0     0%   100%    177.31s 92.35%  net/http.(*conn).serve
+         0     0%   100%    176.08s 91.71%  net/http.serverHandler.ServeHTTP
+         0     0%   100%    173.08s 90.15%  runtime.deferreturn
+         0     0%   100%      1.11s  0.58%  runtime.entersyscall
+         0     0%   100%      9.52s  4.96%  runtime.findRunnable
+         0     0%   100%      1.24s  0.64%  runtime.gcstopm
+         0     0%   100%      2.15s  1.12%  runtime.gopreempt_m
+         0     0%   100%      2.22s  1.15%  runtime.goschedImpl
+         0     0%   100%      2.11s  1.10%  runtime.injectglist
+         0     0%   100%      1.87s  0.97%  runtime.injectglist.func1
+         0     0%   100%     10.82s  5.63%  runtime.mcall

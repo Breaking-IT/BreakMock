@@ -1,0 +1,281 @@
+{
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "notes": [
+    "Fresh process each sample; warm OS file cache, not a cold machine.",
+    "Balanced server ordering. Readiness requires disk mapping load and correct templated response.",
+    "2ms poll interval; measurements include process launch and HTTP probe overhead.",
+    "No concurrent benchmark workloads or builds intended."
+  ],
+  "results": [
+    {
+      "server": "java",
+      "round": 1,
+      "startup_seconds": 0.6168069581035525,
+      "ready_rss_mib": 199.328125
+    },
+    {
+      "server": "go",
+      "round": 1,
+      "startup_seconds": 0.015159917064011097,
+      "ready_rss_mib": 16.71875
+    },
+    {
+      "server": "rust",
+      "round": 1,
+      "startup_seconds": 0.02467133302707225,
+      "ready_rss_mib": 11.171875
+    },
+    {
+      "server": "go",
+      "round": 2,
+      "startup_seconds": 0.010397707927040756,
+      "ready_rss_mib": 16.359375
+    },
+    {
+      "server": "rust",
+      "round": 2,
+      "startup_seconds": 0.008380790939554572,
+      "ready_rss_mib": 11.203125
+    },
+    {
+      "server": "java",
+      "round": 2,
+      "startup_seconds": 0.5827226659748703,
+      "ready_rss_mib": 205.015625
+    },
+    {
+      "server": "rust",
+      "round": 3,
+      "startup_seconds": 0.010362457949668169,
+      "ready_rss_mib": 11.15625
+    },
+    {
+      "server": "java",
+      "round": 3,
+      "startup_seconds": 0.580938708037138,
+      "ready_rss_mib": 211.1875
+    },
+    {
+      "server": "go",
+      "round": 3,
+      "startup_seconds": 0.010743374936282635,
+      "ready_rss_mib": 16.515625
+    },
+    {
+      "server": "java",
+      "round": 4,
+      "startup_seconds": 0.624311082996428,
+      "ready_rss_mib": 206.21875
+    },
+    {
+      "server": "go",
+      "round": 4,
+      "startup_seconds": 0.010631500044837594,
+      "ready_rss_mib": 16.46875
+    },
+    {
+      "server": "rust",
+      "round": 4,
+      "startup_seconds": 0.008057459024712443,
+      "ready_rss_mib": 11.125
+    },
+    {
+      "server": "go",
+      "round": 5,
+      "startup_seconds": 0.009973709005862474,
+      "ready_rss_mib": 16.53125
+    },
+    {
+      "server": "rust",
+      "round": 5,
+      "startup_seconds": 0.00791287503670901,
+      "ready_rss_mib": 11.125
+    },
+    {
+      "server": "java",
+      "round": 5,
+      "startup_seconds": 0.6071548330364749,
+      "ready_rss_mib": 203.8125
+    },
+    {
+      "server": "rust",
+      "round": 6,
+      "startup_seconds": 0.008361792075447738,
+      "ready_rss_mib": 11.171875
+    },
+    {
+      "server": "java",
+      "round": 6,
+      "startup_seconds": 0.6025969999609515,
+      "ready_rss_mib": 212.453125
+    },
+    {
+      "server": "go",
+      "round": 6,
+      "startup_seconds": 0.01021570898592472,
+      "ready_rss_mib": 16.8125
+    },
+    {
+      "server": "java",
+      "round": 7,
+      "startup_seconds": 0.6007224170025438,
+      "ready_rss_mib": 203.28125
+    },
+    {
+      "server": "go",
+      "round": 7,
+      "startup_seconds": 0.014356540981680155,
+      "ready_rss_mib": 16.671875
+    },
+    {
+      "server": "rust",
+      "round": 7,
+      "startup_seconds": 0.007860833080485463,
+      "ready_rss_mib": 11.125
+    },
+    {
+      "server": "go",
+      "round": 8,
+      "startup_seconds": 0.009848749963566661,
+      "ready_rss_mib": 16.5625
+    },
+    {
+      "server": "rust",
+      "round": 8,
+      "startup_seconds": 0.007927750004455447,
+      "ready_rss_mib": 11.1875
+    },
+    {
+      "server": "java",
+      "round": 8,
+      "startup_seconds": 0.5958614160772413,
+      "ready_rss_mib": 203.328125
+    },
+    {
+      "server": "rust",
+      "round": 9,
+      "startup_seconds": 0.008610374992713332,
+      "ready_rss_mib": 11.140625
+    },
+    {
+      "server": "java",
+      "round": 9,
+      "startup_seconds": 0.5984412920661271,
+      "ready_rss_mib": 211.359375
+    },
+    {
+      "server": "go",
+      "round": 9,
+      "startup_seconds": 0.01618124998640269,
+      "ready_rss_mib": 16.8125
+    },
+    {
+      "server": "java",
+      "round": 10,
+      "startup_seconds": 0.6620096659753472,
+      "ready_rss_mib": 196.46875
+    },
+    {
+      "server": "go",
+      "round": 10,
+      "startup_seconds": 0.011886957916431129,
+      "ready_rss_mib": 16.671875
+    },
+    {
+      "server": "rust",
+      "round": 10,
+      "startup_seconds": 0.007555958931334317,
+      "ready_rss_mib": 11.171875
+    },
+    {
+      "server": "go",
+      "round": 11,
+      "startup_seconds": 0.00925999996252358,
+      "ready_rss_mib": 16.703125
+    },
+    {
+      "server": "rust",
+      "round": 11,
+      "startup_seconds": 0.00754091702401638,
+      "ready_rss_mib": 11.1875
+    },
+    {
+      "server": "java",
+      "round": 11,
+      "startup_seconds": 0.6270679170265794,
+      "ready_rss_mib": 206.046875
+    },
+    {
+      "server": "rust",
+      "round": 12,
+      "startup_seconds": 0.010901583009399474,
+      "ready_rss_mib": 11.125
+    },
+    {
+      "server": "java",
+      "round": 12,
+      "startup_seconds": 0.5967132080113515,
+      "ready_rss_mib": 210.0
+    },
+    {
+      "server": "go",
+      "round": 12,
+      "startup_seconds": 0.013762917020358145,
+      "ready_rss_mib": 16.4375
+    },
+    {
+      "server": "java",
+      "round": 13,
+      "startup_seconds": 0.5926511250436306,
+      "ready_rss_mib": 203.875
+    },
+    {
+      "server": "go",
+      "round": 13,
+      "startup_seconds": 0.011508000083267689,
+      "ready_rss_mib": 16.5625
+    },
+    {
+      "server": "rust",
+      "round": 13,
+      "startup_seconds": 0.007894167094491422,
+      "ready_rss_mib": 11.109375
+    },
+    {
+      "server": "go",
+      "round": 14,
+      "startup_seconds": 0.010131666087545455,
+      "ready_rss_mib": 16.484375
+    },
+    {
+      "server": "rust",
+      "round": 14,
+      "startup_seconds": 0.0077894170535728335,
+      "ready_rss_mib": 11.15625
+    },
+    {
+      "server": "java",
+      "round": 14,
+      "startup_seconds": 0.6444483749801293,
+      "ready_rss_mib": 220.265625
+    },
+    {
+      "server": "rust",
+      "round": 15,
+      "startup_seconds": 0.008457708056084812,
+      "ready_rss_mib": 11.140625
+    },
+    {
+      "server": "java",
+      "round": 15,
+      "startup_seconds": 0.5938646249705926,
+      "ready_rss_mib": 213.6875
+    },
+    {
+      "server": "go",
+      "round": 15,
+      "startup_seconds": 0.012122250045649707,
+      "ready_rss_mib": 16.5
+    }
+  ]
+}

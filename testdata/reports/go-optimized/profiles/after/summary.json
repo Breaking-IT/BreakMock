@@ -1,0 +1,25 @@
+{
+  "source_root": "/Users/jvangaalen/git/jgaalen/wiremock-go/BreakMock-rust",
+  "binary_sha256": "c40108a2dc6050ab04d9920d6d6ccc6f60c05c2efb64ba576250dec29cd16686",
+  "load": {
+    "concurrency": 32,
+    "dropped": 0,
+    "errors": 0,
+    "p50_ms": 0.268,
+    "p95_ms": 0.838,
+    "p99_ms": 1.25,
+    "requests": 1398306,
+    "rps": 93189.64120575936,
+    "seconds": 15.004951,
+    "target_rps": 0,
+    "url": "http://127.0.0.1:18522/bench?name=Ada"
+  },
+  "allocated_bytes_per_request": 11447.483128871649,
+  "allocations_per_request": 122.127899043557,
+  "gc_cycles": 1900,
+  "notes": [
+    "Profiled throughput is not a benchmark result.",
+    "Allocation deltas cover the 15s load plus profiling/probe overhead; 3s warmup excluded.",
+    "pprof allocation totals include warmup; mutex delay is cumulative across waiting goroutines, not CPU time."
+  ]
+}

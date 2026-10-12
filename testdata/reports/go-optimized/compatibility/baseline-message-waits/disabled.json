@@ -1,0 +1,31 @@
+{
+  "comparison": "Exact disabled-journal error bodies after server-origin replacement",
+  "passed": 0,
+  "total": 2,
+  "results": [
+    {
+      "name": "disabled journal wait",
+      "pass": false,
+      "reference": [
+        500,
+        "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html;charset=ISO-8859-1\"/>\n<title>Error 500 com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</title>\n</head>\n<body>\n<h2>HTTP ERROR 500 com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</h2>\n<table>\n<tr><th>URI:</th><td>http://127.0.0.1:18111/__admin/messages/wait</td></tr>\n<tr><th>STATUS:</th><td>500</td></tr>\n<tr><th>MESSAGE:</th><td>com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</td></tr>\n</table>\n\n</body>\n</html>\n"
+      ],
+      "candidate": [
+        200,
+        "null"
+      ]
+    },
+    {
+      "name": "disabled journal wait-for-count",
+      "pass": false,
+      "reference": [
+        500,
+        "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html;charset=ISO-8859-1\"/>\n<title>Error 500 com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</title>\n</head>\n<body>\n<h2>HTTP ERROR 500 com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</h2>\n<table>\n<tr><th>URI:</th><td>http://127.0.0.1:18111/__admin/messages/wait-for-count</td></tr>\n<tr><th>STATUS:</th><td>500</td></tr>\n<tr><th>MESSAGE:</th><td>com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available</td></tr>\n</table>\n\n</body>\n</html>\n"
+      ],
+      "candidate": [
+        200,
+        "{\n  \"messageServeEvents\" : [ ],\n  \"messageJournalDisabled\" : true\n}"
+      ]
+    }
+  ]
+}

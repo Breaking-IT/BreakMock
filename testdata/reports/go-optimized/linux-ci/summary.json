@@ -1,0 +1,174 @@
+{
+  "test": {
+    "failed_case_log_lines": [
+      "2026-10-12T06:35:02.5899666Z FAIL binary body mismatch",
+      "2026-10-12T06:35:32.3649204Z FAIL existing count caps results",
+      "2026-10-12T06:35:32.3649610Z FAIL single ignores count",
+      "2026-10-12T06:35:32.3650003Z FAIL zero timeout returns current count"
+    ],
+    "suites": [
+      {
+        "suite": "fixtures_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "matcher_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "template_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "admin_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "runtime_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "gzip_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "diagnostics_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "matcher_distance_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "webhook_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "fault_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "entity_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "messaging_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "status_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_journal_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "journal_concurrency_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py:disabled-journal",
+        "exit_code": 1
+      }
+    ],
+    "failed_suite_count": 3
+  },
+  "rust": {
+    "failed_case_log_lines": [
+      "2026-10-12T06:36:13.3711697Z FAIL binary body mismatch"
+    ],
+    "suites": [
+      {
+        "suite": "fixtures_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "matcher_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "template_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "admin_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "runtime_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "gzip_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "diagnostics_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "matcher_distance_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "webhook_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "fault_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "entity_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "messaging_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "status_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_journal_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "journal_concurrency_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py:disabled-journal",
+        "exit_code": 0
+      }
+    ],
+    "failed_suite_count": 1
+  },
+  "interpretation": "No newly failing differential suites or cases. Go retains JVM binary identity diagnostic and five message-wait failures. Rust retains only JVM binary identity diagnostic. Both journal concurrency suites pass; Go race/vet/container and Rust fmt/unit/Clippy steps succeed."
+}

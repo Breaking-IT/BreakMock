@@ -1,5 +1,8 @@
 # Rust journal optimization and fresh three-way comparison
 
+The subsequent [Go optimization comparison](GO_JOURNAL_OPTIMIZATION.md) supersedes
+the runtime measurements and language comparison below; this report is historical.
+
 Measured on 2026-10-12. This supersedes the initial journal-throughput findings in
 [RUST_COMPARISON.md](RUST_COMPARISON.md). Results compare the existing optimized Go
 implementation with the optimized Rust implementation and pinned Java WireMock

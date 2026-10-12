@@ -1,0 +1,28 @@
+File: server
+Type: cpu
+Time: 2026-10-12 08:16:20 CEST
+Duration: 10.11s, Total samples = 49.06s (485.44%)
+Showing nodes accounting for 45.76s, 93.27% of 49.06s total
+Dropped 401 nodes (cum <= 0.25s)
+Showing top 20 nodes out of 102
+      flat  flat%   sum%        cum   cum%
+    27.98s 57.03% 57.03%     27.99s 57.05%  syscall.rawsyscalln
+     7.70s 15.70% 72.73%      7.70s 15.70%  runtime.usleep
+     3.32s  6.77% 79.49%      3.32s  6.77%  runtime.pthread_cond_wait
+     2.92s  5.95% 85.45%      2.92s  5.95%  runtime.kevent
+     1.15s  2.34% 87.79%      1.15s  2.34%  runtime.pthread_cond_signal
+     1.14s  2.32% 90.11%      1.14s  2.32%  runtime.pthread_kill
+     0.41s  0.84% 90.95%      0.66s  1.35%  runtime.tryDeferToSpanScan
+     0.34s  0.69% 91.64%      0.34s  0.69%  runtime.madvise
+     0.32s  0.65% 92.30%      0.74s  1.51%  runtime.scanObjectsSmall
+     0.15s  0.31% 92.60%      0.32s  0.65%  runtime.scanObject
+     0.07s  0.14% 92.74%      0.34s  0.69%  runtime.mapassign_faststr
+     0.06s  0.12% 92.87%      2.47s  5.03%  github.com/Breaking-IT/BreakMock.(*Store).RecordServed
+     0.06s  0.12% 92.99%      5.07s 10.33%  runtime.stealWork
+     0.04s 0.082% 93.07%      2.86s  5.83%  runtime.gcDrain
+     0.03s 0.061% 93.13%      0.73s  1.49%  runtime.semacquire1
+     0.02s 0.041% 93.17%      0.59s  1.20%  runtime.mallocgc
+     0.02s 0.041% 93.21%      2.83s  5.77%  runtime.netpoll
+     0.01s  0.02% 93.23%     14.73s 30.02%  github.com/Breaking-IT/BreakMock.(*headerOrderConn).Read
+     0.01s  0.02% 93.25%     12.36s 25.19%  internal/poll.(*FD).Write
+     0.01s  0.02% 93.27%      0.25s  0.51%  net/http.(*conn).readRequest

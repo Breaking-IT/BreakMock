@@ -1,0 +1,25 @@
+{
+  "source_root": "/private/tmp/breakmock-go-before-opt",
+  "binary_sha256": "54cee9d184658897212251b6ef5e9466945603ca1ff5a95c7cc12af01926eb5b",
+  "load": {
+    "concurrency": 32,
+    "dropped": 0,
+    "errors": 0,
+    "p50_ms": 0.258,
+    "p95_ms": 1.042,
+    "p99_ms": 1.618,
+    "requests": 1248417,
+    "rps": 83197.69191451732,
+    "seconds": 15.005428291,
+    "target_rps": 0,
+    "url": "http://127.0.0.1:18522/bench?name=Ada"
+  },
+  "allocated_bytes_per_request": 13472.082927419284,
+  "allocations_per_request": 135.14799622241605,
+  "gc_cycles": 2023,
+  "notes": [
+    "Profiled throughput is not a benchmark result.",
+    "Allocation deltas cover the 15s load plus profiling/probe overhead; 3s warmup excluded.",
+    "pprof allocation totals include warmup; mutex delay is cumulative across waiting goroutines, not CPU time."
+  ]
+}

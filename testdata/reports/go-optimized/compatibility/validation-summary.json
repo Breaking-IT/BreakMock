@@ -1,0 +1,34 @@
+{
+  "reference": "WireMock 4.0.0-beta.40",
+  "candidate_commit": "7176b12",
+  "go_race": "passed",
+  "go_vet": "passed",
+  "suite_invocations": 19,
+  "passing_suite_invocations": 16,
+  "new_failures_vs_baseline": 0,
+  "existing_failures": {
+    "diagnostics": [
+      "Binary body mismatch diagnostic embeds JVM identity ([B@...)"
+    ],
+    "message_wait": [
+      "existing count caps results",
+      "single ignores count",
+      "zero timeout returns current count"
+    ],
+    "message_wait_disabled": [
+      "wait returns 200 instead of 500",
+      "wait-for-count returns 200 instead of 500"
+    ]
+  },
+  "baseline_message_wait_confirmation": "Archived preoptimization Go binary built from ab2cd8e; same enabled 4/7 and disabled 0/2 results recorded in baseline-message-waits/",
+  "journal_concurrency": {
+    "capacity": 64,
+    "workers": 16,
+    "iterations": 3,
+    "invariants_passed": 16,
+    "exact_admin_byte_comparisons_passed": 2,
+    "dynamic_scalar_normalized_admin_comparisons_passed": 1,
+    "failed": 0
+  },
+  "strict_boundaries": "Gzip status/headers/compressed bytes remain 99/99. Journal comparisons substitute only generated event IDs, timestamps, ports, timings, response Date; whitespace and property order are preserved. Streaming includes 51 strict and 2 lifecycle checks. This is covered-corpus regression evidence, not universal byte parity."
+}

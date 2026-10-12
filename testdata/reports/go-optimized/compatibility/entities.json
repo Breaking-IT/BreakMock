@@ -1,0 +1,144 @@
+{
+  "reference": "WireMock 4.0.0-beta.40",
+  "comparison": "exact status and body bytes",
+  "passed": 34,
+  "total": 34,
+  "results": [
+    {
+      "name": "missing {'filePath': 'absent.txt'}",
+      "passed": true
+    },
+    {
+      "name": "missing {'dataStore': 'unknown', 'dataRef': 'unknown'}",
+      "passed": true
+    },
+    {
+      "name": "missing {'dataStore': '__files', 'dataRef': 'absent.txt'}",
+      "passed": true
+    },
+    {
+      "name": "'hello'",
+      "passed": true
+    },
+    {
+      "name": "{'data': 'hello'}",
+      "passed": true
+    },
+    {
+      "name": "{'data': 'hello', 'format': 'text'}",
+      "passed": true
+    },
+    {
+      "name": "{'data': 'hi', 'format': 'binary'}",
+      "passed": true
+    },
+    {
+      "name": "{'base64Data': 'AP9BQkM='}",
+      "passed": true
+    },
+    {
+      "name": "{'base64Data': 'w6k=', 'format': 'text'}",
+      "passed": true
+    },
+    {
+      "name": "{'data': {'z': 1, 'a': [True, None, 'x']}}",
+      "passed": true
+    },
+    {
+      "name": "{'data': 'hello', 'compression': 'gzip'}",
+      "passed": true
+    },
+    {
+      "name": "{'data': 'x', 'compression': 'none'}",
+      "passed": true
+    },
+    {
+      "name": "UTF-8 text",
+      "passed": true
+    },
+    {
+      "name": "UTF-8 binary",
+      "passed": true
+    },
+    {
+      "name": "ISO-8859-1 text",
+      "passed": true
+    },
+    {
+      "name": "ISO-8859-1 binary",
+      "passed": true
+    },
+    {
+      "name": "UTF-16 text",
+      "passed": true
+    },
+    {
+      "name": "UTF-16 binary",
+      "passed": true
+    },
+    {
+      "name": "UTF-16BE text",
+      "passed": true
+    },
+    {
+      "name": "UTF-16BE binary",
+      "passed": true
+    },
+    {
+      "name": "UTF-16LE text",
+      "passed": true
+    },
+    {
+      "name": "UTF-16LE binary",
+      "passed": true
+    },
+    {
+      "name": "US-ASCII text",
+      "passed": true
+    },
+    {
+      "name": "US-ASCII binary",
+      "passed": true
+    },
+    {
+      "name": "windows-1252 text",
+      "passed": true
+    },
+    {
+      "name": "windows-1252 binary",
+      "passed": true
+    },
+    {
+      "name": "Shift_JIS text",
+      "passed": true
+    },
+    {
+      "name": "Shift_JIS binary",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'jsonBody': {'z': 1, 'a': 2}, 'body': 'ignored', 'base64Body': 'eA=='}",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'base64Body': 'eA==', 'body': 'ignored'}",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'body': {'data': '{{request.method}}', 'format': 'binary'}, 'transformers': ['response-template']}",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'base64Body': 'e3tyZXF1ZXN0Lm1ldGhvZH19', 'transformers': ['response-template']}",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'body': {'data': 'caf\u00e9 {{request.path}}', 'charset': 'ISO-8859-1'}, 'transformers': ['response-template']}",
+      "passed": true
+    },
+    {
+      "name": "precedence/template {'jsonBody': {'x': '{{request.headers.X-Missing}}'}, 'transformers': ['response-template']}",
+      "passed": true
+    }
+  ]
+}

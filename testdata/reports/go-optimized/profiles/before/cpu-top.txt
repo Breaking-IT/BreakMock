@@ -1,0 +1,28 @@
+File: server
+Type: cpu
+Time: 2026-10-12 08:15:58 CEST
+Duration: 10.10s, Total samples = 54.43s (538.68%)
+Showing nodes accounting for 50.17s, 92.17% of 54.43s total
+Dropped 429 nodes (cum <= 0.27s)
+Showing top 20 nodes out of 101
+      flat  flat%   sum%        cum   cum%
+    25.34s 46.56% 46.56%     25.34s 46.56%  syscall.rawsyscalln
+    12.63s 23.20% 69.76%     12.63s 23.20%  runtime.usleep
+     4.08s  7.50% 77.26%      4.08s  7.50%  runtime.pthread_cond_wait
+     3.83s  7.04% 84.29%      3.83s  7.04%  runtime.kevent
+     1.50s  2.76% 87.05%      1.50s  2.76%  runtime.pthread_cond_signal
+     1.15s  2.11% 89.16%      1.15s  2.11%  runtime.pthread_kill
+     0.53s  0.97% 90.13%      1.05s  1.93%  runtime.scanObjectsSmall
+     0.46s  0.85% 90.98%      0.76s  1.40%  runtime.tryDeferToSpanScan
+     0.18s  0.33% 91.31%      0.42s  0.77%  runtime.scanObject
+     0.09s  0.17% 91.48%      8.90s 16.35%  runtime.stealWork
+     0.06s  0.11% 91.59%      3.48s  6.39%  runtime.gcDrain
+     0.05s 0.092% 91.68%      8.74s 16.06%  runtime.runqgrab
+     0.04s 0.073% 91.75%      2.08s  3.82%  github.com/Breaking-IT/BreakMock.(*Store).RecordServed
+     0.04s 0.073% 91.82%      4.84s  8.89%  runtime.lock2
+     0.04s 0.073% 91.90%      3.72s  6.83%  runtime.netpoll
+     0.03s 0.055% 91.95%      0.33s  0.61%  internal/sync.(*Mutex).Lock (inline)
+     0.03s 0.055% 92.01%      0.88s  1.62%  runtime.mallocgc
+     0.03s 0.055% 92.06%      0.46s  0.85%  runtime.mapassign_faststr
+     0.03s 0.055% 92.12%      1.31s  2.41%  runtime.scanSpan
+     0.03s 0.055% 92.17%      0.60s  1.10%  runtime.unlock2

@@ -1,0 +1,18 @@
+package main
+import (
+ "net"
+ "net/http"
+ _ "net/http/pprof"
+ _ "expvar"
+ "runtime"
+ bm "github.com/Breaking-IT/BreakMock"
+)
+func main() {
+ runtime.SetMutexProfileFraction(5)
+ s,e:=bm.NewServer(bm.Options{MaxJournalEntries:1000}); if e!=nil {panic(e)}
+ _,e=s.Store.AddMapping(bm.Mapping{"request":map[string]any{"method":"GET","urlPath":"/bench"},"response":map[string]any{"body":"Hello, benchmark!","headers":map[string]any{"Content-Type":"text/plain"}}}); if e!=nil {panic(e)}
+ go func(){panic(http.ListenAndServe("127.0.0.1:18523",nil))}()
+ l,e:=net.Listen("tcp","127.0.0.1:18522"); if e!=nil {panic(e)}
+ server:=http.Server{Handler:s,ConnContext:bm.HeaderOrderConnContext}
+ panic(server.Serve(bm.WrapWireListener(l,true)))
+}

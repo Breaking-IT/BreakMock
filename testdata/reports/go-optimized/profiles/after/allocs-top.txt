@@ -1,0 +1,27 @@
+File: server
+Type: alloc_space
+Time: 2026-10-12 08:16:35 CEST
+Showing nodes accounting for 17807.94MB, 97.51% of 18262.20MB total
+Dropped 93 nodes (cum <= 91.31MB)
+Showing top 20 nodes out of 40
+      flat  flat%   sum%        cum   cum%
+ 9076.95MB 49.70% 49.70% 11200.91MB 61.33%  github.com/Breaking-IT/BreakMock.(*Store).RecordServed
+ 2067.58MB 11.32% 61.03%  2067.58MB 11.32%  net/http.Header.Clone (inline)
+ 1483.89MB  8.13% 69.15%  1483.89MB  8.13%  net/textproto.readMIMEHeader
+ 1145.66MB  6.27% 75.42%  1145.66MB  6.27%  net/url.parse
+ 1019.81MB  5.58% 81.01%  3074.28MB 16.83%  net/http.readRequestLimit
+  600.19MB  3.29% 84.29%   600.19MB  3.29%  net/url.parseQuery
+  558.18MB  3.06% 87.35%   558.18MB  3.06%  net/textproto.MIMEHeader.Add (inline)
+  455.59MB  2.49% 89.85%  2169.01MB 11.88%  net/http.(*conn).readRequest
+  285.03MB  1.56% 91.41% 13975.56MB 76.53%  github.com/Breaking-IT/BreakMock.(*Server).ServeHTTP
+  198.01MB  1.08% 92.49%   366.02MB  2.00%  github.com/Breaking-IT/BreakMock.parseWireHeaderOrder
+  198.01MB  1.08% 93.58%   198.01MB  1.08%  strings.genSplit
+     157MB  0.86% 94.44%      157MB  0.86%  internal/bytealg.MakeNoZero
+  137.01MB  0.75% 95.19%   137.01MB  0.75%  context.withCancel (inline)
+  118.51MB  0.65% 95.83%   118.51MB  0.65%  net.(*conn).Read
+  114.51MB  0.63% 96.46%   114.51MB  0.63%  bytes.(*Buffer).grow
+   91.50MB   0.5% 96.96%    91.50MB   0.5%  net/textproto.(*Reader).ReadLine (inline)
+      69MB  0.38% 97.34%   669.20MB  3.66%  net/url.ParseQuery (inline)
+   30.50MB  0.17% 97.51%   167.51MB  0.92%  context.WithCancel
+       1MB 0.0055% 97.51%  1948.92MB 10.67%  github.com/Breaking-IT/BreakMock.captureRequestHeaderOrders
+         0     0% 97.51%   114.51MB  0.63%  bytes.(*Buffer).Write
