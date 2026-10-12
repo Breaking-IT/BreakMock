@@ -46,17 +46,20 @@ type MessageStore struct {
 }
 
 func (s *Store) Messaging() *MessageStore {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if s.messaging == nil {
+	// Publish the store once without contending with request journal writes on
+	// every HTTP request. Once also supports concurrent first access.
+	s.messagingOnce.Do(func() {
 		s.messaging = &MessageStore{owner: s, mappings: map[string]messageMapping{}, channels: map[string]*MessageChannel{}, providers: map[string]Mapping{}, providerOrders: map[string]*adminOrder{}, changed: make(chan struct{})}
-	}
+	})
 	return s.messaging
 }
 func (s *MessageStore) signal() { close(s.changed); s.changed = make(chan struct{}) }
 func (s *MessageStore) Mappings() []Mapping {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
+	if len(s.mappingEntries) == 0 {
+		return []Mapping{}
+	}
 	items := append([]messageMapping(nil), s.mappingEntries...)
 	sort.Slice(items, func(i, j int) bool {
 		pi, pj := bmNumber(items[i].value["priority"], 5), bmNumber(items[j].value["priority"], 5)

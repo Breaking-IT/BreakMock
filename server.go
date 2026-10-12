@@ -106,10 +106,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.admin.ServeHTTP(w, r)
 		return
 	}
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Cannot read request", 400)
-		return
+	// Preserve a present, empty body for matchers without allocating ReadAll's buffer.
+	body := []byte{}
+	var err error
+	if r.Body != http.NoBody {
+		body, err = io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, "Cannot read request", 400)
+			return
+		}
 	}
 	scheme := "http"
 	if r.TLS != nil {
@@ -129,7 +134,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	req := Request{HeaderOrder: headerOrder, Method: r.Method, URL: r.URL.RequestURI(), AbsoluteURL: scheme + "://" + r.Host + r.URL.RequestURI(), Headers: r.Header.Clone(), Body: decodedBody}
+	requestURI := r.URL.RequestURI()
+	req := Request{HeaderOrder: headerOrder, Method: r.Method, URL: requestURI, AbsoluteURL: scheme + "://" + r.Host + requestURI, Headers: r.Header.Clone(), Body: decodedBody}
 	req.Headers.Set("Host", r.Host)
 	req.ClientIP, _, _ = net.SplitHostPort(r.RemoteAddr)
 	var selected Mapping

@@ -12,6 +12,59 @@ import (
 	"time"
 )
 
+func TestMessagingConcurrentInitialization(t *testing.T) {
+	store := NewStore()
+	const workers = 64
+	start := make(chan struct{})
+	results := make(chan *MessageStore, workers)
+	for range workers {
+		go func() {
+			<-start
+			messages := store.Messaging()
+			if messages.owner != store || messages.mappings == nil || messages.channels == nil || messages.providers == nil || messages.providerOrders == nil || messages.changed == nil {
+				t.Error("partially initialized messaging store")
+			}
+			results <- messages
+		}()
+	}
+	close(start)
+	first := <-results
+	for range workers - 1 {
+		if messages := <-results; messages != first {
+			t.Error("concurrent callers received different messaging stores")
+		}
+	}
+}
+
+func BenchmarkMessagingAccessor(b *testing.B) {
+	store := NewStore()
+	want := store.Messaging()
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			if store.Messaging() != want {
+				b.Fatal("messaging store changed")
+			}
+		}
+	})
+}
+
+func BenchmarkMessagingEmptyHTTPTrigger(b *testing.B) {
+	store := NewStore()
+	store.Messaging()
+	request := Request{Method: "GET", URL: "/bench"}
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			if err := store.Messaging().TriggerHTTP(request); err != nil {
+				b.Fatal(err)
+			}
+		}
+	})
+}
+
 func TestMessageMappingFilesSingleAndBulk(t *testing.T) {
 	root := t.TempDir()
 	dir := filepath.Join(root, "message-mappings")

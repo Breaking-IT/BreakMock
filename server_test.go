@@ -60,6 +60,25 @@ func TestRawJSONResponsePreservesOrderAndEscaping(t *testing.T) {
 		t.Fatal(w.Body.String())
 	}
 }
+
+func TestEmptyHTTPBodyStillEvaluatesBodyMatchers(t *testing.T) {
+	s, err := NewServer(Options{RootDir: t.TempDir()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = s.Store.AddMapping(Mapping{
+		"request":  map[string]any{"url": "/body", "bodyPatterns": []any{map[string]any{"equalTo": "required"}}},
+		"response": map[string]any{"status": 201},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := httptest.NewRecorder()
+	s.ServeHTTP(w, httptest.NewRequest("GET", "/body", nil))
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("empty body bypassed matching: status %d", w.Code)
+	}
+}
 func TestConcurrentScenarioTransition(t *testing.T) {
 	s, _ := NewServer(Options{RootDir: t.TempDir()})
 	s.Store.AddMapping(Mapping{"request": map[string]any{"url": "/state"}, "response": map[string]any{"status": 201}, "scenarioName": "s", "requiredScenarioState": "Started", "newScenarioState": "Done"})

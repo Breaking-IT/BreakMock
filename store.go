@@ -4,6 +4,7 @@ package breakmock
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -28,10 +29,12 @@ type journalEntry struct {
 // Store keeps immutable mappings and a request journal protected against concurrent access.
 type Store struct {
 	messaging       *MessageStore
+	messagingOnce   sync.Once
 	mu              sync.RWMutex
 	mappings        map[string]storedMapping
 	scenarios       map[string]string
 	journal         []journalEntry
+	journalStart    int
 	settings        map[string]any
 	settingsOrder   *adminOrder
 	shutdown        func()
@@ -49,7 +52,14 @@ func newID() string {
 	_, _ = rand.Read(b[:])
 	b[6] = (b[6] & 15) | 64
 	b[8] = (b[8] & 63) | 128
-	return fmt.Sprintf("%x-%x-%x-%x-%x", b[:4], b[4:6], b[6:8], b[8:10], b[10:])
+	var out [36]byte
+	hex.Encode(out[:8], b[:4])
+	hex.Encode(out[9:13], b[4:6])
+	hex.Encode(out[14:18], b[6:8])
+	hex.Encode(out[19:23], b[8:10])
+	hex.Encode(out[24:], b[10:])
+	out[8], out[13], out[18], out[23] = '-', '-', '-', '-'
+	return string(out[:])
 }
 func cloneMap(m map[string]any) map[string]any {
 	if m == nil {
@@ -229,7 +239,12 @@ func (s *Store) SetSettings(v map[string]any) {
 		s.settings["proxyPassThrough"] = false
 	}
 }
-func (s *Store) ResetRequests()                          { s.mu.Lock(); defer s.mu.Unlock(); s.journal = nil }
+func (s *Store) ResetRequests() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.journal = nil
+	s.journalStart = 0
+}
 func (s *Store) Record(r Request, m Mapping, status int) { s.RecordServed(r, m, status, nil, nil) }
 func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders http.Header, responseBody []byte, responseHeaderOrder ...[]string) string {
 	s.mu.RLock()
@@ -240,7 +255,7 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	}
 	now := time.Now().Truncate(time.Millisecond)
 	id := newID()
-	headers := map[string]any{}
+	headers := make(map[string]any, len(r.Headers))
 	for k, v := range r.Headers {
 		if len(v) == 1 {
 			headers[k] = v[0]
@@ -252,7 +267,15 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	queryOrder := []string{}
 	cookieOrder := []string{}
 	formOrder := []string{}
-	req := map[string]any{"url": r.URL, "absoluteUrl": r.AbsoluteURL, "method": r.Method, "headers": headers, "body": string(r.Body), "bodyAsBase64": base64.StdEncoding.EncodeToString(r.Body), "loggedDate": now.UnixMilli(), "loggedDateString": now.UTC().Format(time.RFC3339Nano), "cookies": map[string]any{}, "queryParams": map[string]any{}}
+	req := make(map[string]any, 18)
+	req["url"] = r.URL
+	req["absoluteUrl"] = r.AbsoluteURL
+	req["method"] = r.Method
+	req["headers"] = headers
+	req["body"] = string(r.Body)
+	req["bodyAsBase64"] = base64.StdEncoding.EncodeToString(r.Body)
+	req["loggedDate"] = now.UnixMilli()
+	req["loggedDateString"] = now.UTC().Format(time.RFC3339Nano)
 	req["clientIp"] = r.ClientIP
 	req["browserProxyRequest"] = false
 	req["protocol"] = "HTTP/1.1"
@@ -269,8 +292,9 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 		}
 		req["port"] = port
 	}
+	q := map[string]any{}
+	req["queryParams"] = q
 	if u, err := url.Parse(r.URL); err == nil {
-		q := map[string]any{}
 		for k, v := range u.Query() {
 			q[k] = map[string]any{"key": k, "values": v}
 		}
@@ -300,7 +324,7 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	}
 	response := map[string]any{"status": status, "body": string(responseBody), "bodyAsBase64": base64.StdEncoding.EncodeToString(responseBody), "fromProxy": false}
 	if len(responseHeaders) > 0 {
-		h := map[string]any{}
+		h := make(map[string]any, len(responseHeaders))
 		for k, v := range responseHeaders {
 			if len(v) == 0 {
 				continue
@@ -335,13 +359,17 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	r.Body = append([]byte(nil), r.Body...)
 	r.Headers = r.Headers.Clone()
 	r.HeaderOrder = append([]string(nil), r.HeaderOrder...)
+	// Build immutable serialization metadata before taking the journal lock.
+	order := &adminOrder{children: map[string]*adminOrder{
+		"request":  {children: map[string]*adminOrder{"headers": {keys: r.HeaderOrder}, "queryParams": {keys: queryOrder}, "cookies": {keys: cookieOrder}, "formParams": {keys: formOrder}}},
+		"response": {children: map[string]*adminOrder{"headers": {}}},
+	}}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.journalDisabled {
 		return ""
 	}
-	order := &adminOrder{children: map[string]*adminOrder{}}
-	order.children["request"] = &adminOrder{children: map[string]*adminOrder{"headers": {keys: append([]string(nil), r.HeaderOrder...)}, "queryParams": {keys: queryOrder}, "cookies": {keys: cookieOrder}, "formParams": {keys: formOrder}}}
+
 	if m != nil {
 		order.children["responseDefinition"] = s.mappings[bmString(m["id"])].order.child("response")
 	}
@@ -359,12 +387,19 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	if h, ok := response["headers"].(map[string]any); ok {
 		restoreHeaderCasing(h, responseOrder)
 	}
-	order.children["response"] = &adminOrder{children: map[string]*adminOrder{"headers": {keys: responseOrder}}}
-	s.journal = append(s.journal, journalEntry{request: r, event: event, order: order})
-	if s.journalLimit > 0 && len(s.journal) > s.journalLimit {
-		discard := len(s.journal) - s.journalLimit
-		clear(s.journal[:discard])
-		s.journal = s.journal[discard:]
+	order.children["response"].children["headers"].keys = responseOrder
+	entry := journalEntry{request: r, event: event, order: order}
+	if s.journalLimit > 0 && len(s.journal) == s.journalLimit {
+		// Once full, replace the oldest entry in place without allocating or copying.
+		s.journal[s.journalStart] = entry
+		s.journalStart = (s.journalStart + 1) % len(s.journal)
+	} else {
+		s.journal = append(s.journal, entry)
+		if s.journalLimit > 0 && len(s.journal) > s.journalLimit {
+			discard := len(s.journal) - s.journalLimit
+			clear(s.journal[:discard])
+			s.journal = s.journal[discard:]
+		}
 	}
 	return id
 }
@@ -372,14 +407,15 @@ func (s *Store) journalSnapshot() []journalEntry {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	v := make([]journalEntry, len(s.journal))
-	for i, e := range s.journal {
-		v[len(v)-i-1] = e
+	for i := range s.journal {
+		v[len(v)-i-1] = s.journal[(s.journalStart+i)%len(s.journal)]
 	}
 	return v
 }
 func (s *Store) removeEvents(ids map[string]bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	s.linearizeJournal()
 	keep := s.journal[:0]
 	for _, e := range s.journal {
 		if !ids[e.event["id"].(string)] {
@@ -390,9 +426,23 @@ func (s *Store) removeEvents(ids map[string]bool) {
 	s.journal = keep
 }
 
+// linearizeJournal restores chronological backing-array order for infrequent
+// admin mutations. The caller holds s.mu.
+func (s *Store) linearizeJournal() {
+	if s.journalStart == 0 {
+		return
+	}
+	entries := make([]journalEntry, len(s.journal))
+	n := copy(entries, s.journal[s.journalStart:])
+	copy(entries[n:], s.journal[:s.journalStart])
+	s.journal = entries
+	s.journalStart = 0
+}
+
 func (s *Store) ConfigureJournal(enabled bool, maxEntries int) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	s.linearizeJournal()
 	s.journalDisabled = !enabled
 	s.journalLimit = maxEntries
 	if !enabled {
