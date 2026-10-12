@@ -1,0 +1,11 @@
+PASS extension disabled by default; legacy admin route preserved
+PASS shared config preloads proxy and active latency toxic
+PASS native toxic update/delete changes TCP behavior and preserves bytes
+PASS native timeout toxic suppresses response and closes real connection
+PASS one executable proxies HTTP to its own WireMock-compatible mappings
+PASS native proxy update disables and re-enables listener
+PASS Toxiproxy reset leaves WireMock mappings intact
+PASS WireMock reset leaves Toxiproxy listeners intact
+PASS native proxy delete releases its TCP listener
+PASS shared shutdown exits cleanly, closes active links, releases listeners
+10/10 integration checks passed

@@ -1,0 +1,324 @@
+{
+  "reference": "WireMock4.0.0-beta.40",
+  "comparison": "strict response bytes with generated scalar values replaced",
+  "passed": 79,
+  "total": 79,
+  "results": [
+    {
+      "name": "reset",
+      "pass": true
+    },
+    {
+      "name": "clear initial message mappings",
+      "pass": true
+    },
+    {
+      "name": "empty mappings",
+      "pass": true
+    },
+    {
+      "name": "empty messages",
+      "pass": true
+    },
+    {
+      "name": "empty journal",
+      "pass": true
+    },
+    {
+      "name": "empty count",
+      "pass": true
+    },
+    {
+      "name": "empty find",
+      "pass": true
+    },
+    {
+      "name": "empty wait",
+      "pass": true
+    },
+    {
+      "name": "empty wait count",
+      "pass": true
+    },
+    {
+      "name": "missing event",
+      "pass": true
+    },
+    {
+      "name": "missing event delete",
+      "pass": true
+    },
+    {
+      "name": "empty channel send",
+      "pass": true
+    },
+    {
+      "name": "missing provider name",
+      "pass": true
+    },
+    {
+      "name": "missing provider driver",
+      "pass": true
+    },
+    {
+      "name": "missing channel provider",
+      "pass": true
+    },
+    {
+      "name": "missing channel name",
+      "pass": true
+    },
+    {
+      "name": "missing send message",
+      "pass": true
+    },
+    {
+      "name": "missing action message",
+      "pass": true
+    },
+    {
+      "name": "missing action target provider",
+      "pass": true
+    },
+    {
+      "name": "missing http request pattern",
+      "pass": true
+    },
+    {
+      "name": "missing http stub ID",
+      "pass": true
+    },
+    {
+      "name": "mapping defaults",
+      "pass": true
+    },
+    {
+      "name": "mapping get",
+      "pass": true
+    },
+    {
+      "name": "mapping list",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity plain",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity typedtext",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity typedjson",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity typedbinary",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity base64",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity file",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity charset",
+      "pass": true
+    },
+    {
+      "name": "mapping action entity compression",
+      "pass": true
+    },
+    {
+      "name": "mapping nested channel patterns",
+      "pass": true
+    },
+    {
+      "name": "mapping edit",
+      "pass": true
+    },
+    {
+      "name": "metadata find",
+      "pass": true
+    },
+    {
+      "name": "provider register",
+      "pass": true
+    },
+    {
+      "name": "provider register z-provider",
+      "pass": true
+    },
+    {
+      "name": "provider register a-provider",
+      "pass": true
+    },
+    {
+      "name": "provider register middle-provider",
+      "pass": true
+    },
+    {
+      "name": "providers hash iteration order",
+      "pass": true
+    },
+    {
+      "name": "provider remove z-provider",
+      "pass": true
+    },
+    {
+      "name": "provider remove a-provider",
+      "pass": true
+    },
+    {
+      "name": "provider remove middle-provider",
+      "pass": true
+    },
+    {
+      "name": "provider get",
+      "pass": true
+    },
+    {
+      "name": "provider list",
+      "pass": true
+    },
+    {
+      "name": "provider update",
+      "pass": true
+    },
+    {
+      "name": "fixed channel create",
+      "pass": true
+    },
+    {
+      "name": "fixed channel duplicate conflict",
+      "pass": true
+    },
+    {
+      "name": "fixed channel list",
+      "pass": true
+    },
+    {
+      "name": "fixed channel get",
+      "pass": true
+    },
+    {
+      "name": "fixed channel send",
+      "pass": true
+    },
+    {
+      "name": "message journal",
+      "pass": true
+    },
+    {
+      "name": "message count body",
+      "pass": true
+    },
+    {
+      "name": "message find body",
+      "pass": true
+    },
+    {
+      "name": "message get",
+      "pass": true
+    },
+    {
+      "name": "message wait",
+      "pass": true
+    },
+    {
+      "name": "message wait count",
+      "pass": true
+    },
+    {
+      "name": "message remove",
+      "pass": true
+    },
+    {
+      "name": "message empty after removal",
+      "pass": true
+    },
+    {
+      "name": "missing target mapping",
+      "pass": true
+    },
+    {
+      "name": "missing action target returns404",
+      "pass": true
+    },
+    {
+      "name": "failed action is not journalled",
+      "pass": true
+    },
+    {
+      "name": "missing target mapping delete",
+      "pass": true
+    },
+    {
+      "name": "fixed channel delete",
+      "pass": true
+    },
+    {
+      "name": "fixed channel missing",
+      "pass": true
+    },
+    {
+      "name": "provider delete",
+      "pass": true
+    },
+    {
+      "name": "provider missing",
+      "pass": true
+    },
+    {
+      "name": "metadata remove",
+      "pass": true
+    },
+    {
+      "name": "mapping missing",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping first",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping second",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping list",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping get",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping edit",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping list after edit",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping delete all",
+      "pass": true
+    },
+    {
+      "name": "duplicate mapping empty",
+      "pass": true
+    },
+    {
+      "name": "mapping reset",
+      "pass": true
+    },
+    {
+      "name": "reset final",
+      "pass": true
+    }
+  ]
+}
