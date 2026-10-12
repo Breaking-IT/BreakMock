@@ -495,15 +495,6 @@ pub async fn wait_if_needed(
     };
     let timeout = value["timeoutMillis"].as_u64().unwrap_or(0);
     let deadline = tokio::time::Instant::now() + std::time::Duration::from_millis(timeout);
-    if multiple && value["count"].as_i64().is_some_and(|n| n < 0) {
-        return Some(wait_error(
-            req,
-            &format!(
-                "java.lang.IllegalArgumentException: {}",
-                value["count"].as_i64().unwrap()
-            ),
-        ));
-    }
     let notify = state.lock().unwrap().message_notify.clone();
     loop {
         let notified = notify.notified();
@@ -526,6 +517,21 @@ pub async fn wait_if_needed(
                 req,
                 "com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available",
             ));
+        }
+        if multiple {
+            if let Some(count) = value["count"].as_i64().filter(|n| *n < 0) {
+                // Java uses subList while waiting and Stream.limit for an
+                // immediate result; each reports a different invalid count.
+                let detail = if timeout > 0 {
+                    format!("fromIndex(0) > toIndex({count})")
+                } else {
+                    count.to_string()
+                };
+                return Some(wait_error(
+                    req,
+                    &format!("java.lang.IllegalArgumentException: {detail}"),
+                ));
+            }
         }
         if found.len() >= count || tokio::time::Instant::now() >= deadline {
             found.truncate(count);
@@ -698,6 +704,35 @@ mod async_tests {
         let body: Value = serde_json::from_slice(&response.body).unwrap();
         assert_eq!(body["messageServeEvents"].as_array().unwrap().len(), 1);
         assert_eq!(body["messageServeEvents"][0]["message"]["body"], "second");
+    }
+    #[tokio::test]
+    async fn negative_wait_count_errors_follow_timeout_and_journal_precedence() {
+        for disabled in [false, true] {
+            for timeout in [-1, 0, 1000] {
+                let state = state();
+                state.lock().unwrap().no_journal = disabled;
+                let response = wait_if_needed(
+                    &req(
+                        "/messages/wait-for-count",
+                        json!({"count":-1,"timeoutMillis":timeout}),
+                    ),
+                    &state,
+                )
+                .await
+                .unwrap();
+                assert_eq!(response.status, 500);
+                let body = String::from_utf8(response.body).unwrap();
+                let expected = if disabled {
+                    "com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available"
+                } else if timeout > 0 {
+                    "java.lang.IllegalArgumentException: fromIndex(0) &gt; toIndex(-1)"
+                } else {
+                    "java.lang.IllegalArgumentException: -1"
+                };
+                assert!(body.contains(&format!("<title>Error 500 {expected}</title>")));
+                assert!(body.contains(&format!("<tr><th>MESSAGE:</th><td>{expected}</td></tr>")));
+            }
+        }
     }
     #[test]
     fn disk_message_mappings_single_bulk_and_atomic_failure() {

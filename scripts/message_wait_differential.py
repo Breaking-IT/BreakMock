@@ -6,8 +6,8 @@ import argparse,concurrent.futures,json,re,time,urllib.request,urllib.error
 from oracle import identify
 p=argparse.ArgumentParser();p.add_argument('--reference',required=True);p.add_argument('--candidate',required=True);p.add_argument('--output');p.add_argument('--disabled-journal',action='store_true');a=p.parse_args();bases=[a.reference,a.candidate]
 for base,kind in zip(bases,['java','go']):identify(base,kind)
-def call(base,path,body=None,method='POST'):
- req=urllib.request.Request(base+'/__admin'+path,data=None if body is None else json.dumps(body).encode(),method=method,headers={'Content-Type':'application/json'})
+def call(base,path,body=None,method='POST',headers=None):
+ req=urllib.request.Request(base+'/__admin'+path,data=None if body is None else json.dumps(body).encode(),method=method,headers={'Content-Type':'application/json',**(headers or {})})
  try:r=urllib.request.urlopen(req,timeout=3)
  except urllib.error.HTTPError as e:r=e
  return r.status,r.read().decode()
@@ -21,6 +21,11 @@ if a.disabled_journal:
   normalized=[(status,body.replace(base,'<origin>'))for base,(status,body)in zip(bases,raw)]
   ok=normalized[0]==normalized[1] and raw[0][0]==500
   results.append({'name':'disabled journal '+endpoint,'pass':ok,**({}if ok else{'reference':raw[0],'candidate':raw[1]})})
+ # A fixed Host makes the new error-body comparisons exact without substitutions.
+ for timeout in (-1,0,1000):
+  raw=[call(base,'/messages/wait-for-count',{'count':-1,'timeoutMillis':timeout},headers={'Host':'wiremock.test'})for base in bases]
+  ok=raw[0]==raw[1] and raw[0][0]==500 and 'MessageJournalDisabledException' in raw[0][1]
+  results.append({'name':f'disabled journal precedes negative count timeout={timeout}','pass':ok,**({}if ok else{'reference':raw[0],'candidate':raw[1]})})
  report={'comparison':'Exact disabled-journal error bodies after server-origin replacement','passed':sum(r['pass']for r in results),'total':len(results),'results':results}
  if a.output:open(a.output,'w').write(json.dumps(report,indent=2)+'\n')
  print(f"{report['passed']}/{report['total']} passed");raise SystemExit(report['passed']!=report['total'])
@@ -46,6 +51,16 @@ scenario('partial results at timeout','/messages/wait-for-count',{'count':3,'tim
 scenario('existing count caps results','/messages/wait-for-count',{'count':1,'timeoutMillis':1000},preload=['first','second'],max_elapsed=.8)
 scenario('single ignores count','/messages/wait',{'count':3,'timeoutMillis':1000},preload=['existing'],max_elapsed=.8)
 scenario('zero timeout returns current count','/messages/wait-for-count',{'count':1,'timeoutMillis':0},preload=['first','second'],max_elapsed=.8)
+scenario('zero count returns empty','/messages/wait-for-count',{'count':0,'timeoutMillis':1000},preload=['first','second'],max_elapsed=.8)
+scenario('single ignores negative count','/messages/wait',{'count':-1,'timeoutMillis':1000},preload=['existing'],max_elapsed=.8)
+scenario('single omitted timeout is immediate','/messages/wait',{},max_elapsed=.8)
+scenario('count omitted timeout is immediate','/messages/wait-for-count',{'count':1},max_elapsed=.8)
+scenario('omitted count defaults to one','/messages/wait-for-count',{'timeoutMillis':0},preload=['first','second'],max_elapsed=.8)
+for timeout in (-1,0,1000):
+ raw=[call(base,'/messages/wait-for-count',{'count':-1,'timeoutMillis':timeout},headers={'Host':'wiremock.test'})for base in bases]
+ ok=raw[0]==raw[1] and raw[0][0]==500
+ results.append({'name':f'negative count exact error timeout={timeout}','pass':ok,**({}if ok else{'reference':raw[0],'candidate':raw[1]})})
+ print(('PASS 'if ok else'FAIL ')+results[-1]['name'])
 for base in bases:
  channels=json.loads(call(base,'/channels',method='GET')[1])['channels']
  for channel in channels:

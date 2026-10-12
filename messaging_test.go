@@ -1,6 +1,7 @@
 package breakmock
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -195,5 +196,95 @@ func TestDeletedProviderMetadataDoesNotAccumulate(t *testing.T) {
 	}
 	if len(messages.providerOrder) != 0 || len(messages.providerOrders) != 0 || len(messages.providers) != 0 {
 		t.Fatal("deleted provider metadata retained")
+	}
+}
+
+// The Java wait endpoints cap existing results, and only wait-for-count uses count.
+func TestMessageWaitExistingEvents(t *testing.T) {
+	for _, tc := range []struct {
+		name, endpoint, body string
+		want                 int
+	}{
+		{"count cap", "wait-for-count", `{"count":1,"timeoutMillis":1000}`, 1},
+		{"zero timeout cap", "wait-for-count", `{"count":1,"timeoutMillis":0}`, 1},
+		{"zero count", "wait-for-count", `{"count":0,"timeoutMillis":1000}`, 0},
+		{"single ignores count", "wait", `{"count":3,"timeoutMillis":1000}`, 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			store := NewStore()
+			ms := store.Messaging()
+			ch := ms.RegisterChannel("channel", "websocket", Request{Method: "GET", URL: "/ws", Headers: http.Header{}}, nil, nil)
+			ms.Record(ch.ID, "received", map[string]any{"body": "first"}, nil)
+			ms.Record(ch.ID, "received", map[string]any{"body": "second"}, nil)
+			w := httptest.NewRecorder()
+			started := time.Now()
+			NewAdminHandler(store, t.TempDir()).ServeHTTP(w, httptest.NewRequest("POST", "/__admin/messages/"+tc.endpoint, strings.NewReader(tc.body)))
+			if elapsed := time.Since(started); elapsed > 500*time.Millisecond {
+				t.Fatalf("existing events unnecessarily waited %s", elapsed)
+			}
+			if w.Code != 200 {
+				t.Fatal(w.Code, w.Body.String())
+			}
+			var response map[string]any
+			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+				t.Fatal(err)
+			}
+			if tc.endpoint == "wait" {
+				if response["message"].(map[string]any)["body"] != "second" {
+					t.Fatal(response)
+				}
+			} else {
+				events := response["messageServeEvents"].([]any)
+				if len(events) != tc.want {
+					t.Fatalf("got %d events, want %d", len(events), tc.want)
+				}
+				if len(events) > 0 && events[0].(map[string]any)["message"].(map[string]any)["body"] != "second" {
+					t.Fatal(events)
+				}
+			}
+		})
+	}
+}
+
+func TestMessageWaitDisabledJournalAndDefaultTimeout(t *testing.T) {
+	for _, disabled := range []bool{false, true} {
+		for _, endpoint := range []string{"wait", "wait-for-count"} {
+			t.Run(fmt.Sprintf("%s/disabled=%t", endpoint, disabled), func(t *testing.T) {
+				store := NewStore()
+				store.ConfigureJournal(!disabled, 0)
+				w := httptest.NewRecorder()
+				started := time.Now()
+				NewAdminHandler(store, t.TempDir()).ServeHTTP(w, httptest.NewRequest("POST", "/__admin/messages/"+endpoint, strings.NewReader(`{}`)))
+				if elapsed := time.Since(started); elapsed > 500*time.Millisecond {
+					t.Fatalf("missing timeout unnecessarily waited %s", elapsed)
+				}
+				if disabled {
+					if w.Code != 500 || !strings.Contains(w.Body.String(), "MessageJournalDisabledException") {
+						t.Fatal(w.Code, w.Body.String())
+					}
+				} else if w.Code != 200 {
+					t.Fatal(w.Code, w.Body.String())
+				}
+			})
+		}
+	}
+}
+
+func TestMessageWaitNegativeCount(t *testing.T) {
+	for _, tc := range []struct {
+		timeout int
+		detail  string
+	}{
+		{0, "java.lang.IllegalArgumentException: -1"},
+		{-1, "java.lang.IllegalArgumentException: -1"},
+		{1000, "java.lang.IllegalArgumentException: fromIndex(0) &gt; toIndex(-1)"},
+	} {
+		t.Run(fmt.Sprint(tc.timeout), func(t *testing.T) {
+			w := httptest.NewRecorder()
+			NewAdminHandler(NewStore(), t.TempDir()).ServeHTTP(w, httptest.NewRequest("POST", "/__admin/messages/wait-for-count", strings.NewReader(fmt.Sprintf(`{"count":-1,"timeoutMillis":%d}`, tc.timeout))))
+			if w.Code != 500 || !strings.Contains(w.Body.String(), tc.detail) {
+				t.Fatal(w.Code, w.Body.String())
+			}
+		})
 	}
 }

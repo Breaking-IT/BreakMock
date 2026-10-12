@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -382,9 +383,25 @@ func (a *adminHandler) serveMessaging(w http.ResponseWriter, r *http.Request) bo
 		}
 		found := find()
 		if waiting {
-			deadline := time.NewTimer(time.Duration(bmNumber(request["timeoutMillis"], 1000)) * time.Millisecond)
+			if a.store.JournalDisabled() {
+				writeJettyError(w, r, 500, "com.github.tomakehurst.wiremock.verification.MessageJournalDisabledException: The message journal is disabled, so no verification or message searching operations are available")
+				return true
+			}
+			count := 1
+			if p == "/messages/wait-for-count" {
+				count = int(bmNumber(request["count"], 1))
+			}
+			timeout := time.Duration(bmNumber(request["timeoutMillis"], 0)) * time.Millisecond
+			if count < 0 {
+				message := strconv.Itoa(count)
+				if timeout > 0 {
+					message = "fromIndex(0) > toIndex(" + message + ")"
+				}
+				writeJettyError(w, r, 500, "java.lang.IllegalArgumentException: "+message)
+				return true
+			}
+			deadline := time.NewTimer(timeout)
 			defer deadline.Stop()
-			count := int(bmNumber(request["count"], 1))
 		wait:
 			for len(found) < count {
 				s.mu.RLock()
@@ -398,10 +415,14 @@ func (a *adminHandler) serveMessaging(w http.ResponseWriter, r *http.Request) bo
 				case <-changed:
 					found = find()
 				case <-deadline.C:
+					found = find()
 					break wait
 				case <-r.Context().Done():
 					return true
 				}
+			}
+			if len(found) > count {
+				found = found[:count]
 			}
 		}
 		switch p {
