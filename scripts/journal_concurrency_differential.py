@@ -354,12 +354,18 @@ def main():
                 else:
                     os.environ["BREAKMOCK_CANDIDATE_KIND"] = old_kind
             install(base)
+            seen_ids = set()
             for iteration in range(args.iterations):
                 for phase, count, complete in (("under-cap", max(2, args.capacity // 2), True), ("over-cap", args.capacity * 3, False)):
                     clear_journal(base)
                     tokens = [f"{iteration}-{phase}-{n:06d}" for n in range(count)]
                     responses = load(base, tokens, args.workers)
                     ok, details = inspect_journal(base, tokens, args.capacity, complete)
+                    reused = sorted(set(details["ids"]) & seen_ids)
+                    seen_ids.update(details["ids"])
+                    details["checks"]["ids_not_reused_after_reset"] = not reused
+                    details["reused_ids"] = reused
+                    ok = ok and not reused
                     details["mock_response_failures"] = [value for value in responses if not value["passed"]]
                     details["mock_response_exact_checks"] = len(responses)
                     server["invariants"].append(invariant_record(f"iteration {iteration} {phase}", ok and not details["mock_response_failures"], details))
