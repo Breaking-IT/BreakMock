@@ -29,15 +29,15 @@ was skipped, converted to an expected failure, or made nonblocking.
 
 Go's full race tests and vet pass. Rust's full unit suite, formatting check and
 Clippy pass. Per-suite reports and logs are in
-[testdata/reports/compatibility-fixes](testdata/reports/compatibility-fixes).
+[testdata/reports/compatibility-fixes](../testdata/reports/compatibility-fixes).
 
 [Linux CI for the implementation commit](https://github.com/Breaking-IT/BreakMock/actions/runs/38214730011)
 confirms the same result: both implementations pass 18/19 suite invocations,
 including 15/15 enabled and 5/5 disabled message waits. Each diagnostics suite is
 40/41, with only the binary identity case failing. Go race/vet/container and Rust
 formatting/unit/Clippy steps pass. CI remains **red**, with its strict failure
-preserved. [Saved CI evidence](testdata/reports/compatibility-fixes/linux-ci/summary.json)
-and the [assertion audit](testdata/reports/compatibility-fixes/assertion-audit.json)
+preserved. [Saved CI evidence](../testdata/reports/compatibility-fixes/linux-ci/summary.json)
+and the [assertion audit](../testdata/reports/compatibility-fixes/assertion-audit.json)
 document that no existing comparisons were weakened.
 
 ## Why the last assertion cannot be fixed in a native implementation
@@ -63,7 +63,7 @@ pinned JAR, identical fixed-ID mappings and eight identical requests per process
 - **0 of 7** adjacent responses matched in either individual Java process.
 - Every response was a 404; the full bodies and SHA-256 hashes are retained.
 
-See [the complete self-comparison](testdata/reports/compatibility-fixes/java-self-comparison.json).
+See [the complete self-comparison](../testdata/reports/compatibility-fixes/java-self-comparison.json).
 The JVM-option environment variables were unset, as recorded in the manifest.
 No alternate hash mode or patched reference was used.
 

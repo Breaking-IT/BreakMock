@@ -14,8 +14,7 @@ member order after narrowly documented dynamic scalar substitutions.
 Examples:
   python3 scripts/journal_concurrency_differential.py --capacity 64 \
     --reference http://127.0.0.1:18601 \
-    --candidate go=http://127.0.0.1:18602 \
-    --candidate rust=http://127.0.0.1:18603 --scenario-check
+    --candidate go=http://127.0.0.1:18602 --scenario-check
 
 No servers or child processes are started. Stdlib only; oracle.identify checks
 both the pinned Java version and each candidate's independent language header.
@@ -316,8 +315,8 @@ def scenario_check(base, workers):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--reference", required=True)
-    parser.add_argument("--candidate", action="append", required=True, help="Repeat KIND=URL for go/rust, or URL with --candidate-kind")
-    parser.add_argument("--candidate-kind", choices=("go", "rust"), default=os.environ.get("BREAKMOCK_CANDIDATE_KIND", "go"))
+    parser.add_argument("--candidate", action="append", required=True, help="Repeat KIND=URL for go, or URL with --candidate-kind")
+    parser.add_argument("--candidate-kind", choices=("go",), default="go")
     parser.add_argument("--capacity", type=int, default=64, help="Must match EVERY server's --max-request-journal-entries")
     parser.add_argument("--workers", type=int, default=16)
     parser.add_argument("--iterations", type=int, default=3)
@@ -329,8 +328,8 @@ def main():
     targets = [("java", args.reference)]
     for item in args.candidate:
         kind, url = item.split("=", 1) if "=" in item else (args.candidate_kind, item)
-        if kind not in ("go", "rust"):
-            parser.error("candidate kind must be go or rust")
+        if kind != "go":
+            parser.error("candidate kind must be go")
         targets.append((kind, url))
     if len({url.rstrip("/") for _, url in targets}) != len(targets):
         parser.error("reference and candidates must be distinct instances")

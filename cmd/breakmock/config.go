@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	bm "github.com/Breaking-IT/BreakMock"
+	bm "github.com/Breaking-IT/BreakMock/pkg/breakmock"
 )
 
 type serverConfig struct {

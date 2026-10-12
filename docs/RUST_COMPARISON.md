@@ -1,5 +1,10 @@
 # Java, Go and Rust comparison
 
+> Historical measurement report. Rust source and the original three-way scripts
+> are preserved on [`codex/rust-port`](https://github.com/Breaking-IT/BreakMock/tree/codex/rust-port).
+> Reproduction commands below describe that historical checkout. Current `main`
+> contains the Go implementation and Java-versus-Go comparison tools.
+
 **Historical initial-port measurements (2026-10-11).** The Rust journal bottleneck
 has since been profiled and optimized. See the [updated fair comparison](RUST_JOURNAL_OPTIMIZATION.md)
 for the current results and revised language decision; the measurements below
@@ -76,7 +81,7 @@ Repeated process startup (15 samples each, warm OS caches):
 
 All 60 load measurements completed with zero errors or dropped requests. The matched-rate runs completed 5,400,000 checked responses.
 
-Raw reports: [CPU, journal disabled](testdata/reports/rust/benchmark-cpu-10k-three-way.json), [CPU, journal capped](testdata/reports/rust/benchmark-cpu-10k-journal-three-way.json), [throughput, journal disabled](testdata/reports/rust/benchmark-throughput-three-way.json), [throughput, journal capped](testdata/reports/rust/benchmark-throughput-journal-three-way.json), [startup](testdata/reports/rust/startup.json).
+Raw reports: [CPU, journal disabled](../testdata/reports/rust/benchmark-cpu-10k-three-way.json), [CPU, journal capped](../testdata/reports/rust/benchmark-cpu-10k-journal-three-way.json), [throughput, journal disabled](../testdata/reports/rust/benchmark-throughput-three-way.json), [throughput, journal capped](../testdata/reports/rust/benchmark-throughput-journal-three-way.json), [startup](../testdata/reports/rust/startup.json).
 
 Benchmark binaries are frozen at Go `371ba5e` and Rust `3cd7d7f`; SHA-256 hashes are recorded in each report. The later Rust locale fix is not exercised by these workloads. Source-checkout revision fields alone should not be used to identify the benchmark binaries.
 
@@ -95,7 +100,7 @@ cases, 99 gzip cases, 140 matcher distances, 40/41 diagnostic cases, 7 webhooks,
 lifecycle checks, 17 HTTP statuses and 20 streaming-journal cases. Baseline and
 upstream disk-mapping fixtures also pass. An additional seven asynchronous message
 wait checks and two disabled-journal checks pass for Rust. Reports are in
-[testdata/reports/rust](testdata/reports/rust).
+[testdata/reports/rust](../testdata/reports/rust).
 
 Rust unit tests passed (24 library and five binary tests after the locale fix). Clippy completed with
 style/performance suggestions; it is not warning-free. CI separately runs Go and
@@ -166,7 +171,7 @@ The local build samples were **5.79 s for Go** and **27.46 s for Rust** with cle
 artifact caches and pre-downloaded dependencies. No-change builds were **0.169 s**
 and **0.230 s** respectively. The executables were 30.21 MiB (Go) and 21.89 MiB
 (Rust), using the current build configurations, without a size-tuning exercise.
-See [build measurements](testdata/reports/rust/builds.json).
+See [build measurements](../testdata/reports/rust/builds.json).
 
 Observed AI usage across this chat and its three agents:
 
@@ -187,8 +192,8 @@ Rust intrinsically needs fewer tokens or is faster to develop than Go**. A fair
 language experiment would require equivalent starting material and repeated,
 independent implementations. Java development effort was not measured.
 
-Counters and scope are preserved in [Go usage](testdata/reports/rust/go-development-tokens.json)
-and [Rust usage](testdata/reports/rust/rust-development-tokens.json). No conversation
+Counters and scope are preserved in [Go usage](../testdata/reports/rust/go-development-tokens.json)
+and [Rust usage](../testdata/reports/rust/rust-development-tokens.json). No conversation
 content or private session-log paths are exported.
 
 ## Reproduction

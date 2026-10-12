@@ -16,7 +16,7 @@ import (
 	"syscall"
 	"time"
 
-	bm "github.com/Breaking-IT/BreakMock"
+	bm "github.com/Breaking-IT/BreakMock/pkg/breakmock"
 )
 
 func main() {

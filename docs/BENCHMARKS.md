@@ -38,8 +38,8 @@ workloads. Startup includes process launch and readiness polling, so sub-second
 startup values are only coarse observations.
 
 Platform: macOS arm64, Go 1.27.1, OpenJDK 27. Runtime details and the pinned JAR
-checksum are recorded in [no-journal results](testdata/reports/benchmark-v4.json)
-and [bounded-journal results](testdata/reports/benchmark-v4-journal.json).
+checksum are recorded in [no-journal results](../testdata/reports/benchmark-v4.json)
+and [bounded-journal results](../testdata/reports/benchmark-v4-journal.json).
 
 Reproduce:
 
@@ -94,8 +94,8 @@ JDK versions, mappings or longer steady-state runs.
 
 Raw results include every round's CPU time, CPU percentage, CPU/request, achieved
 RPS, latency and sampled RSS:
-[no journal](testdata/reports/benchmark-cpu-10k.json),
-[bounded journal](testdata/reports/benchmark-cpu-10k-journal.json).
+[no journal](../testdata/reports/benchmark-cpu-10k.json),
+[bounded journal](../testdata/reports/benchmark-cpu-10k-journal.json).
 
 ```sh
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --rate 10000 --warmup 10s --duration 15s --rounds 3 --output testdata/reports/benchmark-cpu-10k.json

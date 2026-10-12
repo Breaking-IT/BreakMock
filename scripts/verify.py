@@ -2,17 +2,12 @@
 """Build and run isolated differential suites against pinned Java WireMock."""
 from oracle import identify
 import argparse,hashlib,json,pathlib,subprocess,tempfile,time,urllib.request,shutil,sys,os
-p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--candidate-language',choices=['go','rust'],default='go');p.add_argument('--output-dir');p.add_argument('--suite',action='append');p.add_argument('--candidate-arg',action='append',default=[],help='Extra candidate startup argument, repeatable; use --candidate-arg=--flag for flags');a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
+p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--candidate-language',choices=['go'],default='go');p.add_argument('--output-dir');p.add_argument('--suite',action='append');p.add_argument('--candidate-arg',action='append',default=[],help='Extra candidate startup argument, repeatable; use --candidate-arg=--flag for flags');a=p.parse_args();root=pathlib.Path(__file__).resolve().parent.parent
 pin=json.loads((root/'testdata/reference.json').read_text())
 if hashlib.sha256(pathlib.Path(a.jar).read_bytes()).hexdigest()!=pin['jar_sha256']:raise SystemExit('Reference JAR does not match testdata/reference.json SHA-256')
-if a.candidate_language=='rust':
- subprocess.run(['cargo','build','--release','--manifest-path','rust/Cargo.toml'],cwd=root,check=True)
- binary=root/'rust/target/release/breakmock-rust'
- os.environ['BREAKMOCK_CANDIDATE_KIND']='rust'
-else:
- subprocess.run(['go','build','-o','bin/breakmock','./cmd/breakmock'],cwd=root,check=True)
- binary=root/'bin/breakmock'
-output=pathlib.Path(a.output_dir or ('testdata/reports/rust' if a.candidate_language=='rust' else 'testdata/reports'));output.mkdir(parents=True,exist_ok=True)
+subprocess.run(['go','build','-o','bin/breakmock','./cmd/breakmock'],cwd=root,check=True)
+binary=root/'bin/breakmock'
+output=pathlib.Path(a.output_dir or 'testdata/reports');output.mkdir(parents=True,exist_ok=True)
 reference='http://127.0.0.1:18111';candidate='http://127.0.0.1:18112';results=[]
 suites=['fixtures_differential.py','differential.py','matcher_differential.py','template_differential.py','admin_differential.py','runtime_differential.py','gzip_differential.py','diagnostics_differential.py','matcher_distance_differential.py','webhook_differential.py','fault_differential.py','entity_differential.py','messaging_differential.py','streaming_differential.py','status_differential.py','streaming_journal_differential.py','message_wait_differential.py','journal_concurrency_differential.py']
 for suite,disabled_journal in [(suite,False) for suite in suites]+[('message_wait_differential.py',True)]:

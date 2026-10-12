@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	bm "github.com/Breaking-IT/BreakMock"
+	bm "github.com/Breaking-IT/BreakMock/pkg/breakmock"
 )
 
 func configFile(t *testing.T, body string) string {

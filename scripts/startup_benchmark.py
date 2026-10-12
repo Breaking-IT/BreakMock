@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Balanced cold-process startup to a verified templated HTTP response (warm OS cache)."""
 import argparse,json,pathlib,platform,subprocess,tempfile,time,urllib.request
-p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--go-binary',required=True);p.add_argument('--rust-binary',required=True);p.add_argument('--rounds',type=int,default=15);p.add_argument('--output',default='testdata/reports/rust/startup.json');a=p.parse_args()
-servers=['java','go','rust'];results=[]
+p=argparse.ArgumentParser();p.add_argument('--jar',required=True);p.add_argument('--go-binary',required=True);p.add_argument('--rounds',type=int,default=15);p.add_argument('--output',default='testdata/reports/startup.json');a=p.parse_args()
+servers=['java','go'];results=[]
 with tempfile.TemporaryDirectory(prefix='breakmock-startup-')as directory:
  root=pathlib.Path(directory);(root/'mappings').mkdir();(root/'mappings/ready.json').write_text(json.dumps({'id':'12345678-1234-1234-1234-123456789abc','request':{'method':'GET','url':'/ready'},'response':{'body':"Ready {{math 2 '+' 3}}",'transformers':['response-template']}}))
  for round in range(a.rounds):
-  for kind in servers[round%3:]+servers[:round%3]:
-   port={'java':18901,'go':18902,'rust':18903}[kind]
-   command=['java','-jar',str(pathlib.Path(a.jar).resolve()),'--disable-banner']if kind=='java'else[str(pathlib.Path(a.go_binary if kind=='go'else a.rust_binary).resolve())]
+  for kind in servers[round%len(servers):]+servers[:round%len(servers)]:
+   port={'java':18901,'go':18902}[kind]
+   command=['java','-jar',str(pathlib.Path(a.jar).resolve()),'--disable-banner']if kind=='java'else[str(pathlib.Path(a.go_binary).resolve())]
    command+=['--port',str(port),'--root-dir',directory,'--no-request-journal']
    start=time.perf_counter();proc=subprocess.Popen(command,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
    try:

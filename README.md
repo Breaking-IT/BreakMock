@@ -5,14 +5,14 @@ response templating, and administration. Built by Breaking-IT as a foundation fo
 and controlled failures.
 
 **Implementation choice: Go.** Development continues on `main`. Go is the
-maintained implementation for all new
-features, optimizations and releases, including embedded Toxiproxy. The Rust
-prototype is retired and excluded from CI. Its source and comparison reports
-remain as historical reference; see [the measured comparison](GO_JOURNAL_OPTIMIZATION.md).
+maintained implementation for all new features, optimizations and releases,
+including embedded Toxiproxy. The Rust prototype is retired and excluded from CI.
+Its source is preserved only on the historical `codex/rust-port` branch; see
+[the measured comparison](docs/GO_JOURNAL_OPTIMIZATION.md) for retained results.
 
 **Development status:** a compatibility port under active construction, not a
 complete drop-in replacement. The pinned reference is **WireMock 4.0.0-beta.40**. Upstream is a beta release;
-BreakMock exposes its implemented messaging features by default, without a beta flag. See [COMPATIBILITY.md](COMPATIBILITY.md)
+BreakMock exposes its implemented messaging features by default, without a beta flag. See [COMPATIBILITY.md](docs/COMPATIBILITY.md)
 for tested coverage and known gaps. Performance and compatibility are separate
 claims; neither is inferred from the implementation language.
 
@@ -31,6 +31,28 @@ our maintained implementation because it meets our efficiency goals and lets us
 extend one executable with mocking, test-data and chaos capabilities, including
 native integration with the Go-based Toxiproxy. See the [measurements and their
 scope](#java-versus-go-benchmarks) below.
+
+## Repository layout
+
+```text
+cmd/breakmock/       Standalone server executable
+cmd/bmbench/         Benchmark load generator
+pkg/breakmock/       Go server, matching, templates, admin APIs and tests
+internal/           Supporting packages and embedded assets
+examples/           Runnable mappings and chaos configurations
+docs/               Usage, compatibility and benchmark reports
+scripts/            Build support, benchmarks and compatibility checks
+testdata/           Compatibility fixtures and recorded results
+third_party/        Preserved dependency licenses and notices
+```
+
+The application is Go-only: no Java or Rust source or runtime is bundled.
+Java is used only as an external WireMock reference for optional differential
+checks and comparative benchmarks (including CI). Build and run BreakMock with Go
+and the C compiler/zlib dependency described below. Applications embedding the
+server import `github.com/Breaking-IT/BreakMock/pkg/breakmock`. This replaces
+the former module-root import path. After editing the canonical license files,
+run `python3 scripts/update_license_bundle.py` to refresh embedded notices.
 
 ## Run
 
@@ -80,8 +102,8 @@ keep their normal behavior. To start a configured chaos scenario:
 The example proxies port 8081 to BreakMock on port 8080 with downstream latency.
 Use latency/jitter, bandwidth limits, timeouts, connection resets and byte limits
 to test retries, deadlines, slow downloads and interrupted responses. See the
-[chaos testing recipes](TOXIPROXY.md#chaos-testing-recipes).
-See [Toxiproxy configuration and usage](TOXIPROXY.md) for API examples, CLI
+[chaos testing recipes](docs/TOXIPROXY.md#chaos-testing-recipes).
+See [Toxiproxy configuration and usage](docs/TOXIPROXY.md) for API examples, CLI
 precedence, reset isolation and lifecycle. Runtime proxy changes are not
 persisted. MIT notices are retained and available through `--licenses`.
 
@@ -173,11 +195,11 @@ prove JIT steady state. Journals were disabled or capped equally on both servers
 These results predate subsequent admin compatibility fixes and Toxiproxy
 integration, so they are not measurements of the current executable or active
 chaos scenarios. Compatibility coverage is tracked separately in
-[COMPATIBILITY.md](COMPATIBILITY.md).
+[COMPATIBILITY.md](docs/COMPATIBILITY.md).
 
-See the [full measurement protocol and optimization report](GO_JOURNAL_OPTIMIZATION.md),
+See the [full measurement protocol and optimization report](docs/GO_JOURNAL_OPTIMIZATION.md),
 [raw results and executable hashes](testdata/reports/go-optimized), and
-[historical benchmarks](BENCHMARKS.md). Reproduce the Java/Go workloads with:
+[historical benchmarks](docs/BENCHMARKS.md). Reproduce the Java/Go workloads with:
 
 ```sh
 # Saturation throughput, without and with a bounded journal.

@@ -12,7 +12,7 @@ func TestJavaMatcherFixtures(t *testing.T) {
 	previousLocale := templateDefaultLocale()
 	templateLocale = "en_NL"
 	t.Cleanup(func() { templateLocale = previousLocale })
-	raw, err := os.ReadFile("testdata/matcher_cases.json")
+	raw, err := os.ReadFile("../../testdata/matcher_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func TestJavaMatcherFixtures(t *testing.T) {
 	}
 }
 func TestJavaDistanceFixtures(t *testing.T) {
-	raw, err := os.ReadFile("testdata/matcher_distance_cases.json")
+	raw, err := os.ReadFile("../../testdata/matcher_distance_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,7 +58,7 @@ func TestJavaDistanceFixtures(t *testing.T) {
 }
 
 func TestJavaMessageFixtures(t *testing.T) {
-	raw, err := os.ReadFile("testdata/matcher_message_cases.json")
+	raw, err := os.ReadFile("../../testdata/matcher_message_cases.json")
 	if err != nil {
 		t.Fatal(err)
 	}

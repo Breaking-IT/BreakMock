@@ -16,7 +16,7 @@ import (
 )
 
 func TestUpstreamMappingFilesAndScenario(t *testing.T) {
-	s, e := NewServer(Options{RootDir: "testdata/upstream/remoteloader"})
+	s, e := NewServer(Options{RootDir: "../../testdata/upstream/remoteloader"})
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -31,7 +31,7 @@ func TestUpstreamMappingFilesAndScenario(t *testing.T) {
 		s.ServeHTTP(w, r)
 		want := []byte(c.want)
 		if c.path == "/todo/items" && c.method == "GET" && c.want == "" {
-			want, _ = os.ReadFile("testdata/upstream/remoteloader/__files/body.xml")
+			want, _ = os.ReadFile("../../testdata/upstream/remoteloader/__files/body.xml")
 		}
 		if w.Code != c.status || !bytes.Equal(w.Body.Bytes(), want) {
 			t.Fatalf("%s %s: %d %q want %d %q", c.method, c.path, w.Code, w.Body.String(), c.status, want)
@@ -41,7 +41,7 @@ func TestUpstreamMappingFilesAndScenario(t *testing.T) {
 		r := httptest.NewRequest("GET", path, nil)
 		w := httptest.NewRecorder()
 		s.ServeHTTP(w, r)
-		want, _ := os.ReadFile(filepath.Join("testdata/upstream/remoteloader/__files", file))
+		want, _ := os.ReadFile(filepath.Join("../../testdata/upstream/remoteloader/__files", file))
 		if w.Code != 200 || !bytes.Equal(w.Body.Bytes(), want) {
 			t.Fatalf("file response differs %s", path)
 		}

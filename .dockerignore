@@ -3,4 +3,3 @@ bin
 benchmark-results
 *.prof
 scripts/__pycache__
-rust/target

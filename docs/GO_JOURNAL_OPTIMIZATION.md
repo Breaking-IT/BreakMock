@@ -1,5 +1,10 @@
 # Go journal optimization and fresh Java/Go/Rust comparison
 
+> Historical measurement report. Rust source and the original three-way scripts
+> are preserved on [`codex/rust-port`](https://github.com/Breaking-IT/BreakMock/tree/codex/rust-port).
+> Reproduction commands below describe that historical checkout. Current `main`
+> contains the Go implementation and Java-versus-Go comparison tools.
+
 Measured on 2026-10-12 on the same Apple M4 Pro (14 logical CPUs). This supersedes
 the runtime comparison in [RUST_JOURNAL_OPTIMIZATION.md](RUST_JOURNAL_OPTIMIZATION.md).
 Java is pinned WireMock 4.0.0-beta.40. Rust is the previously optimized executable,
@@ -70,7 +75,7 @@ a mapping from disk and returning the correct templated response.
 All 60 main load measurements had zero errors and dropped arrivals. The matched-rate
 runs checked 5,400,000 response bodies. Ten additional baseline-Go measurements
 also had zero errors/drops. Every fixed-rate run achieved within 2% of 10,000 RPS.
-See [raw rounds, latency, profiles and validation](testdata/reports/go-optimized).
+See [raw rounds, latency, profiles and validation](../testdata/reports/go-optimized).
 
 ## Go before and after
 
@@ -138,7 +143,7 @@ message-wait cases and two disabled-journal message-wait cases. The archived old
 binary independently reproduces all five wait failures. No tests were weakened or
 new normalizations added. Journal comparisons retain whitespace/property order but
 substitute generated IDs, timestamps, ports, durations and response Date, as before.
-Full details are in the [validation summary](testdata/reports/go-optimized/compatibility/README.md).
+Full details are in the [validation summary](../testdata/reports/go-optimized/compatibility/README.md).
 Rust source and executable are unchanged from the prior validated comparison;
 its previously documented gaps also remain.
 
@@ -147,7 +152,7 @@ independently passes Go race tests, vet and the container build, plus Rust forma
 unit tests and Clippy. Both implementations pass the journal concurrency suite.
 The workflow remains red because of the same existing differential failures:
 six Go cases and Rust's JVM-identity diagnostic. Saved step and failure evidence is
-in [the CI summary](testdata/reports/go-optimized/linux-ci/summary.json).
+in [the CI summary](../testdata/reports/go-optimized/linux-ci/summary.json).
 
 ## Unchanged measurement protocol
 

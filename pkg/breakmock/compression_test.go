@@ -62,7 +62,7 @@ func BenchmarkWireGzip(b *testing.B) {
 }
 
 func TestWireGzipReferenceCorpus(t *testing.T) {
-	raw, err := os.ReadFile("testdata/gzip/wiremock-4.0.0-beta.40.json")
+	raw, err := os.ReadFile("../../testdata/gzip/wiremock-4.0.0-beta.40.json")
 	if err != nil {
 		t.Fatal(err)
 	}

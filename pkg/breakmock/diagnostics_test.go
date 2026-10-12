@@ -13,7 +13,7 @@ func TestJavaDiagnosticGolden(t *testing.T) {
 		t.Fatal(e)
 	}
 	s.Store.AddMapping(Mapping{"id": "11111111-1111-4111-8111-111111111111", "request": map[string]any{"method": "GET", "url": "/expected"}, "response": map[string]any{"status": 200}})
-	expected, e := os.ReadFile("testdata/diagnostics/url-mismatch.txt")
+	expected, e := os.ReadFile("../../testdata/diagnostics/url-mismatch.txt")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -21,7 +21,7 @@ func TestJavaDiagnosticGolden(t *testing.T) {
 	if !bytes.Equal(expected, actual) {
 		t.Fatalf("Java mismatch:\n%s\nGo:\n%s", expected, actual)
 	}
-	expected, e = os.ReadFile("testdata/diagnostics/near-miss.json")
+	expected, e = os.ReadFile("../../testdata/diagnostics/near-miss.json")
 	if e != nil {
 		t.Fatal(e)
 	}

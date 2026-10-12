@@ -1,5 +1,10 @@
 # Rust journal optimization and fresh three-way comparison
 
+> Historical measurement report. Rust source and the original three-way scripts
+> are preserved on [`codex/rust-port`](https://github.com/Breaking-IT/BreakMock/tree/codex/rust-port).
+> Reproduction commands below describe that historical checkout. Current `main`
+> contains the Go implementation and Java-versus-Go comparison tools.
+
 The subsequent [Go optimization comparison](GO_JOURNAL_OPTIMIZATION.md) supersedes
 the runtime measurements and language comparison below; this report is historical.
 
@@ -97,7 +102,7 @@ Build measurements (one sample each; source dependencies already downloaded):
 
 All 60 three-way load measurements had zero errors/drops. The matched-rate runs checked 5,400,000 responses. The four old-Rust measurements are additional.
 
-Raw data and compatibility/profile evidence are in [testdata/reports/rust-journal-optimized](testdata/reports/rust-journal-optimized). CPU, latency, RSS and every round are retained.
+Raw data and compatibility/profile evidence are in [testdata/reports/rust-journal-optimized](../testdata/reports/rust-journal-optimized). CPU, latency, RSS and every round are retained.
 
 ## What the profile showed and what changed
 
@@ -152,7 +157,7 @@ in the saved report and test source.
 Linux CI on Java 21 independently confirms the Rust suite and the new concurrent
 journal checks, including identifier uniqueness across resets. See the
 [CI run](https://github.com/Breaking-IT/BreakMock/actions/runs/38208942222) and
-[saved CI summary](testdata/reports/rust-journal-optimized/linux-ci/run.json).
+[saved CI summary](../testdata/reports/rust-journal-optimized/linux-ci/run.json).
 The Go baseline's previously known message-wait failures remain; Go's new journal
 concurrency checks pass. The optimization does not claim to fix unrelated gaps.
 

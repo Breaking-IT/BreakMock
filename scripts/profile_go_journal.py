@@ -26,7 +26,7 @@ import (
  _ "net/http/pprof"
  _ "expvar"
  "runtime"
- bm "github.com/Breaking-IT/BreakMock"
+ bm "github.com/Breaking-IT/BreakMock/pkg/breakmock"
 )
 func main() {
  runtime.SetMutexProfileFraction(5)

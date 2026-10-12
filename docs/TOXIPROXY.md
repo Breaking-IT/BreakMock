@@ -25,10 +25,10 @@ go build -trimpath -o bin/breakmock ./cmd/breakmock
 ./bin/breakmock --config examples/toxiproxy/breakmock.json
 ```
 
-The [example configuration](examples/toxiproxy/breakmock.json) starts HTTP on
+The [example configuration](../examples/toxiproxy/breakmock.json) starts HTTP on
 `127.0.0.1:8080` and a TCP proxy on `127.0.0.1:8081`, forwarding to that HTTP
 listener with 100 milliseconds of downstream latency. Both ports must be free.
-The [mapping](examples/toxiproxy/mappings/hello.json) uses the normal WireMock
+The [mapping](../examples/toxiproxy/mappings/hello.json) uses the normal WireMock
 response-template transformer.
 
 In another terminal:
@@ -195,7 +195,8 @@ The API is unauthenticated, like the existing WireMock admin API; the example
 binds management and proxy listeners to loopback. Bind addresses are configured
 separately for the HTTP server and each proxy.
 
-Go applications embedding `breakmock.NewServer` explicitly pass
+Go applications import `github.com/Breaking-IT/BreakMock/pkg/breakmock` to embed
+`breakmock.NewServer` and explicitly pass
 `Options.Toxiproxy` with `Enabled: true` (the library zero value is disabled) and must
 call `Server.Close()` after stopping their HTTP server to release proxy resources.
 The CLI handles that lifecycle automatically.
@@ -203,8 +204,8 @@ The CLI handles that lifecycle automatically.
 ## Licenses
 
 BreakMock remains Apache-2.0. Toxiproxy retains Shopify's MIT license and
-attribution in [third_party/toxiproxy/LICENSE](third_party/toxiproxy/LICENSE).
-Distributed notices are bundled in [third_party/NOTICES.txt](third_party/NOTICES.txt)
+attribution in [third_party/toxiproxy/LICENSE](../third_party/toxiproxy/LICENSE).
+Distributed notices are bundled in [third_party/NOTICES.txt](../third_party/NOTICES.txt)
 and are embedded into the executable. `breakmock --licenses` prints the Apache
 license, project notices and third-party notices without starting listeners.
 The Docker image also carries the license files.
