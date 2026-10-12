@@ -17,18 +17,26 @@ func TestJavaMatcherFixtures(t *testing.T) {
 		t.Fatal(err)
 	}
 	var cases []struct {
-		Name    string
-		Pattern map[string]any
-		Body    string
-		Matches bool
+		Name             string
+		Pattern          map[string]any
+		Body             string
+		Matches          bool
+		BreakMockMatches *bool `json:"breakmockMatches"`
 	}
 	if err = json.Unmarshal(raw, &cases); err != nil {
 		t.Fatal(err)
 	}
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
-			if got := MatchRequest(c.Pattern, Request{Method: "POST", URL: "/test", Body: []byte(c.Body)}); got != c.Matches {
-				t.Fatalf("got %v, Java reference %v", got, c.Matches)
+			want := c.Matches
+			// Keep the captured Java result, but assert corrected semantics for
+			// explicitly documented upstream bugs. Live differential checks still
+			// compare the original Java and Go bytes without exemptions.
+			if c.BreakMockMatches != nil {
+				want = *c.BreakMockMatches
+			}
+			if got := MatchRequest(c.Pattern, Request{Method: "POST", URL: "/test", Body: []byte(c.Body)}); got != want {
+				t.Fatalf("got %v, want %v (Java reference %v)", got, want, c.Matches)
 			}
 		})
 	}

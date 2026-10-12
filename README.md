@@ -13,7 +13,9 @@ Its source is preserved only on the historical `codex/rust-port` branch; see
 **Development status:** a compatibility port under active construction, not a
 complete drop-in replacement. The pinned reference is **WireMock 4.0.0-beta.40**. Upstream is a beta release;
 BreakMock exposes its implemented messaging features by default, without a beta flag. See [COMPATIBILITY.md](docs/COMPATIBILITY.md)
-for tested coverage and known gaps. Performance and compatibility are separate
+for tested coverage and known gaps. We intentionally correct [five upstream bugs](docs/UPSTREAM_BUG_FIXES.md),
+including matcher and JSON-template errors, so those cases differ from Java.
+Performance and compatibility are separate
 claims; neither is inferred from the implementation language.
 
 ## Why refactor WireMock to Go?
