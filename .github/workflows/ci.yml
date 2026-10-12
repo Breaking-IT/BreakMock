@@ -42,33 +42,3 @@ jobs:
         with:
           name: compatibility-reports
           path: testdata/reports/
-  rust:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-      - name: Install zlib
-        run: sudo apt-get update && sudo apt-get install -y zlib1g-dev
-      - name: Check Rust formatting
-        run: cargo fmt --manifest-path rust/Cargo.toml --all -- --check
-      - name: Test native Rust implementation
-        run: cargo test --manifest-path rust/Cargo.toml --locked --all-targets
-      - name: Run Clippy
-        run: cargo clippy --manifest-path rust/Cargo.toml --locked --all-targets
-      - name: Download pinned Java reference
-        run: |
-          curl --fail --location --silent --show-error https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/4.0.0-beta.40/wiremock-standalone-4.0.0-beta.40.jar -o /tmp/wiremock.jar
-          echo '3a53dec6c814ff73da4abb0bc51624215ea2b913beec8d19aa6d54e4c62161d3  /tmp/wiremock.jar' | sha256sum --check
-      - name: Compare native Rust against Java WireMock
-        run: python3 scripts/verify.py --jar /tmp/wiremock.jar --candidate-language rust --output-dir testdata/reports/rust
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: rust-compatibility-reports
-          path: testdata/reports/rust/
