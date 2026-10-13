@@ -78,15 +78,24 @@ for base in bases:
  deadline=time.monotonic()+2
  while not json.loads(call(base,'GET','/channels')[1])['channels'] and time.monotonic()<deadline:time.sleep(.01)
 step('websocket channel list','GET','/channels')
+def await_events(count,deadline=3):
+ # Both servers can return a reply frame before journaling the events that
+ # produced it (WireMock journals "received" after writing the reply), so wait
+ # until each journal reaches the expected size before comparing. A server that
+ # never reaches it is compared as is, and the step fails.
+ for base in bases:
+  end=time.monotonic()+deadline
+  while len(json.loads(call(base,'GET','/messages')[1]).get('messageServeEvents',[]))<count and time.monotonic()<end:time.sleep(.01)
 for client in clients:client.write('hello');client.frame()
+await_events(2)
 step('websocket matched received and sent journal','GET','/messages')
 step('websocket count channel','POST','/messages/count',{'channel':{'urlPath':'/stream'}})
 step('websocket count body','POST','/messages/count',{'body':{'equalTo':'hello'}})
 for client in clients:client.write('unmatched')
-time.sleep(.05)
+await_events(3)
 step('websocket unmatched journal','GET','/messages')
 for client in clients:client.write(b'\x00\xff',2)
-time.sleep(.05)
+await_events(4)
 step('websocket binary journal','GET','/messages')
 step('websocket remove matched messages','POST','/messages/remove',{'body':{'equalTo':'hello'}})
 for client in clients:client.close()
