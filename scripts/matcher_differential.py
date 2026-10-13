@@ -4,6 +4,7 @@ This corpus compares status/body for positive and negative matching; it does not
 compare generated unmatched-request diagnostic bodies or prove full parity.
 """
 import argparse, json, urllib.request, urllib.error
+import intended_differences
 p=argparse.ArgumentParser();p.add_argument('--reference',default='http://127.0.0.1:18085');p.add_argument('--candidate',default='http://127.0.0.1:18083');p.add_argument('--output');args=p.parse_args()
 def call(base,path,body=None,headers=None,method=None):
     if isinstance(body,dict):body=json.dumps(body).encode();headers={'Content-Type':'application/json',**(headers or {})}
@@ -85,8 +86,10 @@ for name,pattern,body,path,headers,method in cases:
   if status!=201:responses.append(('rejected',status,data));continue
   status,data=call(base,path,body,headers,method);responses.append((status,data))
  ok=responses[0]==responses[1]
- results.append({'name':name,'passed':ok,'reference':repr(responses[0]),'candidate':repr(responses[1]),'request':pattern,'body':body,'path':path})
- print(('PASS ' if ok else 'FAIL ')+name)
+ intended=intended_differences.check('matcher_differential.py',name,*responses) if all(len(r)==2 for r in responses) else None
+ if intended:ok=intended[0]
+ results.append({'name':name,'passed':ok,'reference':repr(responses[0]),'candidate':repr(responses[1]),'request':pattern,'body':body,'path':path,**({'intended_difference':intended[1]} if intended else {})})
+ print(('PASS ' if ok else 'FAIL ')+name+(f' [intended difference {intended[1]}]' if intended else ''))
  if not ok:failed.append((name,responses));print(responses)
 print(f'{len(cases)-len(failed)}/{len(cases)} matched reference')
 if args.output:

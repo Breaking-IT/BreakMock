@@ -31,6 +31,9 @@ func jsonPathMatchDistance(expected any, actual string) float64 {
 	switch v := value.(type) {
 	case nil:
 	case []any:
+		if _, absent := nested["absent"].(bool); absent && len(v) == 0 && matcherJSONPathDefinite(expression) {
+			return ValueMatchDistance(nested, "[]", true)
+		}
 		if _, jsonEqual := nested["equalToJson"]; jsonEqual {
 			values = append(values, matcherJSONValueString(v))
 		} else {
@@ -57,7 +60,7 @@ func jsonPathMatchDistance(expected any, actual string) float64 {
 }
 func xpathMatchDistance(expected any, p map[string]any, actual string) float64 {
 	nested, ok := expected.(map[string]any)
-	if !ok {
+	if !ok || !xpathHasValueMatcher(nested) {
 		if matchXPath(expected, p, actual) {
 			return 0
 		}

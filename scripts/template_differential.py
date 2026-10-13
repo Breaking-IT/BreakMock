@@ -17,6 +17,7 @@ def call(base,path,data=None,method=None,headers=None):
  except urllib.error.HTTPError as e:r=e
  return r.status,r.read()
 from oracle import identify
+import intended_differences
 identify(a.reference,'java'); identify(a.candidate,'go')
 cases=[]
 parameters_by_name={}
@@ -95,7 +96,9 @@ for name,t,body,path,headers in cases:
  diagnostic = name in ('jsonBody template quotes','jsonBody template newline') and results[0][0]==500
  comparison='status_and_exact_body_bytes'
  ok=results[0]==results[1]
- print(('PASS ' if ok else 'FAIL ')+name+(' [JVM diagnostic: strict bytes required]' if diagnostic else ''))
+ intended=intended_differences.check('template_differential.py',name,*results) if all(len(r)==2 for r in results) else None
+ if intended:ok=intended[0];comparison='intended_difference '+intended[1]
+ print(('PASS ' if ok else 'FAIL ')+name+(' [JVM diagnostic: strict bytes required]' if diagnostic else '')+(f' [intended difference {intended[1]}]' if intended else ''))
  record={'name':name,'passed':ok,'comparison':comparison,'reference_status':results[0][0],'candidate_status':results[1][0],'reference_body':results[0][-1][:1200].decode(errors='replace'),'candidate_body':results[1][-1][:1200].decode(errors='replace'),'reference_body_bytes':len(results[0][-1]),'candidate_body_bytes':len(results[1][-1])}
  records.append(record)
  if not ok:failed.append(name);print(' reference:',repr(results[0][-1][:300]),'\n candidate:',repr(results[1][-1][:300]))

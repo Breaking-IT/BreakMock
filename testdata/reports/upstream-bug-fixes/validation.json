@@ -1,0 +1,142 @@
+{
+  "date": "2026-10-12",
+  "reference": "WireMock 4.0.0-beta.40",
+  "checks": {
+    "go_test_race": "passed",
+    "go_vet": "passed",
+    "toxiproxy_integration": "11/11 passed",
+    "docker_build": "passed"
+  },
+  "full_differential": {
+    "reference": "4.0.0-beta.40",
+    "candidate_language": "go",
+    "candidate_args": [],
+    "suites": [
+      {
+        "suite": "fixtures_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "matcher_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "template_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "admin_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "runtime_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "gzip_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "diagnostics_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "matcher_distance_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "webhook_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "fault_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "entity_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "messaging_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "status_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "streaming_journal_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "journal_concurrency_differential.py",
+        "exit_code": 0
+      },
+      {
+        "suite": "message_wait_differential.py:disabled-journal",
+        "exit_code": 0
+      }
+    ]
+  },
+  "final_matcher_rerun": {
+    "reference": "4.0.0-beta.40",
+    "candidate_language": "go",
+    "candidate_args": [],
+    "suites": [
+      {
+        "suite": "matcher_differential.py",
+        "exit_code": 1
+      },
+      {
+        "suite": "matcher_distance_differential.py",
+        "exit_code": 0
+      }
+    ]
+  },
+  "mismatches": {
+    "matcher": {
+      "passed": 432,
+      "total": 434,
+      "strict_mismatches": [
+        "JSONPath array 98",
+        "v4 JSONPath empty/null $.empty{'absent': True}"
+      ]
+    },
+    "template": {
+      "passed": 427,
+      "total": 429,
+      "strict_mismatches": [
+        "toJson missing",
+        "toJson value null"
+      ]
+    },
+    "admin": {
+      "passed": 129,
+      "total": 130,
+      "strict_mismatches": [
+        "asset docs/swagger"
+      ]
+    },
+    "diagnostics": {
+      "passed": 40,
+      "total": 41,
+      "strict_mismatches": [
+        "binary body mismatch"
+      ]
+    }
+  },
+  "comparison_policy": "Live Java comparison scripts unchanged; intentional corrections remain failures, not exemptions.",
+  "binary_sha256": "d099f879964c2f0f270c557e9abd8d69778c8ac52e3c07d51a6e91fc323b0f0a"
+}

@@ -282,7 +282,7 @@ func renderTemplateContext(source string, request Request, parameters map[string
 	})
 	add("toJson", func(o *raymond.Options) any {
 		if o.Param(0) == nil {
-			return ""
+			return "null"
 		}
 		return templatePrettyJSON(templateOmitNulls(o.Param(0)), 0)
 	})

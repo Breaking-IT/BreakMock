@@ -1228,6 +1228,68 @@
         }
       }
     },
+    "/__admin/scenarios/{name}/state": {
+      "put": {
+        "operationId": "setScenarioState",
+        "summary": "Set or reset the state of a scenario",
+        "tags": [
+          "Scenarios"
+        ],
+        "description": "Sets an existing scenario to a state referenced by its mappings. An empty request body resets it to Started.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Scenario name"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "state"
+                ],
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "description": "A state referenced by this scenario’s mappings"
+                  }
+                }
+              },
+              "example": {
+                "state": "Done"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "State changed or reset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Scenario does not exist"
+          },
+          "422": {
+            "description": "Invalid JSON or unsupported/missing state"
+          }
+        }
+      }
+    },
     "/__admin/scenarios/reset": {
       "post": {
         "operationId": "resetAllScenarios",
