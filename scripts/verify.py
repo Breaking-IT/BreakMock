@@ -26,13 +26,16 @@ for suite,disabled_journal in [(suite,False) for suite in suites]+[('message_wai
     if suite=='journal_concurrency_differential.py':cmd+=['--max-request-journal-entries','64']
     if port in (18113,18114):cmd+=['--websocket-idle-timeout','200','--websocket-max-text-message-size','8','--websocket-max-binary-message-size','12']
     proc=subprocess.Popen(cmd,cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);processes.append(proc)
-    for _ in range(100):
+    # A JVM on a busy shared CI runner can need well over ten seconds to start.
+    deadline=time.monotonic()+60
+    while True:
      if proc.poll()is not None:raise RuntimeError(kind+' failed to start (port occupied?)')
      try:
       identify(f'http://127.0.0.1:{port}',kind,timeout=1)
       break
-     except (OSError,ValueError):time.sleep(.1)
-    else:raise RuntimeError(kind+' startup timeout')
+     except (OSError,ValueError):
+      if time.monotonic()>deadline:raise RuntimeError(kind+' startup timeout after 60s')
+      time.sleep(.1)
    cmd=[sys.executable,str(root/'scripts'/suite),'--reference',reference,'--candidate',candidate]
    reports={'differential.py':'compatibility','matcher_differential.py':'matcher','admin_differential.py':'admin','runtime_differential.py':'runtime','template_differential.py':'template','gzip_differential.py':'gzip','diagnostics_differential.py':'diagnostics','matcher_distance_differential.py':'matcher-distance','webhook_differential.py':'webhook','fault_differential.py':'faults','entity_differential.py':'entities','messaging_differential.py':'messaging','streaming_differential.py':'streaming','status_differential.py':'status','streaming_journal_differential.py':'streaming-journal','message_wait_differential.py':'message-wait','journal_concurrency_differential.py':'journal-concurrency','dynamic_template_differential.py':'dynamic-template'}
    if suite in reports:cmd+=['--output',str(output/((reports[suite]+'-disabled' if disabled_journal else reports[suite])+'.json'))]
