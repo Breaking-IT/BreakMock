@@ -95,6 +95,7 @@ def main():
     p.add_argument('--workloads', default='', help='comma-separated subset')
     p.add_argument('--journal-check', choices=['strict', 'report'], default='strict',
                    help='strict fails on a differing logged event; report records the difference and continues')
+    p.add_argument('--source-revision', default='', help='Commit the measured BreakMock builds came from, recorded in the report')
     p.add_argument('--output', required=True)
     a = p.parse_args()
     binaries = dict(item.split('=', 1) for item in a.binary)
@@ -188,6 +189,8 @@ def main():
         'java_version': subprocess.run(['java', '-version'], capture_output=True, text=True).stderr.strip() if any(v.suffix == '.jar' for v in binaries.values()) else None,
         'binaries': {k: {'path': str(v), 'sha256': hashlib.sha256(v.read_bytes()).hexdigest()} for k, v in binaries.items()},
         'driver_sha256': hashlib.sha256(driver.read_bytes()).hexdigest(),
+        'source_revision': a.source_revision or subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+        'source_dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT, text=True).strip()),
         'settings': {'size': a.size, 'rounds': a.rounds, 'duration': a.duration, 'warmup': a.warmup, 'concurrency': a.concurrency,
                      'response_body_bytes': {k[0]: v.stat().st_size for k, v in expected.items()}},
         'notes': ['Unlimited-rate closed loop with persistent connections; driver and servers share the host.',
