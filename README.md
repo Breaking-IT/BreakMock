@@ -20,16 +20,17 @@ claims; neither is inferred from the implementation language.
 
 The goal is to keep WireMock's familiar mappings and APIs while reducing the
 resources needed to run mock services in local development, CI and test
-environments. In the latest Java-versus-Go measurements (2026-10-12):
+environments. In the latest Java-versus-Go measurements (2026-10-13, commit
+`68cd311`):
 
 - **Small responses** (a 17-byte body and a small template): BreakMock delivered
-  **14–33% higher throughput**, used **18–36% less server CPU** at the same
-  10,000 RPS and **90–91% less memory** (28–42 MiB versus 261–478 MiB).
+  **22–50% higher throughput**, used **23–34% less server CPU** at the same
+  10,000 RPS and **90–92% less memory** (28–43 MiB versus 259–490 MiB).
 - **Large JSON responses** (inline, body files, templates and gzip): the larger
-  the body, the bigger the lead. At ~100 KiB BreakMock delivered **1.6–11.8× the
-  throughput** with **55–96% less server CPU**; at ~1 MiB **3.2–79×** with
-  **86–99% less**; at ~10 MiB **3.2–180×** with **91–99.6% less**, using
-  0.4–1.1 GiB of memory where Java used 9.5–12.4 GiB. Responses were
+  the body, the bigger the lead. At ~100 KiB BreakMock delivered **1.3–10.6× the
+  throughput** with **54–96% less server CPU**; at ~1 MiB **3.1–86×** with
+  **85–99% less**; at ~10 MiB **3.0–208×** with **92–99.5% less**, using
+  0.4–0.9 GiB of memory where Java used 11.1–12.4 GiB. Responses were
   byte-identical to Java's.
 - Median readiness was **10.7 ms for Go versus 600.7 ms for Java**.
 
@@ -162,13 +163,14 @@ bounded differential corpus, not the entire upstream Java test suite.
 
 ## Java versus Go benchmarks
 
-Measured **2026-10-12** on an Apple M4 Pro (14 logical CPUs, 48 GB), macOS arm64,
+Measured **2026-10-13** on an Apple M4 Pro (14 logical CPUs, 48 GB), macOS arm64,
 Go 1.27.1 and OpenJDK 27. Java is **WireMock 4.0.0-beta.40** (JAR SHA-256 checked
-against `testdata/reference.json`) with default JVM settings. Go is the current
-BreakMock, including the [large JSON optimizations](docs/LARGE_JSON_OPTIMIZATION.md).
-The same Go load generator drives both servers in alternating order with 32
-persistent connections, checks every response body and reported zero errors and
-zero dropped arrivals. Journals were disabled or capped at 1,000 entries on both.
+against `testdata/reference.json`) with default JVM settings. Go is BreakMock built
+from a clean checkout of commit `68cd311`; every report records that commit, a
+clean tree and the binary's SHA-256. The same Go load generator drives both servers
+in alternating order with 32 persistent connections and checks every response body.
+All runs had zero errors and zero dropped arrivals. Journals were disabled or
+capped at 1,000 entries on both servers.
 
 ### Small responses
 
@@ -180,10 +182,10 @@ measurement; higher is better):
 
 | Request journal | Workload | Java | Go | Go vs Java |
 | --- | --- | ---: | ---: | ---: |
-| Disabled | Static | 86,919 | 115,825 | **+33.3%** |
-| Disabled | Template | 88,987 | 114,070 | **+28.2%** |
-| Capped at 1,000 | Static | 81,271 | 93,283 | **+14.8%** |
-| Capped at 1,000 | Template | 80,112 | 90,990 | **+13.6%** |
+| Disabled | Static | 72,580 | 108,579 | **+49.6%** |
+| Disabled | Template | 82,988 | 105,756 | **+27.4%** |
+| Capped at 1,000 | Static | 73,328 | 89,549 | **+22.1%** |
+| Capped at 1,000 | Template | 72,037 | 87,565 | **+21.6%** |
 
 Server CPU and memory at **the same 10,000 offered RPS** (three rounds, 10 s
 warmup, 15 s measurement; lower is better). CPU is process user+system time per
@@ -192,35 +194,37 @@ Memory is the range of peak sampled RSS across rounds.
 
 | Request journal | Workload | Java CPU µs/req | Go CPU µs/req | CPU saved | Java RSS MiB | Go RSS MiB |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| Disabled | Static | 95.02 | 61.29 | **−35.5%** | 260.8–387.2 | 28.2–28.8 |
-| Disabled | Template | 98.93 | 65.38 | **−33.9%** | 275.2–404.5 | 28.7–29.5 |
-| Capped at 1,000 | Static | 128.18 | 105.49 | **−17.7%** | 392.6–410.5 | 41.6–41.9 |
-| Capped at 1,000 | Template | 136.91 | 108.24 | **−20.9%** | 386.0–477.5 | 42.2–42.4 |
+| Disabled | Static | 84.29 | 55.67 | **−34.0%** | 259.3–378.3 | 28.1–28.7 |
+| Disabled | Template | 85.87 | 66.44 | **−22.6%** | 281.8–402.9 | 28.9–29.2 |
+| Capped at 1,000 | Static | 122.42 | 86.49 | **−29.4%** | 372.2–429.5 | 42.1–42.6 |
+| Capped at 1,000 | Template | 120.91 | 84.71 | **−29.9%** | 402.0–490.4 | 43.0–43.3 |
 
-At saturation, peak RSS was 508–914 MiB for Java and 30–51 MiB for Go. Idle RSS
-after startup was 184–201 MiB for Java and 19–20 MiB for Go. Mean p99 latency at
-10,000 RPS was 2.0–2.2 ms for Go and 2.3–31.0 ms for Java, whose p99 varied with
-GC pauses.
+At saturation, Go also used 27–43% less CPU per request. Peak RSS at saturation
+was 504–897 MiB for Java and 31–53 MiB for Go; idle RSS after startup was
+176–200 MiB and 18–20 MiB. Mean p99 latency at 10,000 RPS was 2.5–3.8 ms for Go
+and 2.0–6.1 ms for Java, so Go did **not** have lower tail latency at this
+moderate rate; arrivals are dispatched in 1 ms batches, which dominates these
+values.
 
 ### Large JSON responses
 
 The workloads serve a ~100 KiB JSON document as inline `jsonBody`, inline `body`,
 `bodyFileName`, templates (straight-line and full Handlebars with `jsonPath`) and
-gzip. Three rounds, 2 s warmup, 5 s measurement, saturation; BreakMock before
+gzip. Three rounds, 2 s warmup, 5 s measurement, saturation. BreakMock before
 this work (`51ac179`) ran in the same session:
 
 | Request journal | Workload | Java RPS | Go before RPS | Go RPS | Go vs Java | Java CPU µs/req | Go CPU µs/req | Java peak RSS MiB | Go peak RSS MiB |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Disabled | jsonBody | 10,960 | 21,305 | 56,844 | **5.2×** | 932.2 | 80.0 | 2,280 | 34 |
-| Disabled | body | 27,077 | 36,893 | 54,782 | **2.0×** | 325.1 | 85.7 | 2,137 | 35 |
-| Disabled | bodyFileName | 14,999 | 28,796 | 55,246 | **3.7×** | 681.8 | 89.3 | 2,088 | 35 |
-| Disabled | Template | 23,452 | 492 | 36,983 | **1.6×** | 385.7 | 147.3 | 3,831 | 39 |
-| Disabled | Template file | 18,415 | 480 | 35,299 | **1.9×** | 540.9 | 158.0 | 3,098 | 41 |
-| Disabled | Template + jsonPath | 20,976 | 485 | 33,122 | **1.6×** | 395.2 | 176.3 | 3,053 | 41 |
-| Disabled | jsonBody, gzip | 9,008 | 13,971 | 106,265 | **11.8×** | 1,202.8 | 48.0 | 2,918 | 42 |
-| Capped at 1,000 | jsonBody | 8,480 | 28,763 | 56,241 | **6.6×** | 1,091.9 | 96.9 | 4,484 | 413 |
-| Capped at 1,000 | Template + jsonPath | 19,749 | 649 | 51,037 | **2.6×** | 435.0 | 119.1 | 5,225 | 452 |
-| Capped at 1,000 | jsonBody, gzip | 8,820 | 15,204 | 83,269 | **9.4×** | 1,213.5 | 65.3 | 4,765 | 453 |
+| Disabled | jsonBody | 8,234 | 19,674 | 57,429 | **7.0×** | 1,012.9 | 83.2 | 3,631 | 34 |
+| Disabled | body | 26,370 | 33,900 | 54,273 | **2.1×** | 318.3 | 81.1 | 3,271 | 34 |
+| Disabled | bodyFileName | 13,966 | 27,221 | 54,505 | **3.9×** | 647.7 | 88.9 | 2,359 | 34 |
+| Disabled | Template | 21,885 | 430 | 34,526 | **1.6×** | 381.0 | 151.7 | 3,145 | 40 |
+| Disabled | Template file | 16,564 | 450 | 33,245 | **2.0×** | 537.4 | 160.9 | 2,915 | 41 |
+| Disabled | Template + jsonPath | 21,136 | 459 | 28,312 | **1.3×** | 393.6 | 179.8 | 4,295 | 42 |
+| Disabled | jsonBody, gzip | 8,245 | 13,142 | 87,070 | **10.6×** | 1,197.7 | 44.6 | 5,486 | 42 |
+| Capped at 1,000 | jsonBody | 8,979 | 25,730 | 54,640 | **6.1×** | 1,034.7 | 97.2 | 5,656 | 392 |
+| Capped at 1,000 | Template + jsonPath | 17,853 | 590 | 48,728 | **2.7×** | 455.4 | 118.4 | 6,329 | 440 |
+| Capped at 1,000 | jsonBody, gzip | 8,143 | 14,221 | 79,141 | **9.7×** | 1,214.2 | 66.8 | 6,208 | 441 |
 
 All 14 combinations, p99 latency and the measurement details are in the
 [large JSON report](docs/LARGE_JSON_OPTIMIZATION.md). Every Go response was
@@ -231,13 +235,13 @@ Java's, and Go's CPU saving per request):
 
 | Workload | ~100 KiB | ~1 MiB | ~10 MiB |
 | --- | ---: | ---: | ---: |
-| jsonBody | 5.2× (−91%) | 9.2× (−97%) | 14.4× (−98%) |
-| body | 2.0× (−74%) | 3.2× (−91%) | 4.0× (−94%) |
-| bodyFileName | 3.7× (−87%) | 3.2× (−88%) | 3.2× (−91%) |
-| Template | 1.6× (−62%) | 4.3× (−86%) | 7.6× (−96%) |
-| Template + jsonPath | 1.6× (−55%) | 4.3× (−86%) | 6.5× (−96%) |
-| jsonBody, gzip | 11.8× (−96%) | 79× (−99%) | 180× (−99.6%) |
-| Peak RSS, Java → Go | 2.0–3.7 GiB → 34–42 MiB | 3.3–5.2 GiB → 59–143 MiB | 9.5–12.4 GiB → 0.4–1.1 GiB |
+| jsonBody | 7.0× (−92%) | 10.0× (−97%) | 15.7× (−98%) |
+| body | 2.1× (−75%) | 3.7× (−90%) | 3.2× (−94%) |
+| bodyFileName | 3.9× (−86%) | 3.1× (−87%) | 3.0× (−92%) |
+| Template | 1.6× (−60%) | 4.5× (−86%) | 5.7× (−95%) |
+| Template + jsonPath | 1.3× (−54%) | 4.4× (−85%) | 4.6× (−94%) |
+| jsonBody, gzip | 10.6× (−96%) | 76× (−99%) | 208× (−99.5%) |
+| Peak RSS, Java → Go | 2.3–5.4 GiB → 34–42 MiB | 3.0–5.0 GiB → 60–145 MiB | 11.1–12.4 GiB → 436–898 MiB |
 
 At ~1 MiB and above, Go's static and template workloads reach ~10 GB/s through
 loopback, the shared load generator's limit, so CPU per request is the fairer
@@ -246,33 +250,33 @@ comparison there. Details: [scaling with body size](docs/LARGE_JSON_OPTIMIZATION
 ### What improved in this release
 
 - **Large responses:** templated bodies of 64 KiB and more were re-parsed on every
-  request, so Go was 26–48× *slower* than Java there; it is now 1.6–3.0× faster.
-  Inline, file and gzip bodies use 37–93% less CPU than before, and peak RSS
-  fell by about half or more.
+  request, so Go was 30–51× *slower* than Java there; it is now 1.3–3.2× faster.
+  Inline, file and gzip bodies use 39–94% less CPU than before, and peak RSS fell
+  by about half or more.
 - **Small responses** were already optimized and are unchanged: an in-process
   A/B of the exact workloads above (`BenchmarkSmallResponse`, alternating builds)
-  is within ±2%. Separate HTTP runs of the previous build in the same session
-  varied by up to ±20% at a fixed rate, which is run-to-run noise on a shared
-  host; they are kept in the raw data, not reported as changes.
+  is within ±2% ([raw output](testdata/reports/benchmark-small-ab.txt)).
 
 ### Scope
 
 These are short, same-host measurements: the load generator shares the CPU, and
-Java's fixed warmup does not prove JIT steady state. Java ran with its default
-heap (about a quarter of RAM), so its RSS shows what the JVM took, not the
-minimum it needs. **The default unbounded journal was not benchmarked.** RSS is
-sampled every 100 ms. Startup was measured separately on 15 fresh processes per
-implementation with warm OS caches, loading a mapping from disk and returning a
+Java's fixed warmup does not prove JIT steady state. Results vary between runs on
+this host (for example, Java's saturation RPS differed by up to 17% from a run the
+day before), so compare implementations within one run, not across runs. Java ran
+with its default heap (about a quarter of RAM), so its RSS shows what the JVM took,
+not the minimum it needs. **The default unbounded journal was not benchmarked.**
+RSS is sampled every 100 ms. Startup was measured separately on 15 fresh processes
+per implementation with warm OS caches, loading a mapping from disk and returning a
 templated response; median RSS at readiness was 206.0 MiB for Java and 16.6 MiB
 for Go. Compatibility is tracked separately in [COMPATIBILITY.md](docs/COMPATIBILITY.md).
 
-Raw results with executable and JAR hashes:
-[small responses](testdata/reports/java-go-2026-10-12) (`current-*` is Java and
-current Go; `go-51ac179-*` is the previous build) and
-large JSON at [100 KiB](testdata/reports/benchmark-large-json.json),
+Raw results with commit, executable and JAR hashes:
+[small responses](testdata/reports/java-go-2026-10-13) and large JSON at
+[100 KiB](testdata/reports/benchmark-large-json.json),
 [1 MiB](testdata/reports/benchmark-large-json-1mib.json) and
-[10 MiB](testdata/reports/benchmark-large-json-10mib.json). Earlier measurements are in
-[BENCHMARKS.md](docs/BENCHMARKS.md) and [GO_JOURNAL_OPTIMIZATION.md](docs/GO_JOURNAL_OPTIMIZATION.md).
+[10 MiB](testdata/reports/benchmark-large-json-10mib.json). Earlier measurements
+are in [BENCHMARKS.md](docs/BENCHMARKS.md) and
+[GO_JOURNAL_OPTIMIZATION.md](docs/GO_JOURNAL_OPTIMIZATION.md).
 
 Reproduce:
 
@@ -284,6 +288,7 @@ python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10000 --warmup 10s --duration 15s --rounds 3 --journal-limit 1000 --output /tmp/cpu-10k-journal.json
 
 # Large JSON responses; list Java first so its responses are the byte reference.
+# Add --size 1048576, or --size 10485760 --journal disabled, for the scaling runs.
 go build -trimpath -o /tmp/breakmock ./cmd/breakmock
 python3 scripts/json_benchmark.py --binary java=/tmp/wiremock.jar --binary go=/tmp/breakmock \
   --rounds 3 --duration 5s --warmup 2s --journal-check report --output /tmp/large-json.json

@@ -1,8 +1,8 @@
 # Benchmark measurements
 
-**Latest results (2026-10-12)** are in the README's
+**Latest results (2026-10-13)** are in the README's
 [Java versus Go benchmarks](../README.md#java-versus-go-benchmarks): small responses
-(raw data in `testdata/reports/java-go-2026-10-12/`) and ~100 KiB JSON responses
+(raw data in `testdata/reports/java-go-2026-10-13/`) and ~100 KiB JSON responses
 ([large JSON report](LARGE_JSON_OPTIMIZATION.md)). The measurements below are
 historical and describe earlier builds.
 

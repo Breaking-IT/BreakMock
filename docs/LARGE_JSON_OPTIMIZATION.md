@@ -1,20 +1,22 @@
 # Large JSON responses: optimization and Java comparison
 
 Earlier benchmarks served 17-byte bodies, so per-request costs that grow with body
-size never showed up. This pass benchmarks ~100 KiB JSON documents served seven
+size never showed up. This pass benchmarks large JSON documents served seven
 ways: inline `jsonBody`, inline `body`, `bodyFileName`, response templates and
-gzip. It found and removed seven such costs, then compared the result with
-WireMock 4.0.0-beta.40 in the same run.
+gzip. It found and removed several such costs, then compared the result with
+WireMock 4.0.0-beta.40.
 
-In this run, the optimized BreakMock served **1.6–11.8× the throughput of Java
-WireMock**. Server CPU per request was **55–96% lower**, p99 latency **57–96% lower**
-and peak RSS **89–99% lower**, on all 14 workload/journal combinations. Before
-this work, BreakMock was **26–48× slower than Java** for large templated bodies.
+At ~100 KiB, the optimized BreakMock served **1.3–10.6× the throughput of Java
+WireMock**, with **54–96% less server CPU** per request and **91–99% less peak
+RSS**, on all 14 workload/journal combinations. The lead grows with body size:
+**3.1–86×** at ~1 MiB and **3.0–208×** at ~10 MiB. Before this work, BreakMock
+was **30–51× slower than Java** for large templated bodies.
 
-Measured on 2026-10-12, Apple M4 Pro (14 logical CPUs), macOS arm64, Go 1.27.1,
-OpenJDK 27 (Homebrew). The JAR's SHA-256 matches `testdata/reference.json`. Every
-response from both Go builds was **byte-identical to Java's response**,
-gzip-compressed bodies included; the load generator checked every response.
+Measured on 2026-10-13 from a clean checkout of commit `68cd311` on an Apple M4
+Pro (14 logical CPUs, 48 GB), macOS arm64, Go 1.27.1, OpenJDK 27 (Homebrew).
+The JAR's SHA-256 matches `testdata/reference.json`. Every response from every
+Go build was **byte-identical to Java's response**, gzip-compressed bodies
+included; the load generator checked every response.
 
 ## Java WireMock vs optimized BreakMock
 
@@ -29,59 +31,59 @@ Throughput, requests per second (mean of 3 rounds; higher is better):
 
 | Journal | Workload | Java | BreakMock before | BreakMock optimized | Optimized vs Java |
 | --- | --- | ---: | ---: | ---: | ---: |
-| off | jsonBody | 10,960 | 21,305 | 56,844 | 5.19× |
-| off | body | 27,077 | 36,893 | 54,782 | 2.02× |
-| off | bodyFileName | 14,999 | 28,796 | 55,246 | 3.68× |
-| off | templateBody | 23,452 | 492 | 36,983 | 1.58× |
-| off | templateFile | 18,415 | 480 | 35,299 | 1.92× |
-| off | templateHelper | 20,976 | 485 | 33,122 | 1.58× |
-| off | jsonBodyGzip | 9,008 | 13,971 | 106,265 | 11.80× |
-| 1,000 | jsonBody | 8,480 | 28,763 | 56,241 | 6.63× |
-| 1,000 | body | 25,279 | 40,879 | 53,600 | 2.12× |
-| 1,000 | bodyFileName | 14,658 | 33,903 | 53,859 | 3.67× |
-| 1,000 | templateBody | 21,403 | 651 | 52,622 | 2.46× |
-| 1,000 | templateFile | 17,212 | 649 | 52,144 | 3.03× |
-| 1,000 | templateHelper | 19,749 | 649 | 51,037 | 2.58× |
-| 1,000 | jsonBodyGzip | 8,820 | 15,204 | 83,269 | 9.44× |
+| off | jsonBody | 8,234 | 19,674 | 57,429 | 6.97× |
+| off | body | 26,370 | 33,900 | 54,273 | 2.06× |
+| off | bodyFileName | 13,966 | 27,221 | 54,505 | 3.90× |
+| off | templateBody | 21,885 | 430 | 34,526 | 1.58× |
+| off | templateFile | 16,564 | 450 | 33,245 | 2.01× |
+| off | templateHelper | 21,136 | 459 | 28,312 | 1.34× |
+| off | jsonBodyGzip | 8,245 | 13,142 | 87,070 | 10.56× |
+| 1,000 | jsonBody | 8,979 | 25,730 | 54,640 | 6.09× |
+| 1,000 | body | 22,167 | 39,481 | 52,819 | 2.38× |
+| 1,000 | bodyFileName | 12,912 | 28,685 | 52,899 | 4.10× |
+| 1,000 | templateBody | 19,348 | 517 | 48,061 | 2.48× |
+| 1,000 | templateFile | 15,839 | 497 | 50,698 | 3.20× |
+| 1,000 | templateHelper | 17,853 | 590 | 48,728 | 2.73× |
+| 1,000 | jsonBodyGzip | 8,143 | 14,221 | 79,141 | 9.72× |
 
 Server CPU per completed request, µs (all server threads, excluding the load
 generator; mean of 3 rounds; lower is better):
 
 | Journal | Workload | Java | BreakMock before | BreakMock optimized | Optimized vs Java |
 | --- | --- | ---: | ---: | ---: | ---: |
-| off | jsonBody | 932.2 | 339.1 | 80.0 | −91% |
-| off | body | 325.1 | 151.2 | 85.7 | −74% |
-| off | bodyFileName | 681.8 | 248.6 | 89.3 | −87% |
-| off | templateBody | 385.7 | 23,144.5 | 147.3 | −62% |
-| off | templateFile | 540.9 | 23,968.5 | 158.0 | −71% |
-| off | templateHelper | 395.2 | 23,968.7 | 176.3 | −55% |
-| off | jsonBodyGzip | 1,202.8 | 689.9 | 48.0 | −96% |
-| 1,000 | jsonBody | 1,091.9 | 301.2 | 96.9 | −91% |
-| 1,000 | body | 364.1 | 159.7 | 100.2 | −72% |
-| 1,000 | bodyFileName | 685.7 | 251.0 | 102.0 | −85% |
-| 1,000 | templateBody | 433.8 | 18,503.5 | 108.5 | −75% |
-| 1,000 | templateFile | 588.8 | 18,682.9 | 114.4 | −81% |
-| 1,000 | templateHelper | 435.0 | 18,553.3 | 119.1 | −73% |
-| 1,000 | jsonBodyGzip | 1,213.5 | 680.4 | 65.3 | −95% |
+| off | jsonBody | 1,012.9 | 341.6 | 83.2 | −92% |
+| off | body | 318.3 | 154.5 | 81.1 | −75% |
+| off | bodyFileName | 647.7 | 239.0 | 88.9 | −86% |
+| off | templateBody | 381.0 | 23,125.4 | 151.7 | −60% |
+| off | templateFile | 537.4 | 23,315.1 | 160.9 | −70% |
+| off | templateHelper | 393.6 | 23,720.4 | 179.8 | −54% |
+| off | jsonBodyGzip | 1,197.7 | 710.3 | 44.6 | −96% |
+| 1,000 | jsonBody | 1,034.7 | 305.8 | 97.2 | −91% |
+| 1,000 | body | 379.5 | 160.7 | 97.3 | −74% |
+| 1,000 | bodyFileName | 693.2 | 243.3 | 102.0 | −85% |
+| 1,000 | templateBody | 452.4 | 19,017.5 | 109.9 | −76% |
+| 1,000 | templateFile | 611.0 | 18,836.5 | 116.2 | −81% |
+| 1,000 | templateHelper | 455.4 | 18,674.9 | 118.4 | −74% |
+| 1,000 | jsonBodyGzip | 1,214.2 | 702.7 | 66.8 | −95% |
 
 p99 latency, ms (mean of 3 rounds; lower is better):
 
 | Journal | Workload | Java | BreakMock before | BreakMock optimized |
 | --- | --- | ---: | ---: | ---: |
-| off | jsonBody | 18.24 | 4.85 | 1.16 |
-| off | body | 5.03 | 2.54 | 1.12 |
-| off | bodyFileName | 13.95 | 3.27 | 1.19 |
-| off | templateBody | 5.96 | 194.93 | 2.55 |
-| off | templateFile | 9.84 | 200.66 | 2.68 |
-| off | templateHelper | 7.60 | 197.24 | 2.99 |
-| off | jsonBodyGzip | 25.01 | 7.72 | 0.90 |
-| 1,000 | jsonBody | 35.15 | 3.61 | 1.35 |
-| 1,000 | body | 5.79 | 2.49 | 1.33 |
-| 1,000 | bodyFileName | 14.52 | 2.92 | 1.40 |
-| 1,000 | templateBody | 6.99 | 134.12 | 1.64 |
-| 1,000 | templateFile | 9.96 | 133.52 | 1.72 |
-| 1,000 | templateHelper | 8.20 | 130.23 | 1.84 |
-| 1,000 | jsonBodyGzip | 24.92 | 8.07 | 1.27 |
+| off | jsonBody | 49.20 | 5.54 | 1.07 |
+| off | body | 5.49 | 2.87 | 1.34 |
+| off | bodyFileName | 16.97 | 3.60 | 1.28 |
+| off | templateBody | 7.62 | 272.60 | 2.84 |
+| off | templateFile | 12.89 | 238.24 | 3.05 |
+| off | templateHelper | 8.70 | 211.58 | 5.22 |
+| off | jsonBodyGzip | 33.00 | 8.12 | 1.68 |
+| 1,000 | jsonBody | 38.07 | 5.11 | 1.54 |
+| 1,000 | body | 8.99 | 2.67 | 1.55 |
+| 1,000 | bodyFileName | 15.35 | 5.49 | 1.51 |
+| 1,000 | templateBody | 9.76 | 193.70 | 2.18 |
+| 1,000 | templateFile | 11.42 | 206.02 | 1.87 |
+| 1,000 | templateHelper | 13.87 | 137.05 | 2.10 |
+| 1,000 | jsonBodyGzip | 29.92 | 9.69 | 1.36 |
 
 Peak sampled RSS, MiB (highest across rounds; lower is better). Each server
 process runs every workload in sequence, so later workloads include earlier
@@ -89,83 +91,84 @@ growth. Java ran with default JVM heap settings:
 
 | Journal | Java | BreakMock before | BreakMock optimized |
 | --- | ---: | ---: | ---: |
-| off | 2,088–3,831 | 71–91 | 34–42 |
-| 1,000 | 3,761–5,788 | 1,065–1,083 | 413–453 |
+| off | 2,359–5,486 | 69–90 | 34–42 |
+| 1,000 | 4,345–6,562 | 966–1,176 | 392–441 |
 
 With a 1,000-entry journal, BreakMock keeps ≈400 MiB because the journal holds
 1,000 copies of ~100 KiB bodies.
 
 Notes:
 
-- The static workloads reach about 54–57k RPS, which moves ≈5.3 GB/s through
+- The static workloads reach about 53–57k RPS, which moves ≈5.3 GB/s through
   loopback. At that point the shared load generator and kernel appear to be the
   limit, so use the CPU table to compare those workloads.
 - Java got the same 2 s warmup per workload as Go. Its JIT also warmed up during
-  earlier workloads in the same process. Java's throughput and CPU varied by up
-  to 24% between rounds; the full per-round values are in the raw report.
+  earlier workloads in the same process. Results vary between rounds and runs on
+  this host; every round is in the raw report.
 - These are same-host observations of one mock workload shape. They are not
   capacity guarantees for other hardware, JVM settings or mappings.
 
 ## Scaling with body size
 
-The same workloads at ~1 MiB and ~10 MiB, Java and current BreakMock, measured
-on 2026-10-13 with the same settings (3 rounds, 2 s warmup, 5 s measurement, 32
-connections). Every Go response was again byte-identical to Java's. The 100 KiB
-columns come from the run above. BreakMock's advantage **grows with body size**:
-per request, Java's CPU rises roughly in proportion to the body, while BreakMock
-serves cached bytes and renders templates in one pass.
+The same workloads at ~1 MiB and ~10 MiB, Java and the optimized BreakMock, with
+the same settings. Every Go response was again byte-identical to Java's. The
+100 KiB columns come from the run above. BreakMock's advantage **grows with body
+size**: per request, Java's CPU rises roughly in proportion to the body, while
+BreakMock serves cached bytes and renders templates in one pass.
 
 Throughput, requests per second, journal disabled (Go ÷ Java in brackets):
 
 | Workload | 100 KiB Java | 100 KiB Go | 1 MiB Java | 1 MiB Go | 10 MiB Java | 10 MiB Go |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| jsonBody | 10,960 | 56,844 (5.2×) | 1,137 | 10,429 (9.2×) | 62 | 887 (14.4×) |
-| body | 27,077 | 54,782 (2.0×) | 3,204 | 10,347 (3.2×) | 212 | 845 (4.0×) |
-| bodyFileName | 14,999 | 55,246 (3.7×) | 3,183 | 10,289 (3.2×) | 272 | 875 (3.2×) |
-| Template | 23,452 | 36,983 (1.6×) | 2,505 | 10,843 (4.3×) | 106 | 814 (7.6×) |
-| Template file | 18,415 | 35,299 (1.9×) | 2,639 | 10,615 (4.0×) | 137 | 822 (6.0×) |
-| Template + jsonPath | 20,976 | 33,122 (1.6×) | 2,522 | 10,949 (4.3×) | 135 | 881 (6.5×) |
-| jsonBody, gzip | 9,008 | 106,265 (11.8×) | 920 | 72,925 (79.3×) | 73 | 13,211 (180.1×) |
+| jsonBody | 8,234 | 57,429 (7.0×) | 1,049 | 10,502 (10.0×) | 55 | 862 (15.7×) |
+| body | 26,370 | 54,273 (2.1×) | 2,774 | 10,357 (3.7×) | 260 | 840 (3.2×) |
+| bodyFileName | 13,966 | 54,505 (3.9×) | 3,333 | 10,493 (3.1×) | 283 | 845 (3.0×) |
+| Template | 21,885 | 34,526 (1.6×) | 2,507 | 11,386 (4.5×) | 145 | 828 (5.7×) |
+| Template file | 16,564 | 33,245 (2.0×) | 2,487 | 11,005 (4.4×) | 165 | 828 (5.0×) |
+| Template + jsonPath | 21,136 | 28,312 (1.3×) | 2,579 | 11,275 (4.4×) | 181 | 834 (4.6×) |
+| jsonBody, gzip | 8,245 | 87,070 (10.6×) | 971 | 74,192 (76.4×) | 75 | 15,675 (208.4×) |
 
 Server CPU per request, µs, journal disabled (Go saving in brackets):
 
 | Workload | 100 KiB Java | 100 KiB Go | 1 MiB Java | 1 MiB Go | 10 MiB Java | 10 MiB Go |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| jsonBody | 932 | 80 (−91%) | 8,322 | 270 (−97%) | 119,622 | 1,923 (−98%) |
-| body | 325 | 86 (−74%) | 2,923 | 272 (−91%) | 35,047 | 1,995 (−94%) |
-| bodyFileName | 682 | 89 (−87%) | 2,327 | 279 (−88%) | 23,340 | 2,059 (−91%) |
-| Template | 386 | 147 (−62%) | 3,597 | 502 (−86%) | 63,099 | 2,605 (−96%) |
-| Template file | 541 | 158 (−71%) | 3,739 | 515 (−86%) | 64,829 | 3,018 (−95%) |
-| Template + jsonPath | 395 | 176 (−55%) | 3,649 | 507 (−86%) | 68,544 | 2,811 (−96%) |
-| jsonBody, gzip | 1,203 | 48 (−96%) | 10,920 | 76 (−99%) | 126,076 | 564 (−99.6%) |
+| jsonBody | 1,013 | 83 (−92%) | 9,146 | 270 (−97%) | 124,868 | 1,980 (−98%) |
+| body | 318 | 81 (−75%) | 2,882 | 281 (−90%) | 31,667 | 2,056 (−94%) |
+| bodyFileName | 648 | 89 (−86%) | 2,223 | 283 (−87%) | 24,165 | 2,025 (−92%) |
+| Template | 381 | 152 (−60%) | 3,386 | 488 (−86%) | 47,921 | 2,628 (−95%) |
+| Template file | 537 | 161 (−70%) | 3,643 | 506 (−86%) | 50,880 | 2,949 (−94%) |
+| Template + jsonPath | 394 | 180 (−54%) | 3,473 | 513 (−85%) | 45,869 | 2,598 (−94%) |
+| jsonBody, gzip | 1,198 | 45 (−96%) | 11,135 | 79 (−99%) | 124,458 | 579 (−99.5%) |
 
 Peak sampled RSS, MiB, journal disabled (highest across rounds):
 
 | Size | Java | Go |
 | --- | ---: | ---: |
-| 100 KiB | 2,088–3,831 | 34–42 |
-| 1 MiB | 3,419–5,358 | 59–143 |
-| 10 MiB | 9,775–12,665 | 433–1,157 |
+| 100 KiB | 2,359–5,486 | 34–42 |
+| 1 MiB | 3,055–5,138 | 60–145 |
+| 10 MiB | 11,323–12,665 | 436–898 |
 
-With a 1,000-entry journal at 1 MiB, BreakMock delivered 4.3–91× Java's
-throughput and used 89–99% less CPU per request; peak RSS was 2.7–4.2 GiB for
-BreakMock (the journal holds 1,000 bodies) versus 8.8–11.8 GiB for Java. The
+With a 1,000-entry journal at 1 MiB, BreakMock delivered 4.7–86× Java's
+throughput and used 90–99% less CPU per request; peak RSS was 2.4–4.0 GiB for
+BreakMock (the journal holds 1,000 bodies) versus 9.5–11.8 GiB for Java. The
 10 MiB runs disabled the journal, because 1,000 entries would hold ~10 GB per
 server.
 
 Notes:
 
 - Java's peak RSS approaches its default maximum heap (a quarter of the host's
-  48 GB). Its 10 MiB runs also varied most between rounds (for example 41–157 RPS
+  48 GB). Its 10 MiB runs also varied most between rounds (for example 100–233 RPS
   for templates), consistent with GC pressure near that limit.
 - From 1 MiB up, BreakMock's static and template workloads reach about 10 GB/s
   of response data through loopback, which appears to be the shared load
   generator's limit rather than the server's; compare CPU per request there.
-- At 10 MiB, gzip responses are 180× faster because BreakMock serves cached
+- At 10 MiB, gzip responses are 208× faster because BreakMock serves cached
   compressed bytes (bodies up to 16 MiB), while Java compresses every response.
 
-Raw data: [1 MiB](../testdata/reports/benchmark-large-json-1mib.json) and
-[10 MiB](../testdata/reports/benchmark-large-json-10mib.json).
+Raw data: [100 KiB](../testdata/reports/benchmark-large-json.json),
+[1 MiB](../testdata/reports/benchmark-large-json-1mib.json) and
+[10 MiB](../testdata/reports/benchmark-large-json-10mib.json), each with the
+source commit and binary and JAR hashes.
 
 ## What was slow
 
@@ -182,7 +185,8 @@ Raw data: [1 MiB](../testdata/reports/benchmark-large-json-1mib.json) and
 The last row matters most for the full Handlebars evaluator with the journal
 off. There the live heap is only a few MiB, so at `GOGC=100` the collector runs
 after every few requests. Before the copy reduction, optimized BreakMock reached
-only 0.78× Java's throughput on `templateHelper`; after it, 1.58×.
+only 0.78× Java's throughput on `templateHelper`; after it, BreakMock was faster
+than Java (1.34× in the final run above).
 
 Two GC policies were also measured: a fixed `GOGC=400` and a dynamic minimum heap
 goal. Neither was adopted. Both recovered throughput, but RSS rose from ~40 MiB to
