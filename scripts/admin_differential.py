@@ -5,6 +5,7 @@ request origin/port, Date header, client address, and measured timing values.
 Use fresh empty roots for persistence checks. WireMock reference must be 4.0.0-beta.40.
 """
 import argparse,json,re,urllib.request,urllib.error,sys,threading
+import intended_differences
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 p=argparse.ArgumentParser();p.add_argument('--reference',default='http://127.0.0.1:18089');p.add_argument('--candidate',default='http://127.0.0.1:18090');p.add_argument('--output');args=p.parse_args()
 def call(base,method,path,body=None,headers=None):
@@ -80,8 +81,10 @@ def step(name,method,path,body=None,headers=None):
  normalized_wire=[normalize_wire(v[2],v[1],semantic[i]) if path.startswith('/__admin/') and isinstance(v[1],(dict,list)) else v[2] for i,v in enumerate(raw)]
  semantic_ok=raw[0][0]==raw[1][0] and semantic[0]==semantic[1]
  ok=raw[0][0]==raw[1][0] and normalized_wire[0]==normalized_wire[1]
- results.append({'name':name,'pass':ok,'semantic_pass':semantic_ok,**({} if ok else {'reference':raw[0],'candidate':raw[1],'normalized_reference_body':normalized_wire[0],'normalized_candidate_body':normalized_wire[1]})})
- print(('PASS ' if ok else 'FAIL ')+name);return raw
+ intended=intended_differences.check('admin_differential.py',name,*[(v[0],v[2] if isinstance(v[2],bytes) else str(v[2]).encode()) for v in raw])
+ if intended:ok=semantic_ok=intended[0]
+ results.append({'name':name,'pass':ok,'semantic_pass':semantic_ok,**({'intended_difference':intended[1]} if intended else {}),**({} if ok else {'reference':raw[0],'candidate':raw[1],'normalized_reference_body':normalized_wire[0],'normalized_candidate_body':normalized_wire[1]})})
+ print(('PASS ' if ok else 'FAIL ')+name+(f' [intended difference {intended[1]}]' if intended else ''));return raw
 step('version JSON','GET','/__admin/version')
 step('version text','GET','/__admin/version',headers={'Accept':'text/plain'})
 step('health','GET','/__admin/health')

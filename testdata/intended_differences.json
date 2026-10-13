@@ -1,0 +1,40 @@
+{
+  "description": "Intended differences from WireMock 4.0.0-beta.40, documented in docs/UPSTREAM_BUG_FIXES.md. For each listed case the differential suites require the reference to still return its documented upstream result AND BreakMock to return its documented corrected result, exactly. Any other result fails, including the two sides matching.",
+  "cases": [
+    {
+      "suite": "matcher_differential.py",
+      "name": "JSONPath array 98",
+      "issue": "https://github.com/wiremock/wiremock/issues/3159",
+      "reference": {"status": 200, "body": "matched"},
+      "candidate": {"status": 200, "body": "unmatched"}
+    },
+    {
+      "suite": "matcher_differential.py",
+      "name": "v4 JSONPath empty/null $.empty{'absent': True}",
+      "issue": "https://github.com/wiremock/wiremock/issues/3159",
+      "reference": {"status": 200, "body": "matched"},
+      "candidate": {"status": 200, "body": "unmatched"}
+    },
+    {
+      "suite": "template_differential.py",
+      "name": "toJson missing",
+      "issue": "https://github.com/wiremock/wiremock/issues/3282",
+      "reference": {"status": 200, "body": ""},
+      "candidate": {"status": 200, "body": "null"}
+    },
+    {
+      "suite": "template_differential.py",
+      "name": "toJson value null",
+      "issue": "https://github.com/wiremock/wiremock/issues/3282",
+      "reference": {"status": 200, "body": ""},
+      "candidate": {"status": 200, "body": "null"}
+    },
+    {
+      "suite": "admin_differential.py",
+      "name": "asset docs/swagger",
+      "issue": "https://github.com/wiremock/wiremock/issues/3319",
+      "reference": {"status": 200, "sha256": "4306cf1dada9455ad6b41e1344552f0dd6980edb3cf2471395a14dd8fee64d97"},
+      "candidate": {"status": 200, "sha256": "e66006261d3dd75b25f33e9b2c92d7dced6020221492a6e151eecd35c7d74f0c"}
+    }
+  ]
+}

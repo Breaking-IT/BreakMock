@@ -23,11 +23,16 @@ Changing the served specification necessarily changes its response bytes. The
 original upstream asset hash is retained in `internal/adminassets/PROVENANCE.json`,
 with the modified specification hash recorded separately.
 
-The existing live Java differential scripts are unchanged: they still report
-these differences as failures, without filtering cases, normalizing the changed
-output, or rewriting the Java reference. The pre-existing JVM byte-array identity
-diagnostic also remains a strict mismatch. Therefore strict parity CI is not
-expected to be green solely because these correctness fixes pass.
+The live Java differential suites pin each affected case in
+`testdata/intended_differences.json` (via `scripts/intended_differences.py`). A
+listed case passes only when Java returns its documented upstream result and
+BreakMock returns the documented corrected result, both exactly: `matched` versus
+`unmatched` for #3159, an empty body versus `null` for #3282, and the original
+versus modified OpenAPI document (SHA-256 recorded in
+`internal/adminassets/PROVENANCE.json`) for #3319. Nothing else is filtered or
+normalized, and the Java reference is not rewritten. If upstream fixes a bug, or
+BreakMock loses a correction, the case fails. A build without these corrections
+fails exactly these five cases.
 
 Captured Java matcher fixture results are retained. Two cases now also record
 an explicit `breakmockMatches: false` expectation for #3159, which Go unit tests
@@ -46,9 +51,8 @@ python3 scripts/verify.py --jar /tmp/wiremock.jar --output-dir /tmp/compatibilit
 ## Validation results
 
 Go unit/race tests, vet, all 11 Toxiproxy executable integration checks and the
-Docker build pass. The full unchanged Java suite passes 15 of 19 invocations:
-matcher has two intentional empty-array differences, templates have two null
-serialization differences, admin has the updated specification, and diagnostics
-retains the existing JVM-identity mismatch. The final matcher/distance rerun
-confirms the same two differences and no distance-suite failures.
-See [the validation summary](../testdata/reports/upstream-bug-fixes/validation.json).
+Docker build pass. After merging current `main` (2026-10-13), `scripts/verify.py`
+passes all 20 suite runs against the pinned JAR, with the five intended
+differences above verified on both sides. The earlier run before the registry,
+which reported them as failures, is kept in
+[the validation summary](../testdata/reports/upstream-bug-fixes/validation.json).

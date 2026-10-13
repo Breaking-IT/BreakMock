@@ -15,8 +15,12 @@ bounded corpus; a passing fixture is not proof of an entire feature's equivalenc
 BreakMock now corrects five confirmed upstream bugs by default, covering XPath
 predicates, JSONPath empty-array absence, null JSON serialization, the trailing-slash
 docs route and the scenario-state OpenAPI operation. See [the corrections and
-migration notes](UPSTREAM_BUG_FIXES.md). Strict Java comparisons remain unchanged
-and report affected cases as failures; these differences are not byte parity.
+migration notes](UPSTREAM_BUG_FIXES.md). These differences are not byte parity.
+The affected differential cases are listed in `testdata/intended_differences.json`:
+for each, the suite requires Java to still return its documented upstream result
+**and** BreakMock to return its documented corrected result, exactly. Every other
+case is still compared for equality, and a listed case fails if either side
+changes, including if the two sides start to match.
 
 ## Implemented and exercised
 
