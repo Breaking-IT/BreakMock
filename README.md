@@ -25,10 +25,12 @@ environments. In the latest Java-versus-Go measurements (2026-10-12):
 - **Small responses** (a 17-byte body and a small template): BreakMock delivered
   **14–33% higher throughput**, used **18–36% less server CPU** at the same
   10,000 RPS and **90–91% less memory** (28–42 MiB versus 261–478 MiB).
-- **Large JSON responses** (~100 KiB, inline, body files, templates and gzip):
-  BreakMock delivered **1.6–11.8× the throughput**, used **55–96% less server
-  CPU** per request and **89–99% less peak memory**. Responses were byte-identical
-  to Java's.
+- **Large JSON responses** (inline, body files, templates and gzip): the larger
+  the body, the bigger the lead. At ~100 KiB BreakMock delivered **1.6–11.8× the
+  throughput** with **55–96% less server CPU**; at ~1 MiB **3.2–79×** with
+  **86–99% less**; at ~10 MiB **3.2–180×** with **91–99.6% less**, using
+  0.4–1.1 GiB of memory where Java used 9.5–12.4 GiB. Responses were
+  byte-identical to Java's.
 - Median readiness was **10.7 ms for Go versus 600.7 ms for Java**.
 
 These results are the basis for the refactor: lower resource use and faster
@@ -224,6 +226,23 @@ All 14 combinations, p99 latency and the measurement details are in the
 [large JSON report](docs/LARGE_JSON_OPTIMIZATION.md). Every Go response was
 byte-identical to Java's.
 
+The lead grows with body size (journal disabled; Go throughput as a multiple of
+Java's, and Go's CPU saving per request):
+
+| Workload | ~100 KiB | ~1 MiB | ~10 MiB |
+| --- | ---: | ---: | ---: |
+| jsonBody | 5.2× (−91%) | 9.2× (−97%) | 14.4× (−98%) |
+| body | 2.0× (−74%) | 3.2× (−91%) | 4.0× (−94%) |
+| bodyFileName | 3.7× (−87%) | 3.2× (−88%) | 3.2× (−91%) |
+| Template | 1.6× (−62%) | 4.3× (−86%) | 7.6× (−96%) |
+| Template + jsonPath | 1.6× (−55%) | 4.3× (−86%) | 6.5× (−96%) |
+| jsonBody, gzip | 11.8× (−96%) | 79× (−99%) | 180× (−99.6%) |
+| Peak RSS, Java → Go | 2.0–3.7 GiB → 34–42 MiB | 3.3–5.2 GiB → 59–143 MiB | 9.5–12.4 GiB → 0.4–1.1 GiB |
+
+At ~1 MiB and above, Go's static and template workloads reach ~10 GB/s through
+loopback, the shared load generator's limit, so CPU per request is the fairer
+comparison there. Details: [scaling with body size](docs/LARGE_JSON_OPTIMIZATION.md#scaling-with-body-size).
+
 ### What improved in this release
 
 - **Large responses:** templated bodies of 64 KiB and more were re-parsed on every
@@ -250,7 +269,9 @@ for Go. Compatibility is tracked separately in [COMPATIBILITY.md](docs/COMPATIBI
 Raw results with executable and JAR hashes:
 [small responses](testdata/reports/java-go-2026-10-12) (`current-*` is Java and
 current Go; `go-51ac179-*` is the previous build) and
-[large JSON](testdata/reports/benchmark-large-json.json). Earlier measurements are in
+large JSON at [100 KiB](testdata/reports/benchmark-large-json.json),
+[1 MiB](testdata/reports/benchmark-large-json-1mib.json) and
+[10 MiB](testdata/reports/benchmark-large-json-10mib.json). Earlier measurements are in
 [BENCHMARKS.md](docs/BENCHMARKS.md) and [GO_JOURNAL_OPTIMIZATION.md](docs/GO_JOURNAL_OPTIMIZATION.md).
 
 Reproduce:

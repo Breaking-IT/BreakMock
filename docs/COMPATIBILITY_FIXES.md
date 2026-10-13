@@ -42,6 +42,13 @@ document that no existing comparisons were weakened.
 
 ## Why the last assertion cannot be fixed in a native implementation
 
+> **Update 2026-10-13:** resolved by agreement to compare the shape of this value
+> rather than its bytes. BreakMock now prints `[B@` with a random identity hash,
+> as Java does, and `diagnostics_differential.py` masks only that token (keeping
+> its column width) for this case, requiring one token on each side. All other
+> bytes are compared. See [COMPATIBILITY.md](COMPATIBILITY.md#byte-comparison-boundaries).
+> The analysis below explains why the value itself cannot match.
+
 For the same binary matcher and request, Java emits lines such as:
 
 ```text

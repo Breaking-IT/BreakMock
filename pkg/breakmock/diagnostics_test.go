@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"net/http/httptest"
 	"os"
+	"regexp"
 	"testing"
 )
 
@@ -38,5 +39,20 @@ func TestTemplateErrorHasExactPlainBody(t *testing.T) {
 	s.writeTemplateError(w, &TemplateExecutionError{Message: "1:0: sample"}, Mapping{"id": "example"})
 	if w.Code != 500 || w.Body.String() != "[ERROR] 1:0: sample" || w.Header().Get("Content-Type") != "text/plain" || w.Header().Get("Matched-Stub-Id") != "example" {
 		t.Fatalf("%v %s", w.Result(), w.Body.String())
+	}
+}
+
+func TestBinaryMismatchUsesJavaByteArrayIdentity(t *testing.T) {
+	shape := regexp.MustCompile(`^\[B@[1-9a-f][0-9a-f]{0,7}$`)
+	seen := map[string]bool{}
+	for i := 0; i < 50; i++ {
+		identity := javaByteArrayIdentity()
+		if !shape.MatchString(identity) {
+			t.Fatalf("identity %q does not have Java's byte[] toString shape", identity)
+		}
+		seen[identity] = true
+	}
+	if len(seen) < 45 {
+		t.Fatalf("identities should vary per call like JVM identity hashes, got %d distinct of 50", len(seen))
 	}
 }

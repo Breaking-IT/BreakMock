@@ -10,6 +10,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ohler55/ojg/jp"
+	"math"
+	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"sort"
@@ -232,7 +234,7 @@ func (s *Server) renderDiagnostic(m Mapping, req Request, width int) string {
 		actual = "\n" + actual
 		if name == "binaryEqualTo" {
 			expected = v
-			actual = base64.StdEncoding.EncodeToString(req.Body)
+			actual = javaByteArrayIdentity()
 		}
 		if name == "matchesJsonPath" || name == "matchesXPath" {
 			expected = v
@@ -380,4 +382,12 @@ func prettyDiagnosticJSON(s string) string {
 		return s
 	}
 	return b.String()
+}
+
+// javaByteArrayIdentity mirrors how WireMock renders the actual body for a
+// binary mismatch: Java's default toString of a fresh byte[], "[B@" followed by
+// the array's identity hash in hex. That hash is a per-object JVM value, never
+// derived from the request, so it is random here as it is in Java.
+func javaByteArrayIdentity() string {
+	return "[B@" + strconv.FormatInt(int64(rand.Int32N(math.MaxInt32)+1), 16)
 }

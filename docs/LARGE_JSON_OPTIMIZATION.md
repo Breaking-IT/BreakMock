@@ -106,6 +106,67 @@ Notes:
 - These are same-host observations of one mock workload shape. They are not
   capacity guarantees for other hardware, JVM settings or mappings.
 
+## Scaling with body size
+
+The same workloads at ~1 MiB and ~10 MiB, Java and current BreakMock, measured
+on 2026-10-13 with the same settings (3 rounds, 2 s warmup, 5 s measurement, 32
+connections). Every Go response was again byte-identical to Java's. The 100 KiB
+columns come from the run above. BreakMock's advantage **grows with body size**:
+per request, Java's CPU rises roughly in proportion to the body, while BreakMock
+serves cached bytes and renders templates in one pass.
+
+Throughput, requests per second, journal disabled (Go ÷ Java in brackets):
+
+| Workload | 100 KiB Java | 100 KiB Go | 1 MiB Java | 1 MiB Go | 10 MiB Java | 10 MiB Go |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| jsonBody | 10,960 | 56,844 (5.2×) | 1,137 | 10,429 (9.2×) | 62 | 887 (14.4×) |
+| body | 27,077 | 54,782 (2.0×) | 3,204 | 10,347 (3.2×) | 212 | 845 (4.0×) |
+| bodyFileName | 14,999 | 55,246 (3.7×) | 3,183 | 10,289 (3.2×) | 272 | 875 (3.2×) |
+| Template | 23,452 | 36,983 (1.6×) | 2,505 | 10,843 (4.3×) | 106 | 814 (7.6×) |
+| Template file | 18,415 | 35,299 (1.9×) | 2,639 | 10,615 (4.0×) | 137 | 822 (6.0×) |
+| Template + jsonPath | 20,976 | 33,122 (1.6×) | 2,522 | 10,949 (4.3×) | 135 | 881 (6.5×) |
+| jsonBody, gzip | 9,008 | 106,265 (11.8×) | 920 | 72,925 (79.3×) | 73 | 13,211 (180.1×) |
+
+Server CPU per request, µs, journal disabled (Go saving in brackets):
+
+| Workload | 100 KiB Java | 100 KiB Go | 1 MiB Java | 1 MiB Go | 10 MiB Java | 10 MiB Go |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| jsonBody | 932 | 80 (−91%) | 8,322 | 270 (−97%) | 119,622 | 1,923 (−98%) |
+| body | 325 | 86 (−74%) | 2,923 | 272 (−91%) | 35,047 | 1,995 (−94%) |
+| bodyFileName | 682 | 89 (−87%) | 2,327 | 279 (−88%) | 23,340 | 2,059 (−91%) |
+| Template | 386 | 147 (−62%) | 3,597 | 502 (−86%) | 63,099 | 2,605 (−96%) |
+| Template file | 541 | 158 (−71%) | 3,739 | 515 (−86%) | 64,829 | 3,018 (−95%) |
+| Template + jsonPath | 395 | 176 (−55%) | 3,649 | 507 (−86%) | 68,544 | 2,811 (−96%) |
+| jsonBody, gzip | 1,203 | 48 (−96%) | 10,920 | 76 (−99%) | 126,076 | 564 (−99.6%) |
+
+Peak sampled RSS, MiB, journal disabled (highest across rounds):
+
+| Size | Java | Go |
+| --- | ---: | ---: |
+| 100 KiB | 2,088–3,831 | 34–42 |
+| 1 MiB | 3,419–5,358 | 59–143 |
+| 10 MiB | 9,775–12,665 | 433–1,157 |
+
+With a 1,000-entry journal at 1 MiB, BreakMock delivered 4.3–91× Java's
+throughput and used 89–99% less CPU per request; peak RSS was 2.7–4.2 GiB for
+BreakMock (the journal holds 1,000 bodies) versus 8.8–11.8 GiB for Java. The
+10 MiB runs disabled the journal, because 1,000 entries would hold ~10 GB per
+server.
+
+Notes:
+
+- Java's peak RSS approaches its default maximum heap (a quarter of the host's
+  48 GB). Its 10 MiB runs also varied most between rounds (for example 41–157 RPS
+  for templates), consistent with GC pressure near that limit.
+- From 1 MiB up, BreakMock's static and template workloads reach about 10 GB/s
+  of response data through loopback, which appears to be the shared load
+  generator's limit rather than the server's; compare CPU per request there.
+- At 10 MiB, gzip responses are 180× faster because BreakMock serves cached
+  compressed bytes (bodies up to 16 MiB), while Java compresses every response.
+
+Raw data: [1 MiB](../testdata/reports/benchmark-large-json-1mib.json) and
+[10 MiB](../testdata/reports/benchmark-large-json-10mib.json).
+
 ## What was slow
 
 | Cost | Where | Fix |
@@ -113,7 +174,7 @@ Notes:
 | Templates of 64 KiB or more were never cached. Each request re-lexed the whole body with raymond's regexp lexer, which is roughly quadratic (≈14 ms per 100 KiB). | `template.go`, `template_plan.go` | Both template caches are now limited by total cached source size (64 MiB, 1,024 entries), not by the size of one template. |
 | Every full-evaluator render ran `strings.Contains(source, helper)` for ~70 helper names, scanning the body ~70 times per request. | `renderTemplateContext` | Each cached template records which helper names its source mentions on the first render and reuses that set. |
 | `jsonBody` was re-encoded on every request. The stored `json.RawMessage` was validated, compacted and then copied, although `DecodeDocument` already stores the compact wire form. | `ServeHTTP` | The stored bytes are served directly. |
-| Gzip (zlib through cgo) re-compressed the same static body on every request. | `ServeHTTP` | Bodies that are not rendered as templates use a cache of compressed output, keyed by content (1 KiB–8 MiB bodies, 32 MiB budget, cleared when full). A changed file or mapping gives a new key, so a stale compressed body is never served. |
+| Gzip (zlib through cgo) re-compressed the same static body on every request. | `ServeHTTP` | Bodies that are not rendered as templates use a cache of compressed output, keyed by content (1 KiB–16 MiB bodies, 64 MiB budget, cleared when full). A changed file or mapping gives a new key, so a stale compressed body is never served. |
 | Each journaled response was copied to a string and to base64 (≈2.3× the body size) on the request path. | `Store.RecordServed` | One owned copy is kept. `body` and `bodyAsBase64` are encoded when the journal is read (`journalText`, `journalBase64`). |
 | `bodyFileName` called `os.OpenRoot` and opened the file on every request. Under concurrency these opens contend in the kernel (≈24 µs per request with 14 workers). | `resolveBodyEntity` | File contents are cached. A cached body is used only while a `stat` of its path reports the same file, size, mtime **and ctime**. Cache misses still read through `os.Root`, so paths cannot escape `__files`. |
 | The body was copied 3–4 times per templated request: string→bytes, the entity's text conversion, Handlebars' `fmt.Sprintf("%s")` and `[]byte` conversion, and `Buffer.String()`. | `entity.go`, `internal/handlebars` | Read-only views and a `strings.Builder` replace these copies. Allocation for the full evaluator fell from 784 KB to 123 KB per request. |
@@ -140,10 +201,9 @@ available there.
 
 - `python3 scripts/verify.py --jar wiremock.jar` makes 20 differential suite runs
   against the pinned JAR (19 suites, one also without a journal), on the final
-  code. 19 pass. The one failing case is
-  `diagnostics: binary body mismatch`, a known pre-existing failure: Java prints
-  a non-deterministic JVM object identity there (see
-  [COMPATIBILITY_FIXES.md](COMPATIBILITY_FIXES.md)).
+  code. All 20 pass. The binary-mismatch diagnostic, whose Java output contains a
+  random JVM object identity, is compared with that token masked (see
+  [COMPATIBILITY.md](COMPATIBILITY.md#byte-comparison-boundaries)).
 - In the benchmark, every served response was compared byte-for-byte with Java's.
 - Journal events were also compared with Java's (ids, timings and client details
   removed). Static responses matched. Two differences remain, and both exist
@@ -205,6 +265,7 @@ objects, numbers, `é` and `<`), as follows:
 go test ./pkg/breakmock -run '^$' -bench 'LargeJSONResponse/.*/100KiB' -count=5
 
 # End to end. List Java first so its responses are the byte reference.
+# Add --size 1048576 or --size 10485760 --journal disabled for the scaling runs.
 curl -fL https://repo.maven.apache.org/maven2/org/wiremock/wiremock-standalone/4.0.0-beta.40/wiremock-standalone-4.0.0-beta.40.jar -o /tmp/wiremock.jar
 git worktree add /tmp/bm-baseline 51ac179
 (cd /tmp/bm-baseline && go build -trimpath -o /tmp/breakmock-baseline ./cmd/breakmock)

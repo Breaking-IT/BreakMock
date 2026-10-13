@@ -8,7 +8,8 @@ import "sync"
 // a changed body file or mapping can never be served a stale compressed form.
 const (
 	gzipCacheMinBytes = 1 << 10
-	gzipCacheBytes    = 32 << 20
+	gzipCacheMaxBytes = 16 << 20
+	gzipCacheBytes    = 64 << 20
 )
 
 var gzipCache = struct {
@@ -19,7 +20,7 @@ var gzipCache = struct {
 
 // cachedWireGzip returns wireGzip(data); callers must not modify the result.
 func cachedWireGzip(data []byte) ([]byte, error) {
-	if len(data) < gzipCacheMinBytes || len(data) > gzipCacheBytes/4 {
+	if len(data) < gzipCacheMinBytes || len(data) > gzipCacheMaxBytes {
 		return wireGzip(data)
 	}
 	gzipCache.RLock()

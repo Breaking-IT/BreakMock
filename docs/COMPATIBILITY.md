@@ -51,13 +51,17 @@ timestamps, measured timings and local origins. Fixed IDs and application values
 are preserved. This is formatting equivalence with those substitutions, **not**
 literal equality of every byte from two independent server processes.
 
-A strict diagnostic case remains failing: WireMock prints a JVM byte-array object
-identity (`[B@...`) for a binary matcher mismatch. Identical requests to the same
-Java server produce different identities. The report preserves the failing
-comparison and repeated-Java evidence; it does not normalize this into a pass.
-The [message-wait fixes and Java self-comparison](COMPATIBILITY_FIXES.md) document
-the latest verification: both native implementations retain only this one failing
-case in the tested corpus, and unmodified Java also fails the exact self-comparison.
+One diagnostic contains a value that no other process can reproduce: for a
+binary matcher mismatch, WireMock prints the actual body as Java's default
+`byte[]` string, `[B@` followed by a per-object JVM identity hash (for example
+`[B@6b9cd557`). Identical requests to the same Java server produce different
+identities. BreakMock prints the same form with a random identity. For this one
+case the suite replaces the `[B@<hex>` token **and its padding** with a placeholder
+of the same width on both sides, requires exactly one such token on each side, and
+compares every other byte, including column alignment. BreakMock builds that print
+anything else (earlier builds printed base64) still fail. See
+[COMPATIBILITY_FIXES.md](COMPATIBILITY_FIXES.md) for the evidence that Java's value
+is non-deterministic.
 
 The harness does not claim universal TCP/HTTP header order, chunk boundaries,
 Date values, HTTP/2 frames, scheduling jitter or random-output equivalence.
@@ -122,7 +126,7 @@ Consolidated local Go and Rust runs (2026-10-12), retained under
 | HTTP admin | 130/130 | JSON bytes with explicit scalar substitutions |
 | Runtime/proxy | 46/46 | Body bytes and selected headers |
 | Gzip | 99/99 | Compressed bytes and negotiation |
-| Diagnostics | 40/41 | Exact bytes; JVM identity case fails |
+| Diagnostics | 41/41 | Exact bytes; one JVM identity token masked width-for-width |
 | Near-miss distances | 140/140 | Exact admin response bytes |
 | Webhooks | 7/7 | Configured callback content; transport headers separate |
 | Faults | 32/32 | Complete socket bytes and reset behavior |
@@ -143,7 +147,7 @@ random and time helpers, mapping/file/jsonBody edits with gzip, raw non-ASCII he
 bytes, and that journal entries hold the body served to each of 120 concurrent requests.
 Its `--discover` mode adds the known template syntax-error cases.
 
-`go test -race ./...` and `go vet ./...` pass. The strict differential runner
-returns nonzero because the JVM-identity diagnostic remains a failure.
+`go test -race ./...` and `go vet ./...` pass, and the strict differential runner
+passes every suite (2026-10-13).
 Outgoing compressed WebSocket frame byte identity is not established; incoming
 compressed-message limits are exercised against Java.
