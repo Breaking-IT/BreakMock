@@ -2,11 +2,14 @@
 package breakmock
 
 import (
+	"bytes"
+	"compress/gzip"
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"sort"
@@ -251,13 +254,39 @@ func (s *Store) RecordServed(r Request, m Mapping, status int, responseHeaders h
 	return s.recordServed(r, m, status, responseHeaders, append([]byte(nil), responseBody...), responseHeaderOrder...)
 }
 
-// journalText and journalBase64 are logged response body views, encoded when
-// the journal is read rather than copied twice on every served request.
-type journalText []byte
-type journalBase64 []byte
+// journalBody is a logged response body, kept as served. When the server
+// gzip-encoded it, the compressed bytes are kept and decoded only when the
+// journal is read, because WireMock journals the body before Jetty compresses it.
+type journalBody struct {
+	data    []byte
+	gzipped bool
+}
 
-func (b journalText) String() string   { return string(b) }
-func (b journalBase64) String() string { return base64.StdEncoding.EncodeToString(b) }
+func (b journalBody) bytes() []byte {
+	if !b.gzipped {
+		return b.data
+	}
+	reader, err := gzip.NewReader(bytes.NewReader(b.data))
+	if err != nil {
+		return b.data
+	}
+	defer reader.Close()
+	decoded, err := io.ReadAll(reader)
+	if err != nil {
+		return b.data
+	}
+	return decoded
+}
+
+// journalText and journalBase64 are views of a logged response body, encoded
+// when the journal is read rather than copied twice on every served request.
+type journalText journalBody
+type journalBase64 journalBody
+
+func (b journalText) String() string { return string(journalBody(b).bytes()) }
+func (b journalBase64) String() string {
+	return base64.StdEncoding.EncodeToString(journalBody(b).bytes())
+}
 func (b journalText) MarshalJSON() ([]byte, error) {
 	return json.Marshal(b.String())
 }
@@ -341,12 +370,16 @@ func (s *Store) recordServed(r Request, m Mapping, status int, responseHeaders h
 	if m != nil {
 		event["stubMapping"] = m
 		event["responseDefinition"] = m["response"]
+		if r.ResponseDefinition != nil {
+			event["responseDefinition"] = r.ResponseDefinition
+		}
 	}
-	response := map[string]any{"status": status, "body": journalText(responseBody), "bodyAsBase64": journalBase64(responseBody), "fromProxy": false}
+	logged := journalBody{data: responseBody, gzipped: r.ResponseGzipped}
+	response := map[string]any{"status": status, "body": journalText(logged), "bodyAsBase64": journalBase64(logged), "fromProxy": false}
 	if len(responseHeaders) > 0 {
 		h := make(map[string]any, len(responseHeaders))
 		for k, v := range responseHeaders {
-			if len(v) == 0 {
+			if len(v) == 0 || (r.ResponseGzipped && strings.EqualFold(k, "Content-Encoding")) {
 				continue
 			}
 			if len(v) == 1 {

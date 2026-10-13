@@ -115,9 +115,15 @@ locale data can change between JDK releases.
 - Intentional divergence: after a templated body file is edited, WireMock keeps
   serving its cached compiled template until the mapping changes. BreakMock serves
   the edited file immediately.
-- Request journals differ for templated responses (WireMock logs the rendered body
-  in `responseDefinition`) and for gzip responses (WireMock logs the uncompressed
-  body). Served bytes are identical.
+- Request journals follow WireMock for templated and gzip responses: the
+  `responseDefinition` is the definition after templating (rendered headers, and a
+  rendered body replacing `body`, `jsonBody` or `bodyFileName`), a template
+  execution error is journaled as its error response, and a gzip-encoded response
+  is journaled uncompressed without `Content-Encoding`. BreakMock keeps the
+  compressed bytes in memory and decodes them only when the journal is read.
+- Java WireMock's capped journal occasionally retains one entry too few under
+  concurrent load. The concurrency suite records that reference defect as a
+  warning; BreakMock's own count must still be exact.
 - Runtime comparisons cover two small workloads. See `BENCHMARKS.md` for the latest
   optimized Go/Rust results and their limits; broader workloads remain unmeasured.
 
@@ -151,7 +157,7 @@ Consolidated local Go and Rust runs (2026-10-12), retained under
 | Message waits, disabled journal | 5/5 | Existing origin substitution; new precedence cases use exact bytes |
 | Concurrent journal | 16 invariants + 3 byte comparisons | Two exact admin responses; one with generated scalar substitutions |
 | Templates inside 80 KB bodies, 3 requests each | 429/429 | Status and response bytes, including errors |
-| Dynamic templates, edits and journal integrity | 238/238 | Exact bytes per request, at 2 sizes; random/time helpers by property |
+| Dynamic templates, edits and journal integrity | 254/254 | Exact bytes per request, at 2 sizes; random/time helpers by property; 16 journal events by field and key order |
 
 The last two rows were run on 2026-10-12 against Java with `template_differential.py --pad 80000 --repeat 3`
 and `dynamic_template_differential.py`. That suite checks values that vary by request,

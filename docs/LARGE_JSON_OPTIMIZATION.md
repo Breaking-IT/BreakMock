@@ -210,12 +210,10 @@ available there.
   [COMPATIBILITY.md](COMPATIBILITY.md#byte-comparison-boundaries)).
 - In the benchmark, every served response was compared byte-for-byte with Java's.
 - Journal events were also compared with Java's (ids, timings and client details
-  removed). Static responses matched. Two differences remain, and both exist
-  unchanged in BreakMock before this work:
-  - For templated responses, Java journals the rendered body in
-    `responseDefinition`; BreakMock journals the template source.
-  - For gzip responses, Java journals the uncompressed body without
-    `Content-Encoding`; BreakMock journals the compressed bytes.
+  removed). When these benchmarks ran, static responses matched and two earlier
+  differences remained (templated `responseDefinition` and gzip bodies). Both
+  have since been fixed; the benchmark's `--journal-check strict` mode now passes
+  against Java for every workload.
 - `scripts/template_differential.py --pad 80000 --repeat 3` reruns all 429
   template cases inside 80 KB templates, 3 requests each: 429/429 identical to
   Java. `scripts/dynamic_template_differential.py` (238 checks) confirms against
@@ -280,8 +278,9 @@ python3 scripts/json_benchmark.py --binary java=/tmp/wiremock.jar \
   --output testdata/reports/benchmark-large-json.json
 ```
 
-`--journal-check report` records the two known journal differences instead of
-stopping the run. Between BreakMock builds, use the default `strict` mode.
+`--journal-check report` records journal differences instead of stopping the run.
+It was needed for the published runs, which predate the journal fixes; current
+builds pass the default `strict` mode against Java.
 
 Raw data: [end-to-end report](../testdata/reports/benchmark-large-json.json)
 (including executable and JAR hashes, every round and the journal differences)

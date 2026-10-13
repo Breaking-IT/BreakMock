@@ -10,14 +10,20 @@ type Mapping = map[string]any
 type Request struct {
 	UnmatchedReport      string
 	UnmatchedContentType string
-	ProcessTimeMillis    int64
-	AddedDelayMillis     int64
-	ClientIP             string
-	PathParams           map[string]string
-	Method               string
-	URL                  string
-	AbsoluteURL          string
-	Headers              http.Header
-	HeaderOrder          []string
-	Body                 []byte
+	// ResponseDefinition is the definition after templating, journaled in place of
+	// the stub's response as WireMock does; nil journals the stub's response.
+	ResponseDefinition map[string]any
+	// ResponseGzipped records that the server, not the stub, gzip-encoded the
+	// response, so the journal presents it uncompressed like WireMock.
+	ResponseGzipped   bool
+	ProcessTimeMillis int64
+	AddedDelayMillis  int64
+	ClientIP          string
+	PathParams        map[string]string
+	Method            string
+	URL               string
+	AbsoluteURL       string
+	Headers           http.Header
+	HeaderOrder       []string
+	Body              []byte
 }

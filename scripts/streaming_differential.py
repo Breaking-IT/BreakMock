@@ -77,10 +77,12 @@ def ws_close(base,client=False):
  try:
   if client:c.write(struct.pack('!H',1000)+b'bye',8)
   else:
-   for _ in range(100):
+   deadline=time.monotonic()+5
+   while True:
     status,body=call(base,'/__admin/channels');channels=[x for x in json.loads(body)['channels'] if x['type']=='websocket']
-    if channels:break
+    if channels or time.monotonic()>deadline:break
     time.sleep(.005)
+   assert channels,'websocket channel was not registered within 5s'
    status,body=call(base,'/__admin/channels/'+channels[-1]['id'],method='DELETE');assert status==200,(status,body)
   return c.frame()
  finally:c.close()

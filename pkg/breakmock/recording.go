@@ -249,7 +249,10 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 		if len(rh) > 0 {
 			response["headers"] = rh
 		}
-		bodyBytes, _ := logged["bodyAsBase64"].(journalBase64)
+		var bodyBytes []byte
+		if view, ok := logged["bodyAsBase64"].(journalBase64); ok {
+			bodyBytes = journalBody(view).bytes()
+		}
 		if encoded, ok := logged["bodyAsBase64"].(string); ok {
 			bodyBytes, _ = base64.StdEncoding.DecodeString(encoded)
 		}
