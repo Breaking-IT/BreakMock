@@ -43,6 +43,10 @@ type MessageStore struct {
 	eventOrders      map[string]*adminOrder
 	sequence         uint64
 	changed          chan struct{}
+	// handling is held for reading while an incoming message is processed. A
+	// reply frame reaches the client before its "sent" and "received" events
+	// are journaled, so journal reads settle in-flight handling first.
+	handling sync.RWMutex
 }
 
 func (s *Store) Messaging() *MessageStore {
@@ -187,7 +191,14 @@ func (s *MessageStore) Record(id, eventType string, message map[string]any, matc
 	s.mu.Unlock()
 	return eventID
 }
+
+// settle waits for incoming messages that are being handled to be journaled.
+func (s *MessageStore) settle() {
+	s.handling.Lock()
+	s.handling.Unlock()
+}
 func (s *MessageStore) Events() []Mapping {
+	s.settle()
 	if s.owner.JournalDisabled() {
 		return []Mapping{}
 	}
