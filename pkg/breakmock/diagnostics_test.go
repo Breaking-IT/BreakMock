@@ -36,7 +36,7 @@ func TestJavaDiagnosticGolden(t *testing.T) {
 func TestTemplateErrorHasExactPlainBody(t *testing.T) {
 	s, _ := NewServer(Options{RootDir: t.TempDir()})
 	w := httptest.NewRecorder()
-	s.writeTemplateError(w, &TemplateExecutionError{Message: "1:0: sample"}, Mapping{"id": "example"})
+	s.writeTemplateError(w, &TemplateExecutionError{Message: "1:0: sample"}, Mapping{"id": "example"}, &Request{})
 	if w.Code != 500 || w.Body.String() != "[ERROR] 1:0: sample" || w.Header().Get("Content-Type") != "text/plain" || w.Header().Get("Matched-Stub-Id") != "example" {
 		t.Fatalf("%v %s", w.Result(), w.Body.String())
 	}

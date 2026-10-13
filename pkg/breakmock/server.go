@@ -170,7 +170,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				finished = time.Now()
 			}
 			req.ProcessTimeMillis = max(int64(0), (finished.Sub(processStarted) - waited).Milliseconds())
-			eventID = s.Store.recordServed(req, selected, capture.status, capture.Header(), capture.body.Bytes(), capture.headerOrder)
+			headers := capture.Header()
+			if len(capture.unloggedHeaders) > 0 {
+				headers = headers.Clone()
+				for _, name := range capture.unloggedHeaders {
+					headers.Del(name)
+				}
+			}
+			eventID = s.Store.recordServed(req, selected, capture.status, headers, capture.body.Bytes(), capture.headerOrder)
 		}
 		if selected != nil {
 			DispatchWebhooks(s.Store, eventID, req, selected, s.options.RootDir)
@@ -291,19 +298,36 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		return RenderTemplate(v, req, params)
 	}
+	var renderedHeaders map[string]any
 	if headers, ok := response["headers"].(map[string]any); ok {
+		if templated && capture != nil {
+			// Journaled only: WireMock logs the definition after templating.
+			renderedHeaders = make(map[string]any, len(headers))
+		}
 		for name, value := range headers {
 			values := bmSlice(value)
-			if values == nil {
+			scalar := values == nil
+			if scalar {
 				values = []any{value}
 			}
+			var renderedValues []any
 			for _, item := range values {
 				v, e := render(fmt.Sprint(item))
 				if e != nil {
-					s.writeTemplateError(w, e, selected)
+					s.writeTemplateError(w, e, selected, &req)
 					return
 				}
 				w.Header().Add(name, v)
+				if renderedHeaders != nil {
+					if scalar {
+						renderedHeaders[name] = v
+					} else {
+						renderedValues = append(renderedValues, v)
+					}
+				}
+			}
+			if renderedHeaders != nil && !scalar {
+				renderedHeaders[name] = renderedValues
 			}
 		}
 	}
@@ -313,7 +337,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if base := bmString(response["proxyBaseUrl"]); base != "" {
 		base, err = render(base)
 		if err != nil {
-			s.writeTemplateError(w, err, selected)
+			s.writeTemplateError(w, err, selected, &req)
 			return
 		}
 		if templated {
@@ -332,7 +356,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					for _, value := range values {
 						v, e := render(fmt.Sprint(value))
 						if e != nil {
-							s.writeTemplateError(w, e, selected)
+							s.writeTemplateError(w, e, selected, &req)
 							return
 						}
 						rendered = append(rendered, v)
@@ -387,28 +411,33 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if errors.As(err, &entityError) {
 			writeJettyError(w, r, 500, entityError.Error())
 		} else {
-			s.writeTemplateError(w, err, selected)
+			s.writeTemplateError(w, err, selected, &req)
 		}
 		return
 	}
 	entity.data = out
 	disableFileTemplate := params["disableBodyFileTemplating"] == true && entity.fromFile
 	rendered := false
+	renderedBody := ""
 	if templated && !disableFileTemplate {
 		source, e := entity.text()
 		if e != nil {
-			s.writeTemplateError(w, e, selected)
+			s.writeTemplateError(w, e, selected, &req)
 			return
 		}
 		if strings.Contains(source, "{{") {
 			v, e := render(source)
 			if e != nil {
-				s.writeTemplateError(w, e, selected)
+				s.writeTemplateError(w, e, selected, &req)
 				return
 			}
 			out = readOnlyBytes(v)
 			rendered = true
+			renderedBody = v
 		}
+	}
+	if templated && capture != nil {
+		req.ResponseDefinition = renderedDefinition(response, renderedHeaders, rendered, renderedBody)
 	}
 	// Avoid Go's automatic content sniffing; WireMock does not infer a type for inline bodies.
 	if _, ok := w.Header()["Content-Type"]; !ok {
@@ -428,6 +457,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		out = compressed
 		w.Header().Set("Content-Encoding", "gzip")
 		w.Header().Del("Content-Length")
+		req.ResponseGzipped = true
 	}
 	w.Header().Set("Matched-Stub-Id", bmString(selected["id"]))
 	if name := bmString(selected["name"]); name != "" {
@@ -595,9 +625,12 @@ type servedResponseWriter struct {
 	http.ResponseWriter
 	startedSending time.Time
 	headerOrder    []string
-	status         int
-	wroteHeader    bool
-	body           bytes.Buffer
+	// unloggedHeaders are transport headers written for the client that
+	// WireMock's journal does not record.
+	unloggedHeaders []string
+	status          int
+	wroteHeader     bool
+	body            bytes.Buffer
 }
 
 func (w *servedResponseWriter) WriteHeader(code int) {
@@ -720,9 +753,16 @@ func gzipResponseAllowed(request *http.Request, status int, headers http.Header)
 	return true
 }
 
-func (s *Server) writeTemplateError(w http.ResponseWriter, err error, m Mapping) {
+// writeTemplateError serves a template failure. For an execution error, WireMock
+// journals the error response itself as the response definition.
+func (s *Server) writeTemplateError(w http.ResponseWriter, err error, m Mapping, req *Request) {
 	var templateError *TemplateExecutionError
 	if errors.As(err, &templateError) {
+		req.ResponseDefinition = map[string]any{"status": 500, "body": "[ERROR] " + templateError.Error(), "headers": map[string]any{"Content-Type": "text/plain"}}
+		if capture, ok := w.(*servedResponseWriter); ok {
+			capture.headerOrder = []string{"Content-Type"}
+			capture.unloggedHeaders = []string{"Connection"}
+		}
 		w.Header().Set("Content-Type", "text/plain")
 		w.Header().Set("Connection", "close")
 		if id := bmString(m["id"]); id != "" {
@@ -733,4 +773,24 @@ func (s *Server) writeTemplateError(w http.ResponseWriter, err error, m Mapping)
 		return
 	}
 	http.Error(w, err.Error(), 500)
+}
+
+// renderedDefinition is the response definition after templating, as WireMock
+// journals it: headers rendered, and a body that was rendered replaces the stub's
+// body, jsonBody or bodyFileName with the rendered text. Other fields are kept.
+func renderedDefinition(response map[string]any, headers map[string]any, bodyRendered bool, body string) map[string]any {
+	definition := make(map[string]any, len(response))
+	for k, v := range response {
+		definition[k] = v
+	}
+	if headers != nil {
+		definition["headers"] = headers
+	}
+	if bodyRendered {
+		delete(definition, "jsonBody")
+		delete(definition, "bodyFileName")
+		delete(definition, "base64Body")
+		definition["body"] = body
+	}
+	return definition
 }

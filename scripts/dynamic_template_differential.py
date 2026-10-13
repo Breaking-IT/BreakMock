@@ -11,6 +11,8 @@ and for templates above 64 KiB (the size at which template caching changed):
   the values cannot match Java byte for byte);
 * mapping edits, body file edits and jsonBody edits, with and without gzip;
 * raw non-ASCII header bytes in matching, templates and the journal;
+* journaled response definitions and bodies for templated, gzip and failing
+  responses, compared field by field and in key order;
 * journal entries under concurrency, which must hold the body served to that request.
 
 Known divergence: WireMock serves a stale cached template after a templated
@@ -244,7 +246,46 @@ for size, pad in SIZES.items():
         logged[k] = [e['request']['headers'].get('X-V') for e in events]
     check(f'{size} header bytes journal', logged['reference'] == logged['candidate'], f"reference {logged['reference']} | candidate {logged['candidate']}")
 
-# 6. Journal entries hold the body served to each request, under concurrency.
+# 6. Journaled events for templated, gzip and failing responses. WireMock journals
+#    the response definition after templating and the body before Jetty's gzip.
+JOURNAL_CASES = [
+    ('inline body', {'body': 'Hi {{request.query.a}}', 'transformers': ['response-template']}, {}),
+    ('templated headers', {'body': 'x', 'headers': {'X-A': '{{request.query.a}}', 'X-M': ['{{request.query.a}}', 'two'], 'Content-Type': 'text/plain'}, 'transformers': ['response-template']}, {}),
+    ('templated jsonBody', {'jsonBody': {'v': '{{request.query.a}}'}, 'transformers': ['response-template']}, {}),
+    ('unrendered jsonBody', {'jsonBody': {'v': 1}, 'transformers': ['response-template']}, {}),
+    ('templated body file', {'bodyFileName': 'journal-template.txt', 'transformers': ['response-template']}, {}),
+    ('unrendered body file', {'bodyFileName': 'journal-static.txt', 'transformers': ['response-template']}, {}),
+    ('body file templating disabled', {'bodyFileName': 'journal-template.txt', 'transformers': ['response-template'], 'transformerParameters': {'disableBodyFileTemplating': True}}, {}),
+    ('entity data template', {'body': {'data': 'E {{request.query.a}}'}, 'transformers': ['response-template']}, {}),
+    ('field order and delay', {'fixedDelayMilliseconds': 1, 'headers': {'X-A': '{{request.query.a}}'}, 'jsonBody': {'v': '{{request.query.a}}'}, 'status': 202, 'transformers': ['response-template']}, {}),
+    ('statusMessage not rendered', {'statusMessage': 'Fine {{request.query.a}}', 'body': 'b', 'transformers': ['response-template']}, {}),
+    ('execution error', {'body': "{{math 1 '/' 0}}", 'transformers': ['response-template']}, {}),
+    ('not templated', {'body': 'Hi {{request.query.a}}'}, {}),
+    ('gzip static', {'body': 'G' * 200, 'headers': {'Content-Type': 'text/plain'}}, {'Accept-Encoding': 'gzip'}),
+    ('gzip template', {'body': 'T{{request.query.a}}' + 'G' * 200, 'headers': {'Content-Type': 'text/plain'}, 'transformers': ['response-template']}, {'Accept-Encoding': 'gzip'}),
+    ('gzip jsonBody', {'jsonBody': {'g': 'G' * 100}, 'headers': {'Content-Type': 'application/json'}}, {'Accept-Encoding': 'gzip'}),
+    ('gzip small body', {'body': 'tiny', 'headers': {'Content-Type': 'text/plain'}}, {'Accept-Encoding': 'gzip'}),
+]
+reset()
+for base in SERVERS.values():
+    call(base, '/__admin/files/journal-template.txt', 'File {{request.query.a}}', method='PUT')
+    call(base, '/__admin/files/journal-static.txt', 'Static file', method='PUT')
+for label, response, headers in JOURNAL_CASES:
+    logged = {}
+    for server, base in SERVERS.items():
+        call(base, '/__admin/requests', method='DELETE')
+        put_mapping(base, response, {'urlPath': '/dyn/journal-event'})
+        call(base, '/dyn/journal-event?a=AA', headers=headers)
+        # Keep key order: pairs lists compare order as well as values.
+        event = json.loads(call(base, '/__admin/requests')[2], object_pairs_hook=lambda pairs: pairs)
+        event = dict(dict(event)['requests'][0])
+        response_fields = [(k, v) for k, v in event['response']]
+        logged[server] = {'responseDefinition': event.get('responseDefinition'), 'response': response_fields,
+                          'stubMappingResponse': dict(event['stubMapping']).get('response') if event.get('stubMapping') else None}
+    check(f'journal event: {label}', logged['reference'] == logged['candidate'],
+          f"reference {json.dumps(logged['reference'])[:300]} | candidate {json.dumps(logged['candidate'])[:300]}")
+
+# 7. Journal entries hold the body served to each request, under concurrency.
 for size, pad in SIZES.items():
     reset()
     for base in SERVERS.values():
