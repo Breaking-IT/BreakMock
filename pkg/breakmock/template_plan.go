@@ -27,6 +27,7 @@ type templatePlan struct {
 var templatePlans = struct {
 	sync.RWMutex
 	entries map[string]*templatePlan
+	bytes   int
 }{entries: map[string]*templatePlan{}}
 
 func lookupTemplatePlan(source string) *templatePlan {
@@ -38,14 +39,15 @@ func lookupTemplatePlan(source string) *templatePlan {
 	}
 	plan = compileTemplatePlan(source)
 	templatePlans.Lock()
-	if len(templatePlans.entries) < 1024 && len(source) < 65536 {
+	if _, exists := templatePlans.entries[source]; !exists && len(templatePlans.entries) < templateCacheEntries && templatePlans.bytes+len(source) <= templateCacheBytes {
 		templatePlans.entries[source] = plan
+		templatePlans.bytes += len(source)
 	}
 	templatePlans.Unlock()
 	return plan
 }
 func compileTemplatePlan(source string) *templatePlan {
-	if len(source) > 65536 || strings.Contains(source, "{{~") || strings.Contains(source, "~}}") {
+	if strings.Contains(source, "{{~") || strings.Contains(source, "~}}") {
 		return nil
 	}
 	program, e := parser.Parse(source)

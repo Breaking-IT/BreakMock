@@ -8,7 +8,8 @@ Does not compare Date/Server/transfer framing, random outputs, or entire WireMoc
 Both servers' mappings and request journals are reset. Never use production servers.
 """
 import argparse,json,urllib.request,urllib.error,pathlib,datetime
-p=argparse.ArgumentParser();p.add_argument('--reference',default='http://127.0.0.1:18087');p.add_argument('--candidate',default='http://127.0.0.1:18088');p.add_argument('--discover',action='store_true',help='Include known unsupported helper coverage');p.add_argument('--report','--output',dest='report');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--reference',default='http://127.0.0.1:18087');p.add_argument('--candidate',default='http://127.0.0.1:18088');p.add_argument('--discover',action='store_true',help='Include known unsupported helper coverage');p.add_argument('--report','--output',dest='report');p.add_argument('--pad',type=int,default=0,help='Append this many bytes of static text to each string template, to exercise large-template caching');p.add_argument('--repeat',type=int,default=1,help='Requests per case; every repetition must match');a=p.parse_args()
+PAD=('\n'+'p'*99)*(a.pad//100)
 def call(base,path,data=None,method=None,headers=None):
  if isinstance(data,dict):data=json.dumps(data).encode();headers={'Content-Type':'application/json',**(headers or {})}
  if isinstance(data,str):data=data.encode()
@@ -87,8 +88,10 @@ for name,t,body,path,headers in cases:
  results=[]
  for base in (a.reference,a.candidate):
   call(base,'/__admin/reset',method='POST')
-  s,b=call(base,'/__admin/mappings',{'request':{'urlPath':'/template-test'},'response':{'status':200,**({'jsonBody':t} if isinstance(t,dict) else {'body':t}),'transformers':['response-template'],'transformerParameters':parameters_by_name.get(name,{})}})
-  results.append(call(base,path,body,headers=headers) if s==201 else ('mapping rejected',s,b))
+  s,b=call(base,'/__admin/mappings',{'request':{'urlPath':'/template-test'},'response':{'status':200,**({'jsonBody':t} if isinstance(t,dict) else {'body':t+PAD}),'transformers':['response-template'],'transformerParameters':parameters_by_name.get(name,{})}})
+  repeated=[call(base,path,body,headers=headers) if s==201 else ('mapping rejected',s,b) for _ in range(a.repeat)]
+  if any(r!=repeated[0] for r in repeated):repeated[0]=('repeated responses differ',)+repeated[0]
+  results.append(repeated[0])
  diagnostic = name in ('jsonBody template quotes','jsonBody template newline') and results[0][0]==500
  comparison='status_and_exact_body_bytes'
  ok=results[0]==results[1]

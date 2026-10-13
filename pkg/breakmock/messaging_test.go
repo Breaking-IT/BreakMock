@@ -288,3 +288,41 @@ func TestMessageWaitNegativeCount(t *testing.T) {
 		})
 	}
 }
+
+// A client can read the journal as soon as it receives a reply frame. The
+// read must still include the reply's "sent" event and the "received" event.
+func TestJournalReadDuringReplyIncludesBothEvents(t *testing.T) {
+	store := NewStore()
+	ms := store.Messaging()
+	h := NewAdminHandler(store, t.TempDir())
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, httptest.NewRequest("POST", "/__admin/message-mappings", strings.NewReader(`{"trigger":{"type":"message","message":{"body":{"equalTo":"hello"}}},"actions":[{"type":"send","message":{"body":"reply"}}]}`)))
+	if w.Code != 201 && w.Code != 200 {
+		t.Fatal(w.Code, w.Body.String())
+	}
+	read := make(chan []Mapping, 1)
+	readDuringSend := false
+	send := func(map[string]any) error {
+		// The frame is on the wire: the client now reads the journal.
+		go func() { read <- ms.Events() }()
+		select {
+		case events := <-read:
+			readDuringSend = true
+			read <- events
+		case <-time.After(50 * time.Millisecond):
+		}
+		return nil
+	}
+	ch := ms.RegisterChannel("channel", "websocket", Request{Method: "GET", URL: "/ws", Headers: http.Header{}}, send, nil)
+	if err := ms.Incoming(ch.ID, map[string]any{"body": "hello"}); err != nil {
+		t.Fatal(err)
+	}
+	events := <-read
+	types := []string{}
+	for _, e := range events {
+		types = append(types, bmString(e["eventType"]))
+	}
+	if readDuringSend || len(events) != 2 || types[0] != "received" || types[1] != "sent" {
+		t.Fatalf("journal read completed during the reply (%v) with events %v", readDuringSend, types)
+	}
+}

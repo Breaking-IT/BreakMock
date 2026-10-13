@@ -9,9 +9,10 @@ import (
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/encoding/ianaindex"
 	"golang.org/x/text/encoding/unicode"
-	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
+	"unsafe"
 )
 
 type resolvedEntity struct {
@@ -71,6 +72,9 @@ func (e resolvedEntity) text() (string, error) {
 		return "", err
 	}
 	if codec == nil {
+		if utf8.Valid(e.data) {
+			return readOnlyString(e.data), nil
+		}
 		return strings.ToValidUTF8(string(e.data), "\ufffd"), nil
 	}
 	data, err := codec.NewDecoder().Bytes(e.data)
@@ -83,7 +87,7 @@ func resolveBodyEntity(value any, root string) (result resolvedEntity, resultErr
 		}
 	}()
 	if text, ok := value.(string); ok {
-		result.data = []byte(text)
+		result.data = readOnlyBytes(text)
 		return result, nil
 	}
 	object, ok := value.(map[string]any)
@@ -128,11 +132,8 @@ func resolveBodyEntity(value any, root string) (result resolvedEntity, resultErr
 	}
 	if fromFile {
 		result.fromFile = true
-		files, err := os.OpenRoot(filepath.Join(root, "__files"))
-		if err == nil {
-			result.data, err = files.ReadFile(name)
-			files.Close()
-		}
+		var err error
+		result.data, err = readBodyFile(filepath.Join(root, "__files"), name)
 		if err == nil {
 			return result, nil
 		}
@@ -144,4 +145,20 @@ func resolveBodyEntity(value any, root string) (result resolvedEntity, resultErr
 		return result, &wireEntityError{`java.lang.NullPointerException: Cannot invoke "com.github.tomakehurst.wiremock.common.InputStreamSource.getStream()" because the return value of "com.github.tomakehurst.wiremock.common.entity.Entity.getStreamSource()" is null`}
 	}
 	return result, nil
+}
+
+// readOnlyBytes and readOnlyString convert without copying. Resolved bodies
+// (inline text, cached body files, stored jsonBody, rendered templates) are only
+// written, compressed, copied or sliced; they are never modified in place.
+func readOnlyBytes(s string) []byte {
+	if s == "" {
+		return []byte{}
+	}
+	return unsafe.Slice(unsafe.StringData(s), len(s))
+}
+func readOnlyString(b []byte) string {
+	if len(b) == 0 {
+		return ""
+	}
+	return unsafe.String(&b[0], len(b))
 }

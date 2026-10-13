@@ -11,6 +11,8 @@ import (
 // Incoming executes only the first matching message stub, then journals reception.
 // Sent events precede reception in insertion order, as in WireMock's handler.
 func (s *MessageStore) Incoming(id string, message map[string]any) error {
+	s.handling.RLock()
+	defer s.handling.RUnlock()
 	channel := s.Channel(id)
 	if channel == nil {
 		return nil
