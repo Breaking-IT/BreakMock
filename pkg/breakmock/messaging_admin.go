@@ -346,6 +346,7 @@ func (a *adminHandler) serveMessaging(w http.ResponseWriter, r *http.Request) bo
 	}
 	if p == "/messages" {
 		if r.Method == "DELETE" {
+			s.settle()
 			s.mu.Lock()
 			s.events = nil
 			s.eventOrders = nil

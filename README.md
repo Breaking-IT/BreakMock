@@ -20,10 +20,19 @@ claims; neither is inferred from the implementation language.
 
 The goal is to keep WireMock's familiar mappings and APIs while reducing the
 resources needed to run mock services in local development, CI and test
-environments. In our latest measured Java-versus-Go workloads, optimized
-BreakMock delivered **14–30% higher throughput**, used **32–45% less server CPU
-at the same 10,000 RPS**, and had a much smaller resident memory footprint.
-Median readiness was **10.7 ms for Go versus 600.7 ms for Java**.
+environments. In the latest Java-versus-Go measurements (2026-10-13, commit
+`68cd311`):
+
+- **Small responses** (a 17-byte body and a small template): BreakMock delivered
+  **22–50% higher throughput**, used **23–34% less server CPU** at the same
+  10,000 RPS and **90–92% less memory** (28–43 MiB versus 259–490 MiB).
+- **Large JSON responses** (inline, body files, templates and gzip): the larger
+  the body, the bigger the lead. At ~100 KiB BreakMock delivered **1.3–10.6× the
+  throughput** with **54–96% less server CPU**; at ~1 MiB **3.1–86×** with
+  **85–99% less**; at ~10 MiB **3.0–208×** with **92–99.5% less**, using
+  0.4–0.9 GiB of memory where Java used 11.1–12.4 GiB. Responses were
+  byte-identical to Java's.
+- Median readiness was **10.7 ms for Go versus 600.7 ms for Java**.
 
 These results are the basis for the refactor: lower resource use and faster
 startup while retaining WireMock compatibility as the target. We chose Go as
@@ -154,61 +163,135 @@ bounded differential corpus, not the entire upstream Java test suite.
 
 ## Java versus Go benchmarks
 
-Latest measured comparison: **2026-10-12**, Apple M4 Pro (14 logical CPUs), macOS
-arm64, Go 1.27.1 and OpenJDK 27. Java is **WireMock 4.0.0-beta.40**; Go is optimized
-BreakMock at commit `7176b12`. Both servers use the same workload driver and
-32 persistent clients. The workloads are a static response and the template
+Measured **2026-10-13** on an Apple M4 Pro (14 logical CPUs, 48 GB), macOS arm64,
+Go 1.27.1 and OpenJDK 27. Java is **WireMock 4.0.0-beta.40** (JAR SHA-256 checked
+against `testdata/reference.json`) with default JVM settings. Go is BreakMock built
+from a clean checkout of commit `68cd311`; every report records that commit, a
+clean tree and the binary's SHA-256. The same Go load generator drives both servers
+in alternating order with 32 persistent connections and checks every response body.
+All runs had zero errors and zero dropped arrivals. Journals were disabled or
+capped at 1,000 entries on both servers.
+
+### Small responses
+
+The workloads are a static 17-byte body and the template
 `Hello {{request.query.name}}: {{math 2 '+' 3}}`.
 
-Mean throughput at saturation (higher is better), two rounds per workload with
-3 seconds of warmup and 5 seconds of measurement:
+Throughput at saturation, requests per second (two rounds, 3 s warmup, 5 s
+measurement; higher is better):
 
-| Request journal | Workload | Java RPS | Go RPS | Go improvement |
+| Request journal | Workload | Java | Go | Go vs Java |
 | --- | --- | ---: | ---: | ---: |
-| Disabled | Static | 86,580 | 112,381 | +29.8% |
-| Disabled | Template | 88,663 | 109,233 | +23.2% |
-| Capped at 1,000 entries | Static | 77,532 | 92,829 | +19.7% |
-| Capped at 1,000 entries | Template | 80,176 | 91,119 | +13.6% |
+| Disabled | Static | 72,580 | 108,579 | **+49.6%** |
+| Disabled | Template | 82,988 | 105,756 | **+27.4%** |
+| Capped at 1,000 | Static | 73,328 | 89,549 | **+22.1%** |
+| Capped at 1,000 | Template | 72,037 | 87,565 | **+21.6%** |
 
-Resource use at **the same 10,000 offered RPS** (lower is better), three rounds
-with 10 seconds of warmup and 15 seconds of measurement. CPU is mean process
-user+system time per completed request across all server threads, excluding the
-load generator. Memory is the range of peak sampled RSS across rounds.
+Server CPU and memory at **the same 10,000 offered RPS** (three rounds, 10 s
+warmup, 15 s measurement; lower is better). CPU is process user+system time per
+completed request across all server threads, excluding the load generator.
+Memory is the range of peak sampled RSS across rounds.
 
-| Request journal | Workload | Java CPU µs/request | Go CPU µs/request | Java RSS MiB | Go RSS MiB |
-| --- | --- | ---: | ---: | ---: | ---: |
-| Disabled | Static | 85.44 | 46.69 | 310.4–347.3 | 25.8–26.6 |
-| Disabled | Template | 88.31 | 50.16 | 320.2–361.6 | 25.3–26.0 |
-| Capped at 1,000 entries | Static | 113.33 | 74.64 | 334.6–364.6 | 37.7–39.9 |
-| Capped at 1,000 entries | Template | 114.89 | 78.47 | 396.8–691.0 | 37.9–38.4 |
+| Request journal | Workload | Java CPU µs/req | Go CPU µs/req | CPU saved | Java RSS MiB | Go RSS MiB |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Disabled | Static | 84.29 | 55.67 | **−34.0%** | 259.3–378.3 | 28.1–28.7 |
+| Disabled | Template | 85.87 | 66.44 | **−22.6%** | 281.8–402.9 | 28.9–29.2 |
+| Capped at 1,000 | Static | 122.42 | 86.49 | **−29.4%** | 372.2–429.5 | 42.1–42.6 |
+| Capped at 1,000 | Template | 120.91 | 84.71 | **−29.9%** | 402.0–490.4 | 43.0–43.3 |
 
-Startup measured 15 fresh processes per implementation with warm OS caches.
-Readiness requires loading a mapping from disk and returning the correct templated
-response. Median readiness was **600.7 ms for Java and 10.7 ms for Go**; median
-RSS at readiness was **206.0 MiB and 16.6 MiB**, respectively.
+At saturation, Go also used 27–43% less CPU per request. Peak RSS at saturation
+was 504–897 MiB for Java and 31–53 MiB for Go; idle RSS after startup was
+176–200 MiB and 18–20 MiB. Mean p99 latency at 10,000 RPS was 2.5–3.8 ms for Go
+and 2.0–6.1 ms for Java, so Go did **not** have lower tail latency at this
+moderate rate; arrivals are dispatched in 1 ms batches, which dominates these
+values.
 
-All measured Java/Go load runs had zero errors or dropped arrivals, and matched-rate
-runs achieved within 2% of the target. These are short, same-host measurements of
-small workloads; the client shares the host, and Java's fixed warmup does not
-prove JIT steady state. Journals were disabled or capped equally on both servers;
-**the default unbounded journal was not benchmarked**. RSS is sampled every 100 ms.
-These results predate subsequent admin compatibility fixes and Toxiproxy
-integration, so they are not measurements of the current executable or active
-chaos scenarios. Compatibility coverage is tracked separately in
-[COMPATIBILITY.md](docs/COMPATIBILITY.md).
+### Large JSON responses
 
-See the [full measurement protocol and optimization report](docs/GO_JOURNAL_OPTIMIZATION.md),
-[raw results and executable hashes](testdata/reports/go-optimized), and
-[historical benchmarks](docs/BENCHMARKS.md). Reproduce the Java/Go workloads with:
+The workloads serve a ~100 KiB JSON document as inline `jsonBody`, inline `body`,
+`bodyFileName`, templates (straight-line and full Handlebars with `jsonPath`) and
+gzip. Three rounds, 2 s warmup, 5 s measurement, saturation. BreakMock before
+this work (`51ac179`) ran in the same session:
+
+| Request journal | Workload | Java RPS | Go before RPS | Go RPS | Go vs Java | Java CPU µs/req | Go CPU µs/req | Java peak RSS MiB | Go peak RSS MiB |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Disabled | jsonBody | 8,234 | 19,674 | 57,429 | **7.0×** | 1,012.9 | 83.2 | 3,631 | 34 |
+| Disabled | body | 26,370 | 33,900 | 54,273 | **2.1×** | 318.3 | 81.1 | 3,271 | 34 |
+| Disabled | bodyFileName | 13,966 | 27,221 | 54,505 | **3.9×** | 647.7 | 88.9 | 2,359 | 34 |
+| Disabled | Template | 21,885 | 430 | 34,526 | **1.6×** | 381.0 | 151.7 | 3,145 | 40 |
+| Disabled | Template file | 16,564 | 450 | 33,245 | **2.0×** | 537.4 | 160.9 | 2,915 | 41 |
+| Disabled | Template + jsonPath | 21,136 | 459 | 28,312 | **1.3×** | 393.6 | 179.8 | 4,295 | 42 |
+| Disabled | jsonBody, gzip | 8,245 | 13,142 | 87,070 | **10.6×** | 1,197.7 | 44.6 | 5,486 | 42 |
+| Capped at 1,000 | jsonBody | 8,979 | 25,730 | 54,640 | **6.1×** | 1,034.7 | 97.2 | 5,656 | 392 |
+| Capped at 1,000 | Template + jsonPath | 17,853 | 590 | 48,728 | **2.7×** | 455.4 | 118.4 | 6,329 | 440 |
+| Capped at 1,000 | jsonBody, gzip | 8,143 | 14,221 | 79,141 | **9.7×** | 1,214.2 | 66.8 | 6,208 | 441 |
+
+All 14 combinations, p99 latency and the measurement details are in the
+[large JSON report](docs/LARGE_JSON_OPTIMIZATION.md). Every Go response was
+byte-identical to Java's.
+
+The lead grows with body size (journal disabled; Go throughput as a multiple of
+Java's, and Go's CPU saving per request):
+
+| Workload | ~100 KiB | ~1 MiB | ~10 MiB |
+| --- | ---: | ---: | ---: |
+| jsonBody | 7.0× (−92%) | 10.0× (−97%) | 15.7× (−98%) |
+| body | 2.1× (−75%) | 3.7× (−90%) | 3.2× (−94%) |
+| bodyFileName | 3.9× (−86%) | 3.1× (−87%) | 3.0× (−92%) |
+| Template | 1.6× (−60%) | 4.5× (−86%) | 5.7× (−95%) |
+| Template + jsonPath | 1.3× (−54%) | 4.4× (−85%) | 4.6× (−94%) |
+| jsonBody, gzip | 10.6× (−96%) | 76× (−99%) | 208× (−99.5%) |
+| Peak RSS, Java → Go | 2.3–5.4 GiB → 34–42 MiB | 3.0–5.0 GiB → 60–145 MiB | 11.1–12.4 GiB → 436–898 MiB |
+
+At ~1 MiB and above, Go's static and template workloads reach ~10 GB/s through
+loopback, the shared load generator's limit, so CPU per request is the fairer
+comparison there. Details: [scaling with body size](docs/LARGE_JSON_OPTIMIZATION.md#scaling-with-body-size).
+
+### What improved in this release
+
+- **Large responses:** templated bodies of 64 KiB and more were re-parsed on every
+  request, so Go was 30–51× *slower* than Java there; it is now 1.3–3.2× faster.
+  Inline, file and gzip bodies use 39–94% less CPU than before, and peak RSS fell
+  by about half or more.
+- **Small responses** were already optimized and are unchanged: an in-process
+  A/B of the exact workloads above (`BenchmarkSmallResponse`, alternating builds)
+  is within ±2% ([raw output](testdata/reports/benchmark-small-ab.txt)).
+
+### Scope
+
+These are short, same-host measurements: the load generator shares the CPU, and
+Java's fixed warmup does not prove JIT steady state. Results vary between runs on
+this host (for example, Java's saturation RPS differed by up to 17% from a run the
+day before), so compare implementations within one run, not across runs. Java ran
+with its default heap (about a quarter of RAM), so its RSS shows what the JVM took,
+not the minimum it needs. **The default unbounded journal was not benchmarked.**
+RSS is sampled every 100 ms. Startup was measured separately on 15 fresh processes
+per implementation with warm OS caches, loading a mapping from disk and returning a
+templated response; median RSS at readiness was 206.0 MiB for Java and 16.6 MiB
+for Go. Compatibility is tracked separately in [COMPATIBILITY.md](docs/COMPATIBILITY.md).
+
+Raw results with commit, executable and JAR hashes:
+[small responses](testdata/reports/java-go-2026-10-13) and large JSON at
+[100 KiB](testdata/reports/benchmark-large-json.json),
+[1 MiB](testdata/reports/benchmark-large-json-1mib.json) and
+[10 MiB](testdata/reports/benchmark-large-json-10mib.json). Earlier measurements
+are in [BENCHMARKS.md](docs/BENCHMARKS.md) and
+[GO_JOURNAL_OPTIMIZATION.md](docs/GO_JOURNAL_OPTIMIZATION.md).
+
+Reproduce:
 
 ```sh
-# Saturation throughput, without and with a bounded journal.
+# Small responses: saturation throughput, then CPU and memory at 10,000 RPS.
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rounds 2 --duration 5s --output /tmp/throughput.json
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rounds 2 --duration 5s --journal-limit 1000 --output /tmp/throughput-journal.json
-
-# CPU and memory at the same offered request rate.
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10000 --warmup 10s --duration 15s --rounds 3 --output /tmp/cpu-10k.json
 python3 scripts/benchmark.py --jar /tmp/wiremock.jar --servers java,go --rate 10000 --warmup 10s --duration 15s --rounds 3 --journal-limit 1000 --output /tmp/cpu-10k-journal.json
+
+# Large JSON responses; list Java first so its responses are the byte reference.
+# Add --size 1048576, or --size 10485760 --journal disabled, for the scaling runs.
+go build -trimpath -o /tmp/breakmock ./cmd/breakmock
+python3 scripts/json_benchmark.py --binary java=/tmp/wiremock.jar --binary go=/tmp/breakmock \
+  --rounds 3 --duration 5s --warmup 2s --journal-check report --output /tmp/large-json.json
 ```
 
 ## License and provenance

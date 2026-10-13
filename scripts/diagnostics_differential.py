@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Exact response bytes for unmatched requests and deterministic near-miss APIs."""
-import argparse,json,urllib.request,urllib.error,difflib,pathlib
+import argparse,json,urllib.request,urllib.error,difflib,pathlib,re
 p=argparse.ArgumentParser();p.add_argument('--reference',default='http://127.0.0.1:18307');p.add_argument('--candidate',default='http://127.0.0.1:18308');p.add_argument('--output',default='testdata/reports/diagnostics.json');a=p.parse_args()
 def call(base,path,body=None,method=None,headers=None):
  data=json.dumps(body).encode() if isinstance(body,(dict,list)) else body.encode() if isinstance(body,str) else body
@@ -12,7 +12,16 @@ assert json.loads(call(a.reference,'/__admin/version')[1])['version']=='4.0.0-be
 from oracle import identify
 identify(a.reference,'java');identify(a.candidate,'go')
 results=[]
-def case(name,patterns,path='/actual',method='GET',body=None,headers=None,extra=None,api=None):
+JAVA_IDENTITY=re.compile(rb'\[B@[0-9a-f]{1,8}( *)')
+def mask_identity(response):
+ # WireMock prints a binary mismatch's actual body as Java's default byte[]
+ # toString: "[B@" and a per-object JVM identity hash, never derived from the
+ # request. Replace only that token, keeping its column width, so alignment and
+ # every other byte are still compared. Each side must contain the Java shape.
+ status,body=response
+ masked,count=JAVA_IDENTITY.subn(lambda m:b'[B@#'.ljust(len(m.group(0))),body)
+ return (status,masked),count
+def case(name,patterns,path='/actual',method='GET',body=None,headers=None,extra=None,api=None,java_identity=False):
  responses=[]
  for base in [a.reference,a.candidate]:
   call(base,'/__admin/reset',{},'POST')
@@ -21,7 +30,13 @@ def case(name,patterns,path='/actual',method='GET',body=None,headers=None,extra=
    status,data=call(base,'/__admin/mappings',mapping,'POST')
    assert status==201,(name,base,status,data)
   responses.append(call(base,api or path,body,method,headers))
- ok=responses[0]==responses[1];result={'name':name,'pass':ok}
+ result={'name':name}
+ if java_identity:
+  masked=[mask_identity(r) for r in responses]
+  ok=all(count==1 for _,count in masked) and masked[0][0]==masked[1][0]
+  result['comparison']='exact bytes; JVM byte[] identity token masked width-for-width; both sides must contain one'
+ else:ok=responses[0]==responses[1]
+ result['pass']=ok
  if not ok:
   repeated=call(a.reference,api or path,body,method,headers)
   result['reference_repeat']={'status':repeated[0],'body':repeated[1].decode(errors='replace')}
@@ -51,7 +66,7 @@ case('cookie mismatch',[{'cookies':{'session':{'equalTo':'expected'}}}],headers=
 case('form mismatch',[{'formParameters':{'key':{'equalTo':'expected'}}}],method='POST',body='key=actual',headers={'Content-Type':'application/x-www-form-urlencoded'})
 case('text body mismatch',[{'bodyPatterns':[{'equalTo':'expected'}]}],method='POST',body='actual')
 case('text body contains',[{'bodyPatterns':[{'contains':'expected'}]}],method='POST',body='actual')
-case('binary body mismatch',[{'bodyPatterns':[{'binaryEqualTo':'YWJj'}]}],method='POST',body='actual')
+case('binary body mismatch',[{'bodyPatterns':[{'binaryEqualTo':'YWJj'}]}],method='POST',body='actual',java_identity=True)
 case('scenario mismatch',[{'url':'/actual'}],extra={'scenarioName':'flow','requiredScenarioState':'Ready'})
 case('path parameter mismatch',[{'urlPathTemplate':'/actual/{id}','pathParameters':{'id':{'equalTo':'123'}}}],path='/actual/456')
 case('closest URL distance',[{'url':'/nowhere'},{'url':'/actuaX'},{'url':'/somewhere'}])

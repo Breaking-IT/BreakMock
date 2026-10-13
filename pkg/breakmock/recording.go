@@ -249,7 +249,10 @@ func (a *adminHandler) snapshot(entries []journalEntry, spec map[string]any) (ma
 		if len(rh) > 0 {
 			response["headers"] = rh
 		}
-		bodyBytes, _ := base64.StdEncoding.DecodeString(bmString(logged["bodyAsBase64"]))
+		bodyBytes, _ := logged["bodyAsBase64"].(journalBase64)
+		if encoded, ok := logged["bodyAsBase64"].(string); ok {
+			bodyBytes, _ = base64.StdEncoding.DecodeString(encoded)
+		}
 		for k, v := range headers {
 			if strings.EqualFold(k, "Content-Encoding") && strings.EqualFold(fmt.Sprint(v), "gzip") {
 				if reader, err := gzip.NewReader(bytes.NewReader(bodyBytes)); err == nil {

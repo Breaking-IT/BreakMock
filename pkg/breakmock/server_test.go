@@ -201,3 +201,25 @@ func TestCanonicalJSONEdgeCases(t *testing.T) {
 		}
 	}
 }
+
+func TestHeaderBytesAreDecodedAsLatin1(t *testing.T) {
+	s, _ := NewServer(Options{RootDir: t.TempDir()})
+	for _, mapping := range []string{
+		`{"request":{"urlPath":"/h"},"response":{"status":200,"body":"[{{request.headers.X-V}}]","transformers":["response-template"]}}`,
+		`{"priority":1,"request":{"urlPath":"/h","headers":{"X-V":{"equalTo":"é"}}},"response":{"status":200,"body":"matched"}}`,
+	} {
+		if _, err := s.Store.AddMappingDocument([]byte(mapping)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// Captured from WireMock 4.0.0-beta.40 with raw header bytes.
+	for raw, want := range map[string]string{"\xe9": "matched", "\xc3\xa9": "[Ã©]", "a\xe9b\xc3\xa9": "[aébÃ©]", "plain": "[plain]"} {
+		r := httptest.NewRequest("GET", "/h", nil)
+		r.Header["X-V"] = []string{raw}
+		w := httptest.NewRecorder()
+		s.ServeHTTP(w, r)
+		if w.Body.String() != want {
+			t.Fatalf("header %q: got %q, want %q", raw, w.Body.String(), want)
+		}
+	}
+}

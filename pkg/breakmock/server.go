@@ -21,6 +21,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 )
 
 type Options struct {
@@ -150,6 +151,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestURI := r.URL.RequestURI()
 	req := Request{HeaderOrder: headerOrder, Method: r.Method, URL: requestURI, AbsoluteURL: scheme + "://" + r.Host + requestURI, Headers: r.Header.Clone(), Body: decodedBody}
 	req.Headers.Set("Host", r.Host)
+	decodeLatin1Headers(req.Headers)
 	req.ClientIP, _, _ = net.SplitHostPort(r.RemoteAddr)
 	var selected Mapping
 	var capture *servedResponseWriter
@@ -168,7 +170,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				finished = time.Now()
 			}
 			req.ProcessTimeMillis = max(int64(0), (finished.Sub(processStarted) - waited).Milliseconds())
-			eventID = s.Store.RecordServed(req, selected, capture.status, capture.Header(), capture.body.Bytes(), capture.headerOrder)
+			eventID = s.Store.recordServed(req, selected, capture.status, capture.Header(), capture.body.Bytes(), capture.headerOrder)
 		}
 		if selected != nil {
 			DispatchWebhooks(s.Store, eventID, req, selected, s.options.RootDir)
@@ -348,7 +350,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	entity := resolvedEntity{}
 	switch {
 	case response["jsonBody"] != nil:
-		out, err = marshalJSON(response["jsonBody"])
+		if raw, ok := response["jsonBody"].(json.RawMessage); ok {
+			// Stored mappings hold jsonBody in its compact wire form (see DecodeDocument).
+			out = raw
+		} else {
+			out, err = marshalJSON(response["jsonBody"])
+		}
 	case response["base64Body"] != nil:
 		out, err = base64.StdEncoding.DecodeString(bmString(response["base64Body"]))
 		entity.binary = true
@@ -386,6 +393,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	entity.data = out
 	disableFileTemplate := params["disableBodyFileTemplating"] == true && entity.fromFile
+	rendered := false
 	if templated && !disableFileTemplate {
 		source, e := entity.text()
 		if e != nil {
@@ -398,7 +406,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				s.writeTemplateError(w, e, selected)
 				return
 			}
-			out = []byte(v)
+			out = readOnlyBytes(v)
+			rendered = true
 		}
 	}
 	// Avoid Go's automatic content sniffing; WireMock does not infer a type for inline bodies.
@@ -406,7 +415,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header()["Content-Type"] = nil
 	}
 	if acceptsGzip(r.Header.Get("Accept-Encoding")) && gzipResponseAllowed(r, status, w.Header()) {
-		compressed, err := wireGzip(out)
+		compress := wireGzip
+		if !rendered {
+			// Static bodies are identical across requests; reuse their compressed form.
+			compress = cachedWireGzip
+		}
+		compressed, err := compress(out)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -618,6 +632,30 @@ func (w *servedResponseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
 	return h.Hijack()
 }
 func (w *servedResponseWriter) Unwrap() http.ResponseWriter { return w.ResponseWriter }
+
+// decodeLatin1Headers decodes header values in place as Jetty does: each byte
+// is one ISO-8859-1 character. Matching, templates and the journal then see the
+// same text as WireMock, for example byte 0xE9 as "é" and UTF-8 "é" as "Ã©".
+func decodeLatin1Headers(headers http.Header) {
+	for _, values := range headers {
+		for i, value := range values {
+			values[i] = latin1String(value)
+		}
+	}
+}
+
+func latin1String(value string) string {
+	for i := 0; i < len(value); i++ {
+		if value[i] >= utf8.RuneSelf {
+			decoded := make([]rune, len(value))
+			for j := 0; j < len(value); j++ {
+				decoded[j] = rune(value[j])
+			}
+			return string(decoded)
+		}
+	}
+	return value
+}
 
 func acceptsGzip(value string) bool {
 	for _, part := range strings.Split(value, ",") {

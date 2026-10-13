@@ -1,0 +1,155 @@
+# go test -bench 'LargeJSONResponse/.*/100KiB' -count=5 at 51ac179 (baseline)
+goos: darwin
+goarch: arm64
+pkg: github.com/Breaking-IT/BreakMock/pkg/breakmock
+cpu: Apple M4 Pro
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	    8493	    140305 ns/op	 730.94 MB/s	  248466 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	    7977	    143409 ns/op	 715.12 MB/s	  248147 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	    8332	    141310 ns/op	 725.74 MB/s	  246474 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	    8576	    141038 ns/op	 727.15 MB/s	  246750 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	    8618	    141952 ns/op	 722.46 MB/s	  246564 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	   95509	     13068 ns/op	7848.09 MB/s	  113350 B/op	      27 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	   89340	     12972 ns/op	7906.02 MB/s	  113353 B/op	      27 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	   95146	     12853 ns/op	7979.06 MB/s	  113351 B/op	      27 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	   93328	     13142 ns/op	7803.39 MB/s	  113349 B/op	      27 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	   91056	     13118 ns/op	7817.78 MB/s	  113349 B/op	      27 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	   34675	     34369 ns/op	2983.97 MB/s	  114191 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	   33564	     33182 ns/op	3090.69 MB/s	  114192 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	   34522	     34913 ns/op	2937.45 MB/s	  114175 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	   32865	     34671 ns/op	2957.93 MB/s	  114193 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	   35008	     35785 ns/op	2865.90 MB/s	  114192 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	      87	  13863600 ns/op	   7.40 MB/s	  780593 B/op	     250 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	      84	  13876212 ns/op	   7.39 MB/s	  778540 B/op	     246 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	      84	  13908324 ns/op	   7.37 MB/s	  777840 B/op	     248 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	      90	  13936296 ns/op	   7.36 MB/s	  777552 B/op	     247 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	      82	  14000941 ns/op	   7.32 MB/s	  781346 B/op	     249 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	      91	  13871651 ns/op	   7.39 MB/s	  780570 B/op	     261 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	      81	  13923993 ns/op	   7.37 MB/s	  782259 B/op	     263 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	      82	  13768023 ns/op	   7.45 MB/s	  781328 B/op	     263 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	      79	  13858392 ns/op	   7.40 MB/s	  783351 B/op	     264 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	      84	  13916949 ns/op	   7.37 MB/s	  777551 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	      92	  13778569 ns/op	   7.44 MB/s	  784350 B/op	     290 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	      85	  13608666 ns/op	   7.54 MB/s	  783059 B/op	     289 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	      91	  13801801 ns/op	   7.43 MB/s	  785264 B/op	     290 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	      87	  13700922 ns/op	   7.49 MB/s	  782513 B/op	     288 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	      92	  13723043 ns/op	   7.47 MB/s	  781310 B/op	     288 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	    2479	    498972 ns/op	  12.84 MB/s	  359156 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	    2445	    507200 ns/op	  12.63 MB/s	  360874 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	    2443	    500148 ns/op	  12.81 MB/s	  363864 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	    2484	    497662 ns/op	  12.87 MB/s	  363463 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	    2455	    494711 ns/op	  12.95 MB/s	  360105 B/op	      38 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	    6709	    179162 ns/op	 572.42 MB/s	  721350 B/op	     108 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	    6183	    178132 ns/op	 575.73 MB/s	  720425 B/op	     108 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	    6298	    179040 ns/op	 572.81 MB/s	  721045 B/op	     108 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	    5929	    179173 ns/op	 572.38 MB/s	  721377 B/op	     108 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	    6164	    176447 ns/op	 581.22 MB/s	  720514 B/op	     108 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	   21944	     53112 ns/op	1930.94 MB/s	  611842 B/op	     104 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	   22244	     52772 ns/op	1943.36 MB/s	  611841 B/op	     104 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	   22227	     52993 ns/op	1935.27 MB/s	  611841 B/op	     104 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	   22140	     53262 ns/op	1925.47 MB/s	  611841 B/op	     104 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	   22136	     52848 ns/op	1940.58 MB/s	  611842 B/op	     104 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   15032	     79551 ns/op	1289.17 MB/s	  612668 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   15170	     79658 ns/op	1287.43 MB/s	  612668 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   15099	     80119 ns/op	1280.04 MB/s	  612668 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   14738	     79129 ns/op	1296.05 MB/s	  612669 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   14968	     81038 ns/op	1265.52 MB/s	  612668 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	      85	  13831054 ns/op	   7.41 MB/s	 1270250 B/op	     316 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	      90	  13970981 ns/op	   7.34 MB/s	 1270513 B/op	     317 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	      82	  14035119 ns/op	   7.31 MB/s	 1270781 B/op	     317 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	      87	  13907676 ns/op	   7.37 MB/s	 1271013 B/op	     318 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	      86	  14093422 ns/op	   7.28 MB/s	 1270347 B/op	     317 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	      87	  14041323 ns/op	   7.30 MB/s	 1270237 B/op	     329 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	      80	  14318754 ns/op	   7.16 MB/s	 1271848 B/op	     330 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	      86	  15042551 ns/op	   6.82 MB/s	 1276239 B/op	     333 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	      86	  14154883 ns/op	   7.25 MB/s	 1272933 B/op	     331 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	      82	  13894711 ns/op	   7.38 MB/s	 1271157 B/op	     329 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	      84	  14049549 ns/op	   7.30 MB/s	 1271948 B/op	     355 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	      85	  14072154 ns/op	   7.29 MB/s	 1271716 B/op	     355 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	      88	  13963421 ns/op	   7.34 MB/s	 1272489 B/op	     355 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	      87	  14170863 ns/op	   7.24 MB/s	 1273019 B/op	     355 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	      85	  14081920 ns/op	   7.28 MB/s	 1272610 B/op	     355 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	    2280	    492473 ns/op	  13.01 MB/s	  377026 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	    2408	    491179 ns/op	  13.04 MB/s	  378130 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	    2335	    489777 ns/op	  13.08 MB/s	  376089 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	    2440	    490469 ns/op	  13.06 MB/s	  377118 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	    2361	    491963 ns/op	  13.02 MB/s	  378595 B/op	     115 allocs/op
+PASS
+ok  	github.com/Breaking-IT/BreakMock/pkg/breakmock	97.609s
+
+# same benchmark with the large JSON optimizations
+goos: darwin
+goarch: arm64
+pkg: github.com/Breaking-IT/BreakMock/pkg/breakmock
+cpu: Apple M4 Pro
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	  548121	      1994 ns/op	51422.41 MB/s	    6666 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	  637371	      1963 ns/op	52256.19 MB/s	    6666 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	  636313	      1994 ns/op	51421.48 MB/s	    6666 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	  577425	      1976 ns/op	51910.34 MB/s	    6666 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=false-14         	  619104	      1994 ns/op	51422.54 MB/s	    6666 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	  626265	      1971 ns/op	52044.73 MB/s	    6669 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	  631599	      1962 ns/op	52273.68 MB/s	    6669 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	  612975	      1993 ns/op	51469.08 MB/s	    6669 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	  588654	      2004 ns/op	51163.67 MB/s	    6669 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=false-14             	  609172	      2022 ns/op	50721.44 MB/s	    6669 B/op	      26 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	  301538	      3918 ns/op	26177.64 MB/s	    7456 B/op	      32 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	  315657	      4041 ns/op	25377.60 MB/s	    7455 B/op	      32 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	  272672	      4017 ns/op	25527.42 MB/s	    7453 B/op	      32 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	  305046	      3706 ns/op	27675.17 MB/s	    7451 B/op	      32 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=false-14     	  335096	      3713 ns/op	27620.35 MB/s	    7449 B/op	      32 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	   86030	     14242 ns/op	7201.04 MB/s	  113993 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	   81159	     14422 ns/op	7110.95 MB/s	  113993 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	   83911	     14339 ns/op	7152.05 MB/s	  113993 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	   82905	     14384 ns/op	7129.75 MB/s	  113994 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=false-14     	   85687	     14789 ns/op	6934.38 MB/s	  113994 B/op	      33 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	   71978	     16566 ns/op	6190.80 MB/s	  114935 B/op	      41 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	   71810	     16751 ns/op	6122.48 MB/s	  114924 B/op	      41 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	   74128	     15976 ns/op	6419.17 MB/s	  114915 B/op	      41 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	   72633	     15621 ns/op	6565.16 MB/s	  114908 B/op	      41 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=false-14     	   79574	     15082 ns/op	6799.66 MB/s	  114902 B/op	      41 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	   57920	     20487 ns/op	5005.90 MB/s	  123299 B/op	     187 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	   59323	     20216 ns/op	5073.03 MB/s	  123299 B/op	     187 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	   57163	     20412 ns/op	5024.15 MB/s	  123299 B/op	     187 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	   57380	     20121 ns/op	5096.80 MB/s	  123299 B/op	     187 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=false-14   	   61024	     21384 ns/op	4795.94 MB/s	  123301 B/op	     187 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	  309958	      3982 ns/op	1609.15 MB/s	    6724 B/op	      29 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	  299877	      3885 ns/op	1648.98 MB/s	    6724 B/op	      29 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	  313767	      3853 ns/op	1662.90 MB/s	    6724 B/op	      29 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	  319023	      3786 ns/op	1692.38 MB/s	    6724 B/op	      29 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=false-14     	  309018	      3955 ns/op	1619.81 MB/s	    6724 B/op	      29 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	  118880	      8458 ns/op	12124.59 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	  129067	      8391 ns/op	12222.04 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	  129658	      8383 ns/op	12233.17 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	  130528	      8354 ns/op	12275.65 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/jsonBody/100KiB/journal=true-14          	  127036	      8397 ns/op	12213.03 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	  130642	      8353 ns/op	12278.09 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	  133161	      8439 ns/op	12152.71 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	  132578	      8409 ns/op	12196.44 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	  131175	      8317 ns/op	12331.02 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/body/100KiB/journal=true-14              	  130290	      8396 ns/op	12214.72 MB/s	  120312 B/op	     100 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	  100873	     10886 ns/op	9420.89 MB/s	  121097 B/op	     106 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	  103290	     11181 ns/op	9172.21 MB/s	  121097 B/op	     106 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	  100650	     10962 ns/op	9355.24 MB/s	  121097 B/op	     106 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	  105952	     11034 ns/op	9294.73 MB/s	  121097 B/op	     106 allocs/op
+BenchmarkLargeJSONResponse/bodyFileName/100KiB/journal=true-14      	   98370	     10990 ns/op	9331.77 MB/s	  121097 B/op	     106 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	   62851	     18514 ns/op	5539.23 MB/s	  227536 B/op	     107 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	   60342	     18567 ns/op	5523.40 MB/s	  227536 B/op	     107 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	   62540	     19051 ns/op	5383.20 MB/s	  227536 B/op	     107 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	   57967	     20770 ns/op	4937.72 MB/s	  227537 B/op	     107 allocs/op
+BenchmarkLargeJSONResponse/templateBody/100KiB/journal=true-14      	   58365	     19708 ns/op	5203.72 MB/s	  227536 B/op	     107 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	   51691	     22814 ns/op	4495.32 MB/s	  228482 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	   51666	     21809 ns/op	4702.35 MB/s	  228482 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	   52886	     21672 ns/op	4732.12 MB/s	  228481 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	   53120	     21734 ns/op	4718.73 MB/s	  228481 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateFile/100KiB/journal=true-14      	   55254	     21591 ns/op	4749.83 MB/s	  228481 B/op	     115 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	   44664	     26020 ns/op	3941.42 MB/s	  235971 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	   45483	     26148 ns/op	3922.09 MB/s	  235971 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	   44630	     26038 ns/op	3938.70 MB/s	  235971 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	   44851	     26074 ns/op	3933.25 MB/s	  235971 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/templateHelper/100KiB/journal=true-14    	   44708	     25952 ns/op	3951.71 MB/s	  235971 B/op	     259 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	  136545	      8262 ns/op	 775.46 MB/s	   20455 B/op	     105 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	  144361	      8392 ns/op	 763.49 MB/s	   20455 B/op	     105 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	  143553	      8228 ns/op	 778.66 MB/s	   20455 B/op	     105 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	  143028	      8378 ns/op	 764.73 MB/s	   20455 B/op	     105 allocs/op
+BenchmarkLargeJSONResponse/jsonBodyGzip/100KiB/journal=true-14      	  139718	      8258 ns/op	 775.86 MB/s	   20455 B/op	     105 allocs/op
+PASS
+ok  	github.com/Breaking-IT/BreakMock/pkg/breakmock	92.042s

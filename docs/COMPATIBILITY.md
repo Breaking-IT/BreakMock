@@ -51,13 +51,17 @@ timestamps, measured timings and local origins. Fixed IDs and application values
 are preserved. This is formatting equivalence with those substitutions, **not**
 literal equality of every byte from two independent server processes.
 
-A strict diagnostic case remains failing: WireMock prints a JVM byte-array object
-identity (`[B@...`) for a binary matcher mismatch. Identical requests to the same
-Java server produce different identities. The report preserves the failing
-comparison and repeated-Java evidence; it does not normalize this into a pass.
-The [message-wait fixes and Java self-comparison](COMPATIBILITY_FIXES.md) document
-the latest verification: both native implementations retain only this one failing
-case in the tested corpus, and unmodified Java also fails the exact self-comparison.
+One diagnostic contains a value that no other process can reproduce: for a
+binary matcher mismatch, WireMock prints the actual body as Java's default
+`byte[]` string, `[B@` followed by a per-object JVM identity hash (for example
+`[B@6b9cd557`). Identical requests to the same Java server produce different
+identities. BreakMock prints the same form with a random identity. For this one
+case the suite replaces the `[B@<hex>` token **and its padding** with a placeholder
+of the same width on both sides, requires exactly one such token on each side, and
+compares every other byte, including column alignment. BreakMock builds that print
+anything else (earlier builds printed base64) still fail. See
+[COMPATIBILITY_FIXES.md](COMPATIBILITY_FIXES.md) for the evidence that Java's value
+is non-deterministic.
 
 The harness does not claim universal TCP/HTTP header order, chunk boundaries,
 Date values, HTTP/2 frames, scheduling jitter or random-output equivalence.
@@ -89,6 +93,19 @@ locale data can change between JDK releases.
   listener wrapper (enabled by the CLI). Embedding without it loses those details.
 - WireMock Cloud proprietary code and extensions such as gRPC/GraphQL are not included.
   Future test-data and chaos features require independent implementation.
+- HTTP request header values are decoded as ISO-8859-1, one character per byte, as
+  Jetty does. Matching, templates, cookies and the journal therefore see a UTF-8
+  `é` sent in a header as `Ã©`, exactly like WireMock.
+- Template syntax errors are not yet Java-compatible. Handlebars.java renders some
+  malformed input as literal text (for example an unclosed `{{foo` or a single `}`),
+  where BreakMock returns an error, and its error messages use a different format
+  (`[ERROR] line:col: found: …, expected: …`). Well-formed templates are unaffected.
+- Intentional divergence: after a templated body file is edited, WireMock keeps
+  serving its cached compiled template until the mapping changes. BreakMock serves
+  the edited file immediately.
+- Request journals differ for templated responses (WireMock logs the rendered body
+  in `responseDefinition`) and for gzip responses (WireMock logs the uncompressed
+  body). Served bytes are identical.
 - Runtime comparisons cover two small workloads. See `BENCHMARKS.md` for the latest
   optimized Go/Rust results and their limits; broader workloads remain unmeasured.
 
@@ -109,7 +126,7 @@ Consolidated local Go and Rust runs (2026-10-12), retained under
 | HTTP admin | 130/130 | JSON bytes with explicit scalar substitutions |
 | Runtime/proxy | 46/46 | Body bytes and selected headers |
 | Gzip | 99/99 | Compressed bytes and negotiation |
-| Diagnostics | 40/41 | Exact bytes; JVM identity case fails |
+| Diagnostics | 41/41 | Exact bytes; one JVM identity token masked width-for-width |
 | Near-miss distances | 140/140 | Exact admin response bytes |
 | Webhooks | 7/7 | Configured callback content; transport headers separate |
 | Faults | 32/32 | Complete socket bytes and reset behavior |
@@ -121,8 +138,16 @@ Consolidated local Go and Rust runs (2026-10-12), retained under
 | Message waits, enabled journal | 15/15 | Existing scalar substitutions; new error cases use exact bytes |
 | Message waits, disabled journal | 5/5 | Existing origin substitution; new precedence cases use exact bytes |
 | Concurrent journal | 16 invariants + 3 byte comparisons | Two exact admin responses; one with generated scalar substitutions |
+| Templates inside 80 KB bodies, 3 requests each | 429/429 | Status and response bytes, including errors |
+| Dynamic templates, edits and journal integrity | 238/238 | Exact bytes per request, at 2 sizes; random/time helpers by property |
 
-`go test -race ./...` and `go vet ./...` pass. The strict differential runner
-returns nonzero because the JVM-identity diagnostic remains a failure.
+The last two rows were run on 2026-10-12 against Java with `template_differential.py --pad 80000 --repeat 3`
+and `dynamic_template_differential.py`. That suite checks values that vary by request,
+random and time helpers, mapping/file/jsonBody edits with gzip, raw non-ASCII header
+bytes, and that journal entries hold the body served to each of 120 concurrent requests.
+Its `--discover` mode adds the known template syntax-error cases.
+
+`go test -race ./...` and `go vet ./...` pass, and the strict differential runner
+passes every suite (2026-10-13).
 Outgoing compressed WebSocket frame byte identity is not established; incoming
 compressed-message limits are exercised against Java.

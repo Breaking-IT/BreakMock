@@ -2,8 +2,12 @@
 package breakmock
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"net/http/httptest"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -69,5 +73,52 @@ func TestJournalWrapReconfigurationAndSnapshotIsolation(t *testing.T) {
 	check("21")
 	if old[0].request.URL != "7" || old[2].request.URL != "5" {
 		t.Fatal("overwrite mutated prior snapshot")
+	}
+}
+
+func TestJournalServesLoggedResponseBodies(t *testing.T) {
+	s, err := NewServer(Options{RootDir: t.TempDir()})
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := strings.Repeat(`{"name":"Zoë <b>","n":1},`, 100)
+	mapping, _ := json.Marshal(map[string]any{"request": map[string]any{"urlPath": "/logged"}, "response": map[string]any{"status": 200, "headers": map[string]any{"Content-Type": "application/json"}, "body": body}})
+	if _, err = s.Store.AddMappingDocument(mapping); err != nil {
+		t.Fatal(err)
+	}
+	if !gzipAvailable() {
+		t.Skip("gzip responses require a cgo build")
+	}
+	plain := httptest.NewRecorder()
+	s.ServeHTTP(plain, httptest.NewRequest("GET", "/logged", nil))
+	compressedRequest := httptest.NewRequest("GET", "/logged?gzip", nil)
+	compressedRequest.Header.Set("Accept-Encoding", "gzip")
+	compressed := httptest.NewRecorder()
+	s.ServeHTTP(compressed, compressedRequest)
+	if plain.Body.String() != body || compressed.Header().Get("Content-Encoding") != "gzip" {
+		t.Fatal("unexpected served responses")
+	}
+	admin := httptest.NewRecorder()
+	s.ServeHTTP(admin, httptest.NewRequest("GET", "/__admin/requests", nil))
+	var journal struct {
+		Requests []struct {
+			Response struct {
+				Body         string `json:"body"`
+				BodyAsBase64 string `json:"bodyAsBase64"`
+			} `json:"response"`
+		} `json:"requests"`
+	}
+	if err = json.Unmarshal(admin.Body.Bytes(), &journal); err != nil || len(journal.Requests) != 2 {
+		t.Fatal(err, admin.Body.String())
+	}
+	// Newest first: the gzip response, then the plain response.
+	for i, served := range [][]byte{compressed.Body.Bytes(), plain.Body.Bytes()} {
+		logged := journal.Requests[i].Response
+		if logged.BodyAsBase64 != base64.StdEncoding.EncodeToString(served) || (i == 1 && logged.Body != body) {
+			t.Fatalf("logged response %d differs from served bytes", i)
+		}
+	}
+	if !strings.Contains(admin.Body.String(), `"body" : "{\"name\":\"Zoë <b>\"`) {
+		t.Fatal("logged text body is not serialized with admin escaping")
 	}
 }

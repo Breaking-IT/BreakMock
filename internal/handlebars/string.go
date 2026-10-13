@@ -54,6 +54,9 @@ func strValue(value reflect.Value) string {
 		result = fmt.Sprintf("%d", ival)
 	case reflect.Float32, reflect.Float64:
 		result = strconv.FormatFloat(val.Float(), 'f', -1, 64)
+	case reflect.String:
+		// BreakMock modification: same result as Sprintf("%s") without copying.
+		result = val.String()
 	case reflect.Invalid:
 		result = ""
 	default:

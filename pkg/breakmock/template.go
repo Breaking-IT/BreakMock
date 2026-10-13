@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 	"unicode/utf16"
 
@@ -21,28 +22,71 @@ import (
 	"github.com/ohler55/ojg/jp"
 )
 
+// Template sources are cached by content. Large response bodies are the most
+// expensive to lex, so the bound is total cached source size, not a per-source size.
+const (
+	templateCacheEntries = 1024
+	templateCacheBytes   = 64 << 20
+)
+
+// A parsed template and the helper names its source mentions. Helper presence is
+// a substring check over the whole source; it is recorded on first render, since
+// repeating dozens of scans over a large response body dominates rendering.
+type templateCacheEntry struct {
+	template *raymond.Template
+	source   string
+	helpers  atomic.Pointer[map[string]bool]
+}
+
+// mentions reports whether the source contains a helper name. It returns a
+// recorder that the caller publishes after a render registered every helper.
+func (e *templateCacheEntry) mentions() (func(string) bool, func()) {
+	if known := e.helpers.Load(); known != nil {
+		return func(name string) bool {
+			found, ok := (*known)[name]
+			if !ok {
+				found = strings.Contains(e.source, name)
+			}
+			return found
+		}, func() {}
+	}
+	seen := map[string]bool{}
+	return func(name string) bool {
+			found := strings.Contains(e.source, name)
+			seen[name] = found
+			return found
+		}, func() {
+			e.helpers.CompareAndSwap(nil, &seen)
+		}
+}
+
 var templateCache = struct {
 	sync.RWMutex
-	entries map[string]*raymond.Template
-}{entries: make(map[string]*raymond.Template)}
+	entries map[string]*templateCacheEntry
+	bytes   int
+}{entries: make(map[string]*templateCacheEntry)}
 
-func cachedTemplate(source string) (*raymond.Template, error) {
+func cachedTemplate(source string) (*raymond.Template, *templateCacheEntry, error) {
 	templateCache.RLock()
-	t := templateCache.entries[source]
+	entry := templateCache.entries[source]
 	templateCache.RUnlock()
-	if t != nil {
-		return t.Clone(), nil
+	if entry != nil {
+		return entry.template.Clone(), entry, nil
 	}
 	t, e := raymond.Parse(source)
 	if e != nil {
-		return nil, e
+		return nil, nil, e
 	}
+	entry = &templateCacheEntry{template: t, source: source}
 	templateCache.Lock()
-	if len(templateCache.entries) < 1024 && len(source) < 65536 {
-		templateCache.entries[source] = t
+	if existing := templateCache.entries[source]; existing != nil {
+		entry = existing
+	} else if len(templateCache.entries) < templateCacheEntries && templateCache.bytes+len(source) <= templateCacheBytes {
+		templateCache.entries[source] = entry
+		templateCache.bytes += len(source)
 	}
 	templateCache.Unlock()
-	return t.Clone(), nil
+	return t.Clone(), entry, nil
 }
 
 type templateValues []string
@@ -125,14 +169,15 @@ func renderTemplateContext(source string, request Request, parameters map[string
 			ctx[k] = v
 		}
 	}
-	t, err := cachedTemplate(source)
+	t, entry, err := cachedTemplate(source)
 	if err != nil {
 		return "", err
 	}
 	// Helper names are literal in Handlebars expressions. A substring check is
 	// a conservative superset (including text literals), so it cannot omit a used helper.
+	mentions, recordMentions := entry.mentions()
 	add := func(name string, f func(*raymond.Options) any) {
-		if strings.Contains(source, name) {
+		if mentions(name) {
 			t.RegisterHelper(name, f)
 		}
 	}
@@ -563,6 +608,7 @@ func renderTemplateContext(source string, request Request, parameters map[string
 	add("now", templateDate)
 	add("date", templateDate)
 	add("parseDate", templateParseDate)
+	recordMentions()
 	err = t.ValidateHelpers()
 	if err == nil {
 		result, err = t.Exec(ctx)

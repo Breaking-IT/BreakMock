@@ -2,7 +2,6 @@
 package raymond
 
 import (
-	"bytes"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -803,13 +802,13 @@ func (v *evalVisitor) wasFuncCall(node *ast.Expression) bool {
 func (v *evalVisitor) VisitProgram(node *ast.Program) interface{} {
 	v.at(node)
 
-	buf := new(bytes.Buffer)
+	// BreakMock modification: a strings.Builder avoids copying each part to
+	// []byte and copying the whole result again, which matters for large bodies.
+	var buf strings.Builder
 
 	for _, n := range node.Body {
 		if str := Str(n.Accept(v)); str != "" {
-			if _, err := buf.Write([]byte(str)); err != nil {
-				v.errPanic(err)
-			}
+			buf.WriteString(str)
 		}
 	}
 
